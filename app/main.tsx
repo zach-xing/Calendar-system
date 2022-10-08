@@ -4,45 +4,53 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import {
   BottomNavigation,
   BottomNavigationTab,
-  Layout,
-  Text,
+  Icon,
 } from "@ui-kitten/components";
+import CalendarPage from "./page/calendar";
+import CreatePage from "./page/create";
+import TaskPage from "./page/task";
 
 const { Navigator, Screen } = createBottomTabNavigator();
 
-const UsersScreen = () => (
-  <Layout style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-    <Text category="h1">USERS</Text>
-  </Layout>
-);
-
-const OrdersScreen = () => (
-  <Layout style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-    <Text category="h1">ORDERS</Text>
-  </Layout>
-);
-
+/**
+ * 底部组件
+ */
 const BottomTabBar = ({ navigation, state }) => (
   <BottomNavigation
     selectedIndex={state.index}
     onSelect={(index) => navigation.navigate(state.routeNames[index])}
   >
-    <BottomNavigationTab title="USERS" />
-    <BottomNavigationTab title="ORDERS" />
+    <BottomNavigationTab icon={<Icon name="calendar-outline" />} />
+    <BottomNavigationTab icon={<Icon name="plus-square" />} />
+    <BottomNavigationTab icon={<Icon name="archive-outline" />} />
   </BottomNavigation>
-);
-
-const TabNavigator = () => (
-  <Navigator tabBar={(props) => <BottomTabBar {...props} />}>
-    <Screen name="Users" component={UsersScreen} />
-    <Screen name="Orders" component={OrdersScreen} />
-  </Navigator>
 );
 
 export default function Main() {
   return (
     <NavigationContainer>
-      <TabNavigator />
+      <Navigator tabBar={(props) => <BottomTabBar {...props} />}>
+        <Screen
+          name="Calendar"
+          component={CalendarPage}
+          options={({ navigation }) => ({
+            title: "",
+            headerLeft: () => (
+              <Icon
+                name="menu-2-outline"
+                fill="black"
+                style={{
+                  width: 30,
+                  height: 30,
+                  marginLeft: 10,
+                }}
+              />
+            ),
+          })}
+        />
+        <Screen name="Create" component={CreatePage} />
+        <Screen name="Task" component={TaskPage} />
+      </Navigator>
     </NavigationContainer>
   );
 }
