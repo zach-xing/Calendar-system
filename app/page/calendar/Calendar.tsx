@@ -12,6 +12,7 @@ export default function CalendarCustomComp() {
 
   return (
     <Calendar
+      style={styles.calendarStyle}
       markedDates={{
         [selectedDay]: { selected: true },
       }}
@@ -25,14 +26,7 @@ export default function CalendarCustomComp() {
 }
 
 const styles = StyleSheet.create({
-  dayContainer: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    aspectRatio: 1,
-  },
-  value: {
-    fontSize: 12,
-    fontWeight: "400",
+  calendarStyle: {
+    marginBottom: 10,
   },
 });
