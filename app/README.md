@@ -21,7 +21,8 @@ TypeScript is a superset of JavaScript which gives you static types and powerful
 - react native UI Kitten
 - eva icons
 - react native storage
-- 等等（之后需要再安装）
+- react-native-calendars
+- dayjs
 
 ## 🚀 How to use
 
