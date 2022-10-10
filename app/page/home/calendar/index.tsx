@@ -7,7 +7,7 @@ import Menu from "./components/Menu";
 /**
  * 日历 page
  */
-export default function CalendarScreen({ navigation }) {
+export default function CalendarPage({ navigation }) {
   return (
     <Layout style={styles.container}>
       {/* more 菜单组件 */}

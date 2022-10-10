@@ -1,48 +1,36 @@
 import React from "react";
 import { NavigationContainer } from "@react-navigation/native";
-import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import {
-  BottomNavigation,
-  BottomNavigationTab,
-  Button,
-  Icon,
-} from "@ui-kitten/components";
-import CalendarPage from "./page/calendar";
-import CreatePage from "./page/create";
-import TaskPage from "./page/task";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
+
+import HomeScreen from "./page/home";
+import SettingScreen from "./page/setting";
 import Toast from "react-native-toast-message";
 
-const { Navigator, Screen } = createBottomTabNavigator();
+const Stack = createNativeStackNavigator();
 
 /**
- * 底部组件
+ * 主路由
  */
-const BottomTabBar = ({ navigation, state }) => (
-  <BottomNavigation
-    selectedIndex={state.index}
-    onSelect={(index) => navigation.navigate(state.routeNames[index])}
-  >
-    <BottomNavigationTab icon={<Icon name="calendar-outline" />} />
-    <BottomNavigationTab icon={<Icon name="plus-square" />} />
-    <BottomNavigationTab icon={<Icon name="archive-outline" />} />
-  </BottomNavigation>
-);
-
 export default function Main() {
   return (
     <>
       <NavigationContainer>
-        <Navigator tabBar={(props) => <BottomTabBar {...props} />}>
-          <Screen
-            name="Calendar"
-            component={CalendarPage}
+        <Stack.Navigator>
+          <Stack.Screen
+            name="home"
+            component={HomeScreen}
             options={() => ({
               header: () => null,
             })}
           />
-          <Screen name="Create" component={CreatePage} />
-          <Screen name="Task" component={TaskPage} />
-        </Navigator>
+          <Stack.Screen
+            name="setting"
+            component={SettingScreen}
+            options={() => ({
+              header: () => null,
+            })}
+          />
+        </Stack.Navigator>
       </NavigationContainer>
 
       <Toast position="bottom" bottomOffset={70} />

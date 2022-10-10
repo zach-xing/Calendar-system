@@ -20,7 +20,7 @@ export default function MenuComp({ navigation }) {
   // 点击 “设置”
   const pressSetting = () => {
     setMenuVisible(false);
-    navigation.navigate("Calendar-setting");
+    navigation.navigate("setting");
   };
 
   // 点击 “同步...”
