@@ -1,58 +1,33 @@
 import React from "react";
-import { StyleSheet, View } from "react-native";
-import { Calendar } from "react-native-calendars";
-import { Card, List, Text } from "@ui-kitten/components";
-import ListItem from "./components/ListItem";
-
-const data = new Array(8).fill({
-  title: "Item",
-});
+import { StyleSheet } from "react-native";
+import { Layout } from "@ui-kitten/components";
+import Calendar from "./components/Calendar";
+import Menu from "./components/Menu";
 
 /**
- * 自定义日历组件
+ * 日历 page
  */
-export default function CalendarCustomComp() {
-  const [selectedDay, setSelectedDay] = React.useState(
-    new Date().toISOString().slice(0, 10)
-  );
-
+export default function CalendarScreen({ navigation }) {
   return (
-    <>
-      <Calendar
-        style={styles.calendarStyle}
-        markedDates={{
-          [selectedDay]: { selected: true },
-        }}
-        monthFormat={"yyyy-MM"}
-        enableSwipeMonths={true}
-        onDayPress={(day) => {
-          setSelectedDay(day.dateString);
-        }}
-      />
+    <Layout style={styles.container}>
+      {/* more 菜单组件 */}
+      <Menu navigation={navigation} />
 
-      <View>
-        <Text category="h5">{selectedDay}</Text>
-        <List
-          style={styles.listStyle}
-          contentContainerStyle={styles.listContentContainer}
-          data={data}
-          renderItem={ListItem}
-        />
-      </View>
-    </>
+      {/* 日历组件 */}
+      <Calendar />
+
+    </Layout>
   );
 }
 
 const styles = StyleSheet.create({
-  calendarStyle: {
-    marginBottom: 10,
+  container: {
+    flex: 1,
+    paddingTop: 20,
+    marginLeft: 5,
+    marginRight: 5,
   },
-  listStyle: {
-    maxHeight: "58%",
-    backgroundColor: 'white'
-  },
-  listContentContainer: {
-    // paddingHorizontal: 8,
-    // paddingVertical: 4,
+  headerStyle: {
+    flexDirection: "row",
   },
 });

@@ -1,31 +1,31 @@
 import React from "react";
-import { StyleSheet } from "react-native";
-import { Layout } from "@ui-kitten/components";
-import Calendar from "./Calendar";
-import Menu from "./Menu";
-/**
- * 日历 page
- */
-export default function CalendarPage() {
-  return (
-    <Layout style={styles.container}>
-      {/* more 菜单组件 */}
-      <Menu />
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import CalendarScreen from "./Calendar";
+import SettingPage from "./Setting";
 
-      {/* 日历组件 */}
-      <Calendar />
-    </Layout>
+const Stack = createNativeStackNavigator();
+
+/**
+ * 页面
+ */
+export default function Page() {
+
+  return (
+    <Stack.Navigator>
+      <Stack.Screen
+        name="Calendar-home"
+        component={CalendarScreen}
+        options={() => ({
+          header: () => null,
+        })}
+      />
+      <Stack.Screen
+        name="Calendar-setting"
+        component={SettingPage}
+        options={() => ({
+          header: () => null,
+        })}
+      />
+    </Stack.Navigator>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    paddingTop: 20,
-    marginLeft: 5,
-    marginRight: 5,
-  },
-  headerStyle: {
-    flexDirection: "row",
-  },
-});
