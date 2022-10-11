@@ -38,7 +38,13 @@ export default function Page() {
           header: () => null,
         })}
       />
-      <Screen name="Create" component={CreatePage} />
+      <Screen
+        name="Create"
+        component={CreatePage}
+        options={() => ({
+          header: () => null,
+        })}
+      />
       <Screen name="Task" component={TaskPage} />
     </Navigator>
   );

@@ -52,7 +52,7 @@ export default function MenuComp({ navigation }) {
           header={
             <View style={styles.cardHeaderStyle}>
               <Image
-                source={require("../../../assets/avatar.png")}
+                source={require("../../../../assets/avatar.png")}
                 style={{ width: 40, height: 40, marginBottom: 10 }}
               />
               <Text category="h6">未登录</Text>
