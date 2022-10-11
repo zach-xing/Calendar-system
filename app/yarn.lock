@@ -1675,6 +1675,13 @@
     prompts "^2.4.0"
     semver "^6.3.0"
 
+"@react-native-community/datetimepicker@6.2.0":
+  version "6.2.0"
+  resolved "https://registry.npmmirror.com/@react-native-community/datetimepicker/-/datetimepicker-6.2.0.tgz#50bc629e70e4030c48205c01efbc65a8f35d82d4"
+  integrity sha512-w1ZS+wYO3qSASliRp+B7mPphOhtVm++rhSbj1WsgXdgLgDXSkDxpMnAXXQu9M0XdcgBwVJ6wDExeIwuzU5Jtfg==
+  dependencies:
+    invariant "^2.2.4"
+
 "@react-native/assets@1.0.0":
   version "1.0.0"
   resolved "https://registry.npmmirror.com/@react-native/assets/-/assets-1.0.0.tgz#c6f9bf63d274bafc8e970628de24986b30a55c8e"
@@ -5778,6 +5785,11 @@ react-freeze@^1.0.0:
   version "1.0.3"
   resolved "https://registry.npmmirror.com/react-freeze/-/react-freeze-1.0.3.tgz#5e3ca90e682fed1d73a7cb50c2c7402b3e85618d"
   integrity sha512-ZnXwLQnGzrDpHBHiC56TXFXvmolPeMjTn1UOm610M4EXGzbEDR7oOIyS2ZiItgbs6eZc4oU/a0hpk8PrcKvv5g==
+
+react-hook-form@^7.37.0:
+  version "7.37.0"
+  resolved "https://registry.npmmirror.com/react-hook-form/-/react-hook-form-7.37.0.tgz#4d1738f092d3d8a3ade34ee892d97350b1032b19"
+  integrity sha512-6NFTxsnw+EXSpNNvLr5nFMjPdYKRryQcelTHg7zwBB6vAzfPIcZq4AExP4heVlwdzntepQgwiOQW4z7Mr99Lsg==
 
 "react-is@^16.12.0 || ^17.0.0 || ^18.0.0":
   version "18.2.0"
