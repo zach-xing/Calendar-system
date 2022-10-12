@@ -10,6 +10,8 @@ import {
   Datepicker,
 } from "@ui-kitten/components";
 import { useForm, Controller } from "react-hook-form";
+import DatePicker from "../../../components/DatePicker";
+import dayjs from "dayjs";
 
 /**
  * 日程 comp
@@ -21,7 +23,7 @@ export default function Schedule() {
     formState: { errors },
   } = useForm();
   const [isFullDay, setIsFullDay] = React.useState(false);
-  const [date, setDate] = React.useState(new Date());
+  const nowDateString = dayjs(new Date()).format("YYYY-MM-DD hh:mm");
 
   const onSubmit = (data) => console.log(data);
 
@@ -69,17 +71,13 @@ export default function Schedule() {
           {isFullDay ? (
             // 全天
             <Controller
-              name="dataString"
+              name="startTime"
               control={control}
               rules={{
                 required: true,
               }}
               render={({ field: { onChange, value } }) => (
-                <Datepicker
-                  date={value}
-                  onSelect={onChange}
-                  status={errors.dataString ? "danger" : "basic"}
-                />
+                <DatePicker label={"全天"} onChange={onChange} mode="date" />
               )}
             />
           ) : (
@@ -88,34 +86,24 @@ export default function Schedule() {
               <Controller
                 name="startTime"
                 control={control}
-                rules={{
-                  required: true,
-                }}
-                render={({ field: { onChange, onBlur, value } }) => (
-                  <Input
-                    value={value}
-                    label="开始时间"
-                    placeholder="Place your start time"
-                    onBlur={onBlur}
-                    onChangeText={onChange}
-                    status={errors.title ? "danger" : "basic"}
+                defaultValue={nowDateString}
+                render={({ field: { onChange } }) => (
+                  <DatePicker
+                    label={"开始时间"}
+                    onChange={onChange}
+                    mode="datetime"
                   />
                 )}
               />
               <Controller
                 name="endTime"
                 control={control}
-                rules={{
-                  required: true,
-                }}
-                render={({ field: { onChange, onBlur, value } }) => (
-                  <Input
-                    value={value}
-                    label="结束时间"
-                    placeholder="Place your end time"
-                    onBlur={onBlur}
-                    onChangeText={onChange}
-                    status={errors.title ? "danger" : "basic"}
+                defaultValue={nowDateString}
+                render={({ field: { onChange } }) => (
+                  <DatePicker
+                    label={"结束时间"}
+                    onChange={onChange}
+                    mode="datetime"
                   />
                 )}
               />
