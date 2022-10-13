@@ -5,27 +5,25 @@ import {
   Layout,
   Text,
   Input,
-  Toggle,
   Button,
   Select,
   SelectItem,
 } from "@ui-kitten/components";
 import { useForm, Controller } from "react-hook-form";
 import DatePicker from "../../../components/DatePicker";
-import dayjs from "dayjs";
 import { repeatArr, remindArr } from "../../../constant";
+import dayjs from "dayjs";
 
 /**
- * 日程 screen
+ * 重要日 screen
  */
-export default function Schedule() {
+export default function ImportantDay() {
   const {
     control,
     handleSubmit,
     formState: { errors },
   } = useForm();
-  const [isFullDay, setIsFullDay] = React.useState(false);
-  const nowDateString = dayjs(new Date()).format("YYYY-MM-DD hh:mm");
+  const nowDateString = dayjs(new Date()).format("YYYY-MM-DD");
 
   const onSubmit = (data) => console.log(data);
 
@@ -50,67 +48,21 @@ export default function Schedule() {
           )}
         />
 
-        {/* 选择日程的时间 */}
         <View style={styles.gap}>
-          <View
-            style={{
-              display: "flex",
-              flexDirection: "row",
-              justifyContent: "space-between",
-              alignItems: "center",
-              ...styles.gap,
+          <Text style={{ fontSize: 12, color: "grey", fontWeight: "bold" }}>
+            日期
+          </Text>
+          <Controller
+            name="startTime"
+            control={control}
+            rules={{
+              required: true,
             }}
-          >
-            <Text>全天</Text>
-            <Toggle
-              checked={isFullDay}
-              onChange={(res) => {
-                setIsFullDay(res);
-              }}
-            />
-          </View>
-
-          {isFullDay ? (
-            // 全天
-            <Controller
-              name="startTime"
-              control={control}
-              rules={{
-                required: true,
-              }}
-              render={({ field: { onChange, value } }) => (
-                <DatePicker label={"全天"} onChange={onChange} mode="date" />
-              )}
-            />
-          ) : (
-            // 不是 全天
-            <>
-              <Controller
-                name="startTime"
-                control={control}
-                defaultValue={nowDateString}
-                render={({ field: { onChange } }) => (
-                  <DatePicker
-                    label={"开始时间"}
-                    onChange={onChange}
-                    mode="datetime"
-                  />
-                )}
-              />
-              <Controller
-                name="endTime"
-                control={control}
-                defaultValue={nowDateString}
-                render={({ field: { onChange } }) => (
-                  <DatePicker
-                    label={"结束时间"}
-                    onChange={onChange}
-                    mode="datetime"
-                  />
-                )}
-              />
-            </>
-          )}
+            defaultValue={nowDateString}
+            render={({ field: { onChange } }) => (
+              <DatePicker label={"全天"} onChange={onChange} mode="date" />
+            )}
+          />
         </View>
 
         <Controller
