@@ -7,11 +7,13 @@ import {
   Input,
   Toggle,
   Button,
-  Datepicker,
+  Select,
+  SelectItem,
 } from "@ui-kitten/components";
 import { useForm, Controller } from "react-hook-form";
 import DatePicker from "../../../components/DatePicker";
 import dayjs from "dayjs";
+import { repeatArr, remindArr } from "../../../constant";
 
 /**
  * 日程 comp
@@ -40,7 +42,7 @@ export default function Schedule() {
             <Input
               value={value}
               label="标题"
-              placeholder="Place your title"
+              placeholder="please your title"
               onBlur={onBlur}
               onChangeText={onChange}
               status={errors.title ? "danger" : "basic"}
@@ -111,7 +113,69 @@ export default function Schedule() {
           )}
         </View>
 
-        <Button onPress={handleSubmit(onSubmit)}>Submit</Button>
+        <Controller
+          name="repeat"
+          control={control}
+          rules={{
+            required: true,
+          }}
+          defaultValue={0}
+          render={({ field: { onChange, value } }) => (
+            <Select
+              value={repeatArr[value].value}
+              label="重复"
+              onSelect={(index: any) => {
+                onChange(index.row);
+              }}
+            >
+              {repeatArr.map((item) => (
+                <SelectItem key={item.id} title={item.value} />
+              ))}
+            </Select>
+          )}
+        />
+
+        <Controller
+          name="remind"
+          control={control}
+          rules={{
+            required: true,
+          }}
+          defaultValue={0}
+          render={({ field: { onChange, value } }) => (
+            <Select
+              value={remindArr[value].value}
+              style={styles.gap}
+              label="提醒"
+              onSelect={(index: any) => {
+                onChange(index.row);
+              }}
+            >
+              {remindArr.map((item) => (
+                <SelectItem key={item.id} title={item.value} />
+              ))}
+            </Select>
+          )}
+        />
+
+        <Controller
+          name="desc"
+          control={control}
+          render={({ field: { onChange, onBlur, value } }) => (
+            <Input
+              label="描述"
+              value={value}
+              multiline={true}
+              textStyle={{ minHeight: 64 }}
+              placeholder="please input desc"
+              onBlur={onBlur}
+              onChangeText={onChange}
+            />
+          )}
+        />
+        <Button style={styles.gap} onPress={handleSubmit(onSubmit)}>
+          Submit
+        </Button>
       </Card>
     </Layout>
   );
