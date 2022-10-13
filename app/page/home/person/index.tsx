@@ -4,7 +4,7 @@ import { Layout, Text } from "@ui-kitten/components";
 /**
  * 创建 page
  */
-export default function Task() {
+export default function Person() {
   return (
     <Layout
       style={{

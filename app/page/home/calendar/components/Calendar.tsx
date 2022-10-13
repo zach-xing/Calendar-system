@@ -1,7 +1,7 @@
 import React from "react";
 import { StyleSheet, View } from "react-native";
 import { Calendar } from "react-native-calendars";
-import { Card, List, Text } from "@ui-kitten/components";
+import { List, Text } from "@ui-kitten/components";
 import ListItem from "./ListItem";
 
 const data = new Array(8).fill({
@@ -48,8 +48,8 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   listStyle: {
-    maxHeight: "58%",
-    backgroundColor: 'white'
+    maxHeight: "64%",
+    backgroundColor: "white",
   },
   listContentContainer: {
     // paddingHorizontal: 8,

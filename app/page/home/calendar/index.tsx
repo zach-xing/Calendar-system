@@ -2,7 +2,6 @@ import React from "react";
 import { StyleSheet } from "react-native";
 import { Layout } from "@ui-kitten/components";
 import Calendar from "./components/Calendar";
-import Menu from "./components/Menu";
 
 /**
  * 日历 page
@@ -10,12 +9,8 @@ import Menu from "./components/Menu";
 export default function CalendarPage({ navigation }) {
   return (
     <Layout style={styles.container}>
-      {/* more 菜单组件 */}
-      <Menu navigation={navigation} />
-
       {/* 日历组件 */}
       <Calendar />
-
     </Layout>
   );
 }

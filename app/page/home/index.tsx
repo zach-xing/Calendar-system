@@ -7,7 +7,7 @@ import {
 } from "@ui-kitten/components";
 import CalendarPage from "./calendar";
 import CreatePage from "./create";
-import TaskPage from "./task";
+import PersonPage from "./person";
 
 const { Navigator, Screen } = createBottomTabNavigator();
 
@@ -21,7 +21,7 @@ const BottomTabBar = ({ navigation, state }) => (
   >
     <BottomNavigationTab icon={<Icon name="calendar-outline" />} />
     <BottomNavigationTab icon={<Icon name="plus-square" />} />
-    <BottomNavigationTab icon={<Icon name="archive-outline" />} />
+    <BottomNavigationTab icon={<Icon name="person" />} />
   </BottomNavigation>
 );
 
@@ -45,7 +45,7 @@ export default function Page() {
           header: () => null,
         })}
       />
-      <Screen name="Task" component={TaskPage} />
+      <Screen name="Task" component={PersonPage} />
     </Navigator>
   );
 }
