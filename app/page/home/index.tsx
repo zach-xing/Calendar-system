@@ -45,7 +45,13 @@ export default function Page() {
           header: () => null,
         })}
       />
-      <Screen name="Task" component={PersonPage} />
+      <Screen
+        name="Task"
+        component={PersonPage}
+        options={() => ({
+          header: () => null,
+        })}
+      />
     </Navigator>
   );
 }
