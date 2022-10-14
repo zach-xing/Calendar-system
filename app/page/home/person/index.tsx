@@ -32,8 +32,12 @@ export default function Person() {
           style={styles.avatar}
           source={require("../../../assets/avatar.png")}
         />
-        <Text category="h5" style={{ marginTop: 5 }}>
-          Zeekg
+        <Text
+          category="h5"
+          style={{ marginTop: 5 }}
+          onPress={() => linkTo("/login-or-register")}
+        >
+          未登录
         </Text>
       </View>
 
