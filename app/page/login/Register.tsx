@@ -12,7 +12,10 @@ export default function Login({ navigation }) {
     handleSubmit,
     formState: { errors },
   } = useForm();
-  const onSubmit = (data) => console.log(data);
+  const onSubmit = (data) => {
+    navigation.goBack();
+    console.log(data);
+  };
 
   const [secureTextEntry, setSecureTextEntry] = React.useState(true);
 
@@ -30,13 +33,28 @@ export default function Login({ navigation }) {
     <Layout style={styles.container}>
       <View style={styles.titleStyle}>
         <Text category="h5" style={{ marginVertical: 20, color: "blue" }}>
-          Welcome Back👋👋👋
-        </Text>
-        <Text style={{ color: "grey" }}>
-          We happy to see you again. To use your account, you should log in
-          first.
+          Sign Up
         </Text>
       </View>
+
+      <Controller
+        name="name"
+        control={control}
+        rules={{
+          required: true,
+        }}
+        render={({ field: { onChange, onBlur, value } }) => (
+          <Input
+            style={{ marginVertical: 10 }}
+            value={value}
+            label="名称"
+            placeholder="Place your Name"
+            onBlur={onBlur}
+            onChangeText={onChange}
+            status={errors.password ? "danger" : "basic"}
+          />
+        )}
+      />
 
       <Controller
         name="account"
@@ -78,17 +96,8 @@ export default function Login({ navigation }) {
         )}
       />
 
-      <View>
-        <Text
-          style={{ color: "grey" }}
-          onPress={() => navigation.navigate("loginOrRegister-register")}
-        >
-          注册账号👈
-        </Text>
-      </View>
-
       <Button style={{ marginTop: 50 }} onPress={handleSubmit(onSubmit)}>
-        Login
+        Register
       </Button>
     </Layout>
   );
@@ -101,6 +110,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 15,
   },
   titleStyle: {
-    marginVertical: 40,
+    marginTop: 40,
+    marginBottom: 20,
   },
 });
