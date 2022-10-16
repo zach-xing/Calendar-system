@@ -3,15 +3,28 @@ import { StyleSheet } from "react-native";
 import { Layout } from "@ui-kitten/components";
 import Calendar from "./components/Calendar";
 import Agenda from "./components/Agenda";
+import { CHANGE_VIEW, event } from "../../../events";
 
 /**
  * 日历 page
  */
-export default function CalendarPage({ navigation }) {
+export default function CalendarPage() {
+  const [view, setView] = React.useState<"calendar" | "event">("calendar");
+
+  React.useEffect(() => {
+    event.on(CHANGE_VIEW, changeView);
+    return () => {
+      event.off(CHANGE_VIEW, changeView);
+    };
+  }, []);
+
+  const changeView = (v) => {
+    setView(v);
+  };
+
   return (
     <Layout style={styles.container}>
-      {/* 日历组件 */}
-      <Calendar />
+      {view === "calendar" ? <Calendar /> : <Agenda />}
     </Layout>
   );
 }
