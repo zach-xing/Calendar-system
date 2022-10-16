@@ -25,7 +25,7 @@ export default function Setting() {
         />
       </View>
       <Menu>
-        <MenuItem title="默认日历视图" accessoryRight={ForwardIcon} />
+        <MenuItem title="目前日历视图" accessoryRight={ForwardIcon} />
         <MenuItem title="默认提醒时间" accessoryRight={ForwardIcon} />
         <MenuItem title="全天时间默认提醒时间" accessoryRight={ForwardIcon} />
       </Menu>

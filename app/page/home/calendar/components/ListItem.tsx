@@ -21,6 +21,9 @@ export default function ListItem(info: any) {
           <Text style={{ fontSize: 16, color: "black" }}>10:00</Text>
           <Text style={{ fontSize: 12, color: "grey" }}>15:00</Text>
         </View>
+
+        <View style={styles.dttt} />
+
         {/* 事件的信息展示 */}
         <View style={styles.infoStyle}>
           <Text category="p1" style={{ fontWeight: "bold", color: "blue" }}>
@@ -44,10 +47,16 @@ const styles = StyleSheet.create({
     flexDirection: "row",
   },
   flagStyle: {
-    width: "20%",
+    width: "18%",
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
+  },
+  dttt: {
+    width: "1%",
+    marginRight: 5,
+    borderRadius: 10,
+    backgroundColor: "lightblue",
   },
   infoStyle: {
     width: "80%",

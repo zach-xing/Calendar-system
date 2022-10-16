@@ -18,19 +18,22 @@ export default function CalendarCustomComp() {
 
   return (
     <>
-      <Calendar
-        style={styles.calendarStyle}
-        markedDates={{
-          [selectedDay]: { selected: true },
-        }}
-        monthFormat={"yyyy-MM"}
-        enableSwipeMonths={true}
-        onDayPress={(day) => {
-          setSelectedDay(day.dateString);
-        }}
-      />
+      <View style={{ height: "50%" }}>
+        <Calendar
+          style={styles.calendarStyle}
+          markedDates={{
+            [selectedDay]: { selected: true },
+          }}
+          monthFormat={"yyyy-MM"}
+          enableSwipeMonths={true}
+          onDayPress={(day) => {
+            
+            setSelectedDay(day.dateString);
+          }}
+        />
+      </View>
 
-      <View>
+      <View style={{ height: "50%" }}>
         <Text category="h5">{selectedDay}</Text>
         <List
           style={styles.listStyle}
@@ -45,10 +48,11 @@ export default function CalendarCustomComp() {
 
 const styles = StyleSheet.create({
   calendarStyle: {
+    // flex: 2,
     marginBottom: 10,
   },
   listStyle: {
-    maxHeight: "64%",
+    // maxHeight: "64%",
     backgroundColor: "white",
   },
   listContentContainer: {

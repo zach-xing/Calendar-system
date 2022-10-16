@@ -25,6 +25,13 @@ export default function Main() {
             })}
           />
           <Stack.Screen
+            name="show"
+            component={HomeScreen}
+            options={() => ({
+              header: () => null,
+            })}
+          />
+          <Stack.Screen
             name="setting"
             component={SettingScreen}
             options={() => ({
