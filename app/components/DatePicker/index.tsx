@@ -26,7 +26,7 @@ export default function DatePicker(props: IProps) {
     setDatePickerVisibility(false);
     props.onChange(
       dayjs(date).format(
-        props.mode !== "datetime" ? "YYYY-MM-DD" : "YYYY-MM-DD hh:mm"
+        props.mode !== "datetime" ? "YYYY-MM-DD 00:00" : "YYYY-MM-DD HH:mm"
       )
     );
   };
@@ -39,7 +39,7 @@ export default function DatePicker(props: IProps) {
         accessoryRight={() => (
           <Text>
             {dayjs(curTime).format(
-              props.mode !== "datetime" ? "YYYY-MM-DD" : "YYYY-MM-DD hh:mm"
+              props.mode !== "datetime" ? "YYYY-MM-DD" : "YYYY-MM-DD HH:mm"
             )}
           </Text>
         )}

@@ -11,8 +11,9 @@ import {
   SelectItem,
 } from "@ui-kitten/components";
 import { useForm, Controller } from "react-hook-form";
-import DatePicker from "../../../components/DatePicker";
 import dayjs from "dayjs";
+import Toast from "react-native-toast-message";
+import DatePicker from "../../../components/DatePicker";
 import { repeatArr, remindArr } from "../../../constant";
 import storage from "../../../utils/storage";
 
@@ -26,11 +27,51 @@ export default function Schedule() {
     formState: { errors },
   } = useForm();
   const [isFullDay, setIsFullDay] = React.useState(false);
-  const nowDateString = dayjs(new Date()).format("YYYY-MM-DD hh:mm");
+  const nowDateString = dayjs(new Date()).format("YYYY-MM-DD HH:mm");
 
-  const onSubmit = (data) => {
-    // storage.save();
-    console.log(data);
+  const onSubmit = async (data) => {
+    const tmpDate = data.startTime.slice(0, 7);
+    const newData = {
+      ...data,
+      category: "schedule",
+      isFullDay: isFullDay,
+    };
+    // 初始化 Schedule 的事件数组
+    let prevData: RNType.ScheduleType[];
+    try {
+      prevData = [
+        ...(await storage.load({
+          key: "event",
+          id: tmpDate,
+        })),
+        newData,
+      ];
+    } catch (error) {
+      prevData = [newData];
+    }
+    prevData.sort(
+      (a, b) =>
+        new Date(a.startTime).getTime() - new Date(b.startTime).getTime()
+    );
+
+    storage
+      .save({
+        key: "event",
+        id: tmpDate,
+        data: prevData,
+      })
+      .then(() => {
+        Toast.show({
+          type: "success",
+          text1: "创建成功",
+        });
+      })
+      .catch((err) => {
+        Toast.show({
+          type: "error",
+          text1: "创建失败",
+        });
+      });
   };
 
   return (
@@ -82,7 +123,7 @@ export default function Schedule() {
               rules={{
                 required: true,
               }}
-              render={({ field: { onChange, value } }) => (
+              render={({ field: { onChange } }) => (
                 <DatePicker label={"全天"} onChange={onChange} mode="date" />
               )}
             />
