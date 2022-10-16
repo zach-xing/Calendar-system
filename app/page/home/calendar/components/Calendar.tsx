@@ -27,7 +27,6 @@ export default function CalendarCustomComp() {
           monthFormat={"yyyy-MM"}
           enableSwipeMonths={true}
           onDayPress={(day) => {
-            
             setSelectedDay(day.dateString);
           }}
         />

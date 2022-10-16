@@ -1,13 +1,8 @@
 import React from "react";
 import { Image, StyleSheet, View } from "react-native";
-import {
-  Icon,
-  Layout,
-  Menu,
-  MenuItem,
-  Text,
-} from "@ui-kitten/components";
+import { Icon, Layout, Menu, MenuItem, Text } from "@ui-kitten/components";
 import { useLinkTo } from "@react-navigation/native";
+import storage from "../../../utils/storage";
 
 const ForwardIcon = () => (
   <Icon name="chevron-right" style={{ width: 24, height: 24 }} fill="black" />
@@ -18,6 +13,19 @@ const ForwardIcon = () => (
  */
 export default function Person() {
   const linkTo = useLinkTo();
+
+  React.useEffect(() => {
+    storage
+      .load({
+        key: "login",
+      })
+      .then((res) => {
+        console.log("is login true");
+      })
+      .catch((err) => {
+        console.log("error, login false");
+      });
+  }, []);
 
   return (
     <Layout

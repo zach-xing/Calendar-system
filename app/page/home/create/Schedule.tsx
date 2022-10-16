@@ -14,6 +14,7 @@ import { useForm, Controller } from "react-hook-form";
 import DatePicker from "../../../components/DatePicker";
 import dayjs from "dayjs";
 import { repeatArr, remindArr } from "../../../constant";
+import storage from "../../../utils/storage";
 
 /**
  * 日程 screen
@@ -27,7 +28,10 @@ export default function Schedule() {
   const [isFullDay, setIsFullDay] = React.useState(false);
   const nowDateString = dayjs(new Date()).format("YYYY-MM-DD hh:mm");
 
-  const onSubmit = (data) => console.log(data);
+  const onSubmit = (data) => {
+    // storage.save();
+    console.log(data);
+  };
 
   return (
     <Layout style={styles.container}>

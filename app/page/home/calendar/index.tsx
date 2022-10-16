@@ -11,7 +11,7 @@ export default function CalendarPage({ navigation }) {
   return (
     <Layout style={styles.container}>
       {/* 日历组件 */}
-      <Agenda />
+      <Calendar />
     </Layout>
   );
 }
