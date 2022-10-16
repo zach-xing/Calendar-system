@@ -3,6 +3,7 @@ import { StyleSheet, View } from "react-native";
 import { Calendar } from "react-native-calendars";
 import { List, Text } from "@ui-kitten/components";
 import ListItem from "./ListItem";
+import storage from "../../../../utils/storage";
 
 const data = new Array(8).fill({
   title: "Item",
@@ -16,6 +17,13 @@ export default function CalendarCustomComp() {
     new Date().toISOString().slice(0, 10)
   );
 
+  React.useEffect(() => {
+    (async () => {
+      const data = await storage.load({ key: "event", id: "2022-10" });
+      console.log(data);
+    })();
+  }, []);
+
   return (
     <>
       <View style={{ height: "50%" }}>
@@ -23,6 +31,7 @@ export default function CalendarCustomComp() {
           style={styles.calendarStyle}
           markedDates={{
             [selectedDay]: { selected: true },
+            "2022-10-18": { marked: true, dotColor: "red", activeOpacity: 0 },
           }}
           monthFormat={"yyyy-MM"}
           enableSwipeMonths={true}
