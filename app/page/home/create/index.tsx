@@ -3,7 +3,6 @@ import { Layout, Tab, TabBar, Text } from "@ui-kitten/components";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 import Schedule from "./Schedule";
 import ImportantDay from "./ImportantDay";
-import Task from "./Task";
 
 const { Navigator, Screen } = createMaterialTopTabNavigator();
 
@@ -14,7 +13,6 @@ const TopTabBar = ({ navigation, state }) => (
   >
     <Tab title="日程" />
     <Tab title="重要日" />
-    <Tab title="任务" />
   </TabBar>
 );
 
@@ -35,7 +33,6 @@ export default function Create() {
       <Navigator tabBar={(props) => <TopTabBar {...props} />}>
         <Screen name="Schedule" component={Schedule} />
         <Screen name="importantDay" component={ImportantDay} />
-        <Screen name="task" component={Task} />
       </Navigator>
     </Layout>
   );

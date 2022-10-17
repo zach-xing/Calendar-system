@@ -29,6 +29,7 @@ export default function Schedule() {
   const [isFullDay, setIsFullDay] = React.useState(false);
   const nowDateString = dayjs(new Date()).format("YYYY-MM-DD HH:mm");
 
+  // schedule 提交
   const onSubmit = async (data) => {
     const tmpDate = data.startTime.slice(0, 7);
     const newData = {
@@ -36,7 +37,7 @@ export default function Schedule() {
       category: "schedule",
       isFullDay: isFullDay,
     };
-    // 初始化 Schedule 的事件数组
+    // 初始化 事件数组
     let prevData: RNType.ScheduleType[];
     try {
       prevData = [

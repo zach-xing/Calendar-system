@@ -13,6 +13,8 @@ import { useForm, Controller } from "react-hook-form";
 import DatePicker from "../../../components/DatePicker";
 import { repeatArr, remindArr } from "../../../constant";
 import dayjs from "dayjs";
+import storage from "../../../utils/storage";
+import Toast from "react-native-toast-message";
 
 /**
  * 重要日 screen
@@ -23,9 +25,51 @@ export default function ImportantDay() {
     handleSubmit,
     formState: { errors },
   } = useForm();
-  const nowDateString = dayjs(new Date()).format("YYYY-MM-DD");
+  const nowDateString = dayjs(new Date()).format("YYYY-MM-DD 00:00");
 
-  const onSubmit = (data) => console.log(data);
+  const onSubmit = async (data) => {
+    const newData = {
+      ...data,
+      category: "importantDay",
+    };
+    const dateString = newData.startTime.slice(0, 7);
+    // 初始化 事件数组
+    let prevData: RNType.ScheduleType[];
+    try {
+      prevData = [
+        ...(await storage.load({
+          key: "event",
+          id: dateString,
+        })),
+        newData,
+      ];
+    } catch (error) {
+      prevData = [newData];
+    }
+    prevData.sort(
+      (a, b) =>
+        new Date(a.startTime).getTime() - new Date(b.startTime).getTime()
+    );
+
+    storage
+      .save({
+        key: "event",
+        id: dateString,
+        data: prevData,
+      })
+      .then(() => {
+        Toast.show({
+          type: "success",
+          text1: "创建成功",
+        });
+      })
+      .catch((err) => {
+        Toast.show({
+          type: "error",
+          text1: "创建失败",
+        });
+      });
+  };
 
   return (
     <Layout style={styles.container}>

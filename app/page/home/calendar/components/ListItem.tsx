@@ -1,4 +1,4 @@
-import { Text } from "@ui-kitten/components";
+import { Icon, Text } from "@ui-kitten/components";
 import React from "react";
 import { View, StyleSheet } from "react-native";
 
@@ -18,17 +18,23 @@ export default function ListItem(info: any) {
     >
       <View style={styles.containerStyle}>
         <View style={styles.flagStyle}>
-          {data?.isFullDay ? (
-            <Text>全天</Text>
+          {data.category === "schedule" ? (
+            <>
+              {data?.isFullDay ? (
+                <Text>全天</Text>
+              ) : (
+                <View>
+                  <Text style={{ fontSize: 16, color: "black" }}>
+                    {data.startTime.slice(-5)}
+                  </Text>
+                  <Text style={{ fontSize: 12, color: "grey" }}>
+                    {data.endTime.slice(-5)}
+                  </Text>
+                </View>
+              )}
+            </>
           ) : (
-            <View>
-              <Text style={{ fontSize: 16, color: "black" }}>
-                {data.startTime.slice(-5)}
-              </Text>
-              <Text style={{ fontSize: 12, color: "grey" }}>
-                {data.endTime.slice(-5)}
-              </Text>
-            </View>
+            <Icon style={styles.icon} fill="black" name="star" />
           )}
         </View>
 
@@ -67,5 +73,9 @@ const styles = StyleSheet.create({
   },
   infoStyle: {
     width: "80%",
+  },
+  icon: {
+    width: 30,
+    height: 30,
   },
 });

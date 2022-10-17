@@ -5,10 +5,6 @@ import { List, Text } from "@ui-kitten/components";
 import ListItem from "./ListItem";
 import storage from "../../../../utils/storage";
 
-const data = new Array(8).fill({
-  title: "Item",
-});
-
 /**
  * 自定义日历组件
  */
