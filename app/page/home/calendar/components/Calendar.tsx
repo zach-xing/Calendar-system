@@ -16,13 +16,19 @@ export default function CalendarCustomComp() {
   const [selectedDay, setSelectedDay] = React.useState(
     new Date().toISOString().slice(0, 10)
   );
+  const [curEvent, setCurEvent] = React.useState([]);
 
   React.useEffect(() => {
     (async () => {
-      const data = await storage.load({ key: "event", id: "2022-10" });
-      console.log(data);
+      try {
+        const data = await storage.load({ key: "event", id: "2022-10" });
+        const arr = data.filter(
+          (v) => v.startTime.slice(0, 10) === selectedDay
+        );
+        setCurEvent(arr);
+      } catch (error) {}
     })();
-  }, []);
+  }, [selectedDay]);
 
   return (
     <>
@@ -30,8 +36,8 @@ export default function CalendarCustomComp() {
         <Calendar
           style={styles.calendarStyle}
           markedDates={{
+            "2022-10-18": { marked: true, dotColor: "red" },
             [selectedDay]: { selected: true },
-            "2022-10-18": { marked: true, dotColor: "red", activeOpacity: 0 },
           }}
           monthFormat={"yyyy-MM"}
           enableSwipeMonths={true}
@@ -46,7 +52,7 @@ export default function CalendarCustomComp() {
         <List
           style={styles.listStyle}
           contentContainerStyle={styles.listContentContainer}
-          data={data}
+          data={curEvent}
           renderItem={ListItem}
         />
       </View>

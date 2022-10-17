@@ -1,4 +1,4 @@
-import { Card, Text } from "@ui-kitten/components";
+import { Text } from "@ui-kitten/components";
 import React from "react";
 import { View, StyleSheet } from "react-native";
 
@@ -6,7 +6,7 @@ import { View, StyleSheet } from "react-native";
  * 列表渲染的 Item
  */
 export default function ListItem(info: any) {
-  // console.log(info);
+  const data = info.item;
   return (
     <View
       // appearance="filled"
@@ -18,19 +18,26 @@ export default function ListItem(info: any) {
     >
       <View style={styles.containerStyle}>
         <View style={styles.flagStyle}>
-          <Text style={{ fontSize: 16, color: "black" }}>10:00</Text>
-          <Text style={{ fontSize: 12, color: "grey" }}>15:00</Text>
+          {data?.isFullDay ? (
+            <Text>全天</Text>
+          ) : (
+            <View>
+              <Text style={{ fontSize: 16, color: "black" }}>
+                {data.startTime.slice(-5)}
+              </Text>
+              <Text style={{ fontSize: 12, color: "grey" }}>
+                {data.endTime.slice(-5)}
+              </Text>
+            </View>
+          )}
         </View>
 
         <View style={styles.dttt} />
 
         {/* 事件的信息展示 */}
         <View style={styles.infoStyle}>
-          <Text category="p1" style={{ fontWeight: "bold", color: "blue" }}>
-            Sep 20, 2021
-          </Text>
-          <Text category="h6" style={{ marginVertical: 5 }}>
-            My Dribbble Shoot
+          <Text category="h6" style={{ marginVertical: 5, color: "blue" }}>
+            {data.title}
           </Text>
           <Text numberOfLines={1}>
             Lorem Ipsum is simply dummy text of the printing and typesetting
@@ -56,7 +63,7 @@ const styles = StyleSheet.create({
     width: "1%",
     marginRight: 5,
     borderRadius: 10,
-    backgroundColor: "lightblue",
+    backgroundColor: "blue",
   },
   infoStyle: {
     width: "80%",
