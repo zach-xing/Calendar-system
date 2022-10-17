@@ -2,8 +2,9 @@ import React from "react";
 import { StyleSheet, View } from "react-native";
 import { Calendar } from "react-native-calendars";
 import { List, Text } from "@ui-kitten/components";
-import ListItem from "./ListItem";
+import ListItem from "./CalendarItem";
 import storage from "../../../../utils/storage";
+import { event, REFRESH_DATE } from "../../../../events";
 
 const schedule = { key: "schedule", color: "blue", selectedDotColor: "blue" };
 const importantDay = {
@@ -27,35 +28,40 @@ export default function CalendarCustomComp() {
 
   // 当月更改后
   React.useEffect(() => {
-    (async () => {
-      const data = await getStorageData();
-      const tmpMap = new Map();
-      data.map((v) => {
-        const dateString = v.startTime.slice(0, 10);
-        if (tmpMap.has(dateString)) {
-          tmpMap.set(dateString, { dots: [schedule, importantDay] });
-        } else {
-          v.category === "schedule"
-            ? tmpMap.set(dateString, { dots: [schedule] })
-            : tmpMap.set(dateString, { dots: [importantDay] });
-        }
-      });
-      for(const key of tmpMap.keys()) {
-        markedObj[key] = tmpMap.get(key);
-      }
-      setCurData(data);
-    })();
+    refreshData();
+    event.on(REFRESH_DATE, refreshData);
+    return () => {
+      event.off(REFRESH_DATE, refreshData);
+    };
   }, [selectedMouth]);
 
   // 当选中的day发生改变时更改
   React.useEffect(() => {
     (async () => {
-      const arr = curData.filter(
-        (v) => v.startTime.slice(0, 10) === selectedDay
-      );
+      const arr = curData.filter((v) => v.dateString === selectedDay);
       setCurEvent(arr);
     })();
   }, [curData, selectedDay]);
+
+  // 刷新数据
+  const refreshData = async () => {
+    const data = await getStorageData();
+    const tmpMap = new Map();
+    data.map((v) => {
+      const dateString = v.dateString;
+      if (tmpMap.has(dateString)) {
+        tmpMap.set(dateString, { dots: [schedule, importantDay] });
+      } else {
+        v.category === "schedule"
+          ? tmpMap.set(dateString, { dots: [schedule] })
+          : tmpMap.set(dateString, { dots: [importantDay] });
+      }
+    });
+    for (const key of tmpMap.keys()) {
+      markedObj[key] = tmpMap.get(key);
+    }
+    setCurData(data);
+  };
 
   // 从 storage 获取数据
   const getStorageData = async () => {

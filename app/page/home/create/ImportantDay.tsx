@@ -10,11 +10,13 @@ import {
   SelectItem,
 } from "@ui-kitten/components";
 import { useForm, Controller } from "react-hook-form";
+import dayjs from "dayjs";
+import Toast from "react-native-toast-message";
 import DatePicker from "../../../components/DatePicker";
 import { repeatArr, remindArr } from "../../../constant";
-import dayjs from "dayjs";
 import storage from "../../../utils/storage";
-import Toast from "react-native-toast-message";
+import { event, REFRESH_DATE } from "../../../events";
+import { sortEvent } from "../../../utils/handleDate";
 
 /**
  * 重要日 screen
@@ -30,40 +32,38 @@ export default function ImportantDay() {
   const onSubmit = async (data) => {
     const newData = {
       ...data,
+      dateString: data.dateString.slice(0, 10),
       category: "importantDay",
     };
-    const dateString = newData.startTime.slice(0, 7);
+    const tmpString = newData.dateString.slice(0, 7);
     // 初始化 事件数组
     let prevData: RNType.ScheduleType[];
     try {
       prevData = [
         ...(await storage.load({
           key: "event",
-          id: dateString,
+          id: tmpString,
         })),
         newData,
       ];
     } catch (error) {
       prevData = [newData];
     }
-    prevData.sort(
-      (a, b) =>
-        new Date(a.startTime).getTime() - new Date(b.startTime).getTime()
-    );
 
     storage
       .save({
         key: "event",
-        id: dateString,
-        data: prevData,
+        id: tmpString,
+        data: sortEvent(prevData),
       })
       .then(() => {
+        event.emit(REFRESH_DATE, undefined);
         Toast.show({
           type: "success",
           text1: "创建成功",
         });
       })
-      .catch((err) => {
+      .catch(() => {
         Toast.show({
           type: "error",
           text1: "创建失败",
@@ -97,7 +97,7 @@ export default function ImportantDay() {
             日期
           </Text>
           <Controller
-            name="startTime"
+            name="dateString"
             control={control}
             rules={{
               required: true,

@@ -8,9 +8,9 @@ import { remindArr } from "../../../../constant";
  */
 export default function ListItem(info: any) {
   const data = info.item;
+
   return (
     <View
-      // appearance="filled"
       style={{
         marginVertical: 5,
         marginHorizontal: 3,
@@ -26,10 +26,14 @@ export default function ListItem(info: any) {
               ) : (
                 <View>
                   <Text style={{ fontSize: 16, color: "black" }}>
-                    {data.startTime.slice(-5)}
+                    {data.dateString === data.startTime.slice(0, 10)
+                      ? data.startTime.slice(-5)
+                      : "结束"}
                   </Text>
                   <Text style={{ fontSize: 12, color: "grey" }}>
-                    {data.endTime.slice(-5)}
+                    {data.dateString === data.endTime.slice(0, 10)
+                      ? data.endTime.slice(-5)
+                      : "开始"}
                   </Text>
                 </View>
               )}

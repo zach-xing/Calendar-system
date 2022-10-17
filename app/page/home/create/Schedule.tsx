@@ -14,8 +14,10 @@ import { useForm, Controller } from "react-hook-form";
 import dayjs from "dayjs";
 import Toast from "react-native-toast-message";
 import DatePicker from "../../../components/DatePicker";
-import { repeatArr, remindArr } from "../../../constant";
+import { remindArr } from "../../../constant";
 import storage from "../../../utils/storage";
+import { handleDateGap, sortEvent } from "../../../utils/handleDate";
+import { event, REFRESH_DATE } from "../../../events";
 
 /**
  * 日程 screen
@@ -31,12 +33,15 @@ export default function Schedule() {
 
   // schedule 提交
   const onSubmit = async (data) => {
+    // storage.clearMapForKey("event");
     const tmpDate = data.startTime.slice(0, 7);
     const newData = {
       ...data,
       category: "schedule",
       isFullDay: isFullDay,
+      dateString: data.startTime.slice(0, 10),
     };
+    const resArr = handleDateGap(newData);
     // 初始化 事件数组
     let prevData: RNType.ScheduleType[];
     try {
@@ -45,23 +50,20 @@ export default function Schedule() {
           key: "event",
           id: tmpDate,
         })),
-        newData,
+        ...resArr,
       ];
     } catch (error) {
-      prevData = [newData];
+      prevData = [...resArr];
     }
-    prevData.sort(
-      (a, b) =>
-        new Date(a.startTime).getTime() - new Date(b.startTime).getTime()
-    );
 
     storage
       .save({
         key: "event",
         id: tmpDate,
-        data: prevData,
+        data: sortEvent(prevData),
       })
       .then(() => {
+        event.emit(REFRESH_DATE, undefined);
         Toast.show({
           type: "success",
           text1: "创建成功",
@@ -158,28 +160,6 @@ export default function Schedule() {
             </>
           )}
         </View>
-
-        <Controller
-          name="repeat"
-          control={control}
-          rules={{
-            required: true,
-          }}
-          defaultValue={0}
-          render={({ field: { onChange, value } }) => (
-            <Select
-              value={repeatArr[value].value}
-              label="重复"
-              onSelect={(index: any) => {
-                onChange(index.row);
-              }}
-            >
-              {repeatArr.map((item) => (
-                <SelectItem key={item.id} title={item.value} />
-              ))}
-            </Select>
-          )}
-        />
 
         <Controller
           name="remind"

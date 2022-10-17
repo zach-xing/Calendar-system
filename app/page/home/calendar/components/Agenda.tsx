@@ -6,20 +6,9 @@ import {
   AgendaEntry,
   AgendaSchedule,
 } from "react-native-calendars";
-
-const renderItem = (reservation: AgendaEntry, isFirst: boolean) => {
-  const fontSize = isFirst ? 16 : 14;
-  const color = isFirst ? "black" : "#43515c";
-
-  return (
-    <TouchableOpacity
-      style={[styles.item, { height: reservation.height }]}
-      onPress={() => Alert.alert(reservation.name)}
-    >
-      <Text style={{ fontSize, color }}>{reservation.name}</Text>
-    </TouchableOpacity>
-  );
-};
+import { Card } from "@ui-kitten/components";
+import AgendaItem from "./AgendaItem";
+import storage from "../../../../utils/storage";
 
 const renderEmptyDate = () => {
   return (
@@ -30,32 +19,23 @@ const renderEmptyDate = () => {
 };
 
 export default function AgendaComp() {
+  const dateString = new Date().toISOString().slice(0, 10);
   const [items, setItems] = React.useState<AgendaSchedule>(undefined);
 
-  const loadItems = (day: DateData) => {
-    const tmpItems = items || [];
-    for (let i = -15; i < 85; i++) {
-      const time = day.timestamp + i * 24 * 60 * 60 * 1000;
-      const strTime = timeToString(time);
+  const loadMonthItems = async (day: DateData) => {
+    const storageArr = await getStorageData(day.dateString.slice(0, 7));
 
-      if (!tmpItems[strTime]) {
-        tmpItems[strTime] = [];
-
-        const numItems = Math.floor(Math.random() * 3 + 1);
-        for (let j = 0; j < numItems; j++) {
-          tmpItems[strTime].push({
-            name: "Item for " + strTime + " #" + j,
-            height: Math.max(50, Math.floor(Math.random() * 150)),
-            day: strTime,
-          });
-        }
+    console.log(storageArr);
+    const newItems = {};
+    storageArr.forEach((item) => {
+      const tmp = item.startTime.slice(0, 10);
+      if (newItems.hasOwnProperty(tmp)) {
+        newItems[tmp].push({ ...item });
+      } else {
+        newItems[tmp] = [];
       }
-    }
-
-    const newItems: AgendaSchedule = {};
-    Object.keys(tmpItems).forEach((key) => {
-      newItems[key] = tmpItems[key];
     });
+    
     setItems(newItems);
   };
 
@@ -63,49 +43,32 @@ export default function AgendaComp() {
     return r1.name !== r2.name;
   };
 
-  const timeToString = (time: number) => {
-    const date = new Date(time);
-    return date.toISOString().split("T")[0];
+  const getStorageData = async (month: string) => {
+    try {
+      const data = await storage.load({
+        key: "event",
+        id: month,
+      });
+      return data;
+    } catch (error) {
+      return [];
+    }
   };
 
   return (
     <Agenda
       items={items}
-      loadItemsForMonth={loadItems}
-      selected={"2022-10-16"}
-      renderItem={renderItem}
+      loadItemsForMonth={loadMonthItems}
+      selected={dateString}
+      renderItem={AgendaItem}
       renderEmptyDate={renderEmptyDate}
       rowHasChanged={rowHasChanged}
       showClosingKnob={true}
-      // markingType={'period'}
-      // markedDates={{
-      //    '2017-05-08': {textColor: '#43515c'},
-      //    '2017-05-09': {textColor: '#43515c'},
-      //    '2017-05-14': {startingDay: true, endingDay: true, color: 'blue'},
-      //    '2017-05-21': {startingDay: true, color: 'blue'},
-      //    '2017-05-22': {endingDay: true, color: 'gray'},
-      //    '2017-05-24': {startingDay: true, color: 'gray'},
-      //    '2017-05-25': {color: 'gray'},
-      //    '2017-05-26': {endingDay: true, color: 'gray'}}}
-      // monthFormat={'yyyy'}
-      // theme={{calendarBackground: 'red', agendaKnobColor: 'green'}}
-      //renderDay={(day, item) => (<Text>{day ? day.day: 'item'}</Text>)}
-      // hideExtraDays={false}
-      // showOnlySelectedDayItems
-      // reservationsKeyExtractor={this.reservationsKeyExtractor}
     />
   );
 }
 
 const styles = StyleSheet.create({
-  item: {
-    backgroundColor: "white",
-    flex: 1,
-    borderRadius: 5,
-    padding: 10,
-    marginRight: 10,
-    marginTop: 17,
-  },
   emptyDate: {
     height: 15,
     flex: 1,
