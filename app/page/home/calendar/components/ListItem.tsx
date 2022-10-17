@@ -1,6 +1,7 @@
 import { Icon, Text } from "@ui-kitten/components";
 import React from "react";
 import { View, StyleSheet } from "react-native";
+import { remindArr } from "../../../../constant";
 
 /**
  * 列表渲染的 Item
@@ -34,20 +35,37 @@ export default function ListItem(info: any) {
               )}
             </>
           ) : (
-            <Icon style={styles.icon} fill="black" name="star" />
+            <Icon style={styles.icon} fill="green" name="star" />
           )}
         </View>
 
-        <View style={styles.dttt} />
+        <View
+          style={{
+            ...styles.dttt,
+            backgroundColor: data.category === "schedule" ? "blue" : "green",
+          }}
+        />
 
         {/* 事件的信息展示 */}
         <View style={styles.infoStyle}>
-          <Text category="h6" style={{ marginVertical: 5, color: "blue" }}>
+          <Text
+            category="h6"
+            style={{
+              marginVertical: 5,
+              color: data.category === "schedule" ? "blue" : "green",
+            }}
+          >
             {data.title}
           </Text>
-          <Text numberOfLines={1}>
-            Lorem Ipsum is simply dummy text of the printing and typesetting
-          </Text>
+          {data?.desc ? (
+            <Text numberOfLines={1} style={styles.descStyle}>
+              {data?.desc}
+            </Text>
+          ) : (
+            <Text numberOfLines={1} style={styles.descStyle}>
+              提醒: {remindArr[data.remind].value}
+            </Text>
+          )}
         </View>
       </View>
     </View>
@@ -74,8 +92,11 @@ const styles = StyleSheet.create({
   infoStyle: {
     width: "80%",
   },
+  descStyle: {
+    fontSize: 14,
+  },
   icon: {
-    width: 30,
-    height: 30,
+    width: 26,
+    height: 26,
   },
 });
