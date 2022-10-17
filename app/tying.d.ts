@@ -25,7 +25,7 @@ declare namespace RNType {
   type ImportantDayType = {
     category: "importantDay"; // importantDay
     title: string;
-    dataString: string;
+    startTime: string;
     repeat: number; // 重复提醒，eg：不重复
     remind: Array<string>; // 提醒
     desc?: string;
