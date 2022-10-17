@@ -25,17 +25,15 @@ export default function AgendaComp() {
   const loadMonthItems = async (day: DateData) => {
     const storageArr = await getStorageData(day.dateString.slice(0, 7));
 
-    console.log(storageArr);
     const newItems = {};
     storageArr.forEach((item) => {
-      const tmp = item.startTime.slice(0, 10);
-      if (newItems.hasOwnProperty(tmp)) {
-        newItems[tmp].push({ ...item });
+      if (newItems.hasOwnProperty(item.dateString)) {
+        newItems[item.dateString].push({ ...item });
       } else {
-        newItems[tmp] = [];
+        newItems[item.dateString] = [{ ...item }];
       }
     });
-    
+    console.log(newItems);
     setItems(newItems);
   };
 
