@@ -12,7 +12,6 @@
     "dayjs": "^1.11.5",
     "expo": "^46.0.0",
     "react": "18.0.0",
-    "react-datepicker": "^4.8.0",
     "react-dom": "18.0.0",
     "react-hook-form": "^7.37.0",
     "react-native": "0.69.6",
@@ -25,7 +24,8 @@
     "react-native-svg": "12.3.0",
     "react-native-tab-view": "^3.2.1",
     "react-native-toast-message": "^2.1.5",
-    "react-native-web": "~0.18.7"
+    "react-native-web": "~0.18.7",
+    "uuid": "^9.0.0"
   },
   "devDependencies": {
     "@babel/core": "^7.18.6",

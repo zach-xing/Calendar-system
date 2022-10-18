@@ -1,6 +1,6 @@
 import { Icon, Text } from "@ui-kitten/components";
 import React from "react";
-import { View, StyleSheet } from "react-native";
+import { View, StyleSheet, TouchableOpacity } from "react-native";
 import { remindArr } from "../../../../constant";
 
 /**
@@ -10,7 +10,7 @@ export default function ListItem(info: any) {
   const data = info.item;
 
   return (
-    <View
+    <TouchableOpacity
       style={{
         marginVertical: 5,
         marginHorizontal: 3,
@@ -72,7 +72,7 @@ export default function ListItem(info: any) {
           )}
         </View>
       </View>
-    </View>
+    </TouchableOpacity>
   );
 }
 

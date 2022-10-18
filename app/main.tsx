@@ -6,6 +6,7 @@ import Toast from "react-native-toast-message";
 import HomeScreen from "./page/home";
 import SettingScreen from "./page/setting";
 import LoginOrRegisterScreen from "./page/login";
+import ShowScreen from "./page/show";
 import storage from "./utils/storage";
 
 const Stack = createNativeStackNavigator();
@@ -41,7 +42,7 @@ export default function Main() {
           />
           <Stack.Screen
             name="show"
-            component={HomeScreen}
+            component={ShowScreen}
             options={() => ({
               header: () => null,
             })}

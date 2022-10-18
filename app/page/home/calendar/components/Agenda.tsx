@@ -33,7 +33,6 @@ export default function AgendaComp() {
         newItems[item.dateString] = [{ ...item }];
       }
     });
-    console.log(newItems);
     setItems(newItems);
   };
 
