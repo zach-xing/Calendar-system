@@ -26,7 +26,7 @@ TypeScript is a superset of JavaScript which gives you static types and powerful
 - react-hook-form
 - react-native-modal-datetime-picker
 - dayjs
-- uuid
+- react-native-uuid
 
 ## 🚀 How to use
 

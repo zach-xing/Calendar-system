@@ -1,18 +1,18 @@
 import { Alert, StyleSheet, Text, TouchableOpacity } from "react-native";
 import React from "react";
 import dayjs from "dayjs";
+import TouchableOpacityWithRoute from "../../../../components/TouchableOpacityWithRoute";
 
 /**
  * Agenda 列表渲染的 Item
  */
 export default function AgendaItem(data, isFirst: boolean) {
   const fontSize = isFirst ? 16 : 14;
-  const color = isFirst ? "black" : "#43515c";
 
   return (
-    <TouchableOpacity
+    <TouchableOpacityWithRoute
       style={[styles.item]}
-      onPress={() => Alert.alert(data.title)}
+      to={{ screen: "show", params: data }}
     >
       <Text>{data.dateString}</Text>
       <Text
@@ -34,7 +34,7 @@ export default function AgendaItem(data, isFirst: boolean) {
           )}
         </>
       )}
-    </TouchableOpacity>
+    </TouchableOpacityWithRoute>
   );
 }
 

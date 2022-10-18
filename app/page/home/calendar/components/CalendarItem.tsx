@@ -1,6 +1,7 @@
 import { Icon, Text } from "@ui-kitten/components";
 import React from "react";
 import { View, StyleSheet, TouchableOpacity } from "react-native";
+import TouchableOpacityWithRoute from "../../../../components/TouchableOpacityWithRoute";
 import { remindArr } from "../../../../constant";
 
 /**
@@ -10,12 +11,13 @@ export default function ListItem(info: any) {
   const data = info.item;
 
   return (
-    <TouchableOpacity
+    <TouchableOpacityWithRoute
       style={{
         marginVertical: 5,
         marginHorizontal: 3,
         padding: 5,
       }}
+      to={{ screen: "show", params: data }}
     >
       <View style={styles.containerStyle}>
         <View style={styles.flagStyle}>
@@ -72,7 +74,7 @@ export default function ListItem(info: any) {
           )}
         </View>
       </View>
-    </TouchableOpacity>
+    </TouchableOpacityWithRoute>
   );
 }
 
