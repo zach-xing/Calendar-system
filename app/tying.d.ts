@@ -12,6 +12,7 @@ declare namespace RNType {
    * 日程 type
    */
   type ScheduleType = {
+    id: string;
     category: "schedule"; // schedule
     title: string; // 标题
     isFullDay: boolean; // 是否全天
@@ -23,6 +24,7 @@ declare namespace RNType {
   };
 
   type ImportantDayType = {
+    id: string;
     category: "importantDay"; // importantDay
     title: string;
     startTime: string;

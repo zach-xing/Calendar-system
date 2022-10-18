@@ -1,4 +1,5 @@
 import dayjs from "dayjs";
+import uuid from "react-native-uuid";
 
 /**
  * 处理两个日期之间的间隔
@@ -18,12 +19,14 @@ export function handleDateGap(data: RNType.ScheduleType) {
     for (; start.isBefore(endDateString); start = start.add(1, "day")) {
       arr.push({
         ...data,
+        id: "" + uuid.v4(),
         isFullDay: true,
         dateString: start.format("YYYY-MM-DD"),
       });
     }
     arr.push({
       ...data,
+      id: "" + uuid.v4(),
       isFullDay: false,
       dateString: start.format("YYYY-MM-DD"),
     });

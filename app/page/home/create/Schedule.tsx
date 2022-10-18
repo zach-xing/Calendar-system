@@ -13,6 +13,7 @@ import {
 import { useForm, Controller } from "react-hook-form";
 import dayjs from "dayjs";
 import Toast from "react-native-toast-message";
+import uuid from "react-native-uuid";
 import DatePicker from "../../../components/DatePicker";
 import { remindArr } from "../../../constant";
 import storage from "../../../utils/storage";
@@ -35,8 +36,10 @@ export default function Schedule() {
   const onSubmit = async (data) => {
     // storage.clearMapForKey("event");
     const tmpDate = data.startTime.slice(0, 7);
-    const newData = {
+    
+    const newData = { 
       ...data,
+      id: "" + uuid.v4(),
       category: "schedule",
       isFullDay: isFullDay,
       dateString: data.startTime.slice(0, 10),

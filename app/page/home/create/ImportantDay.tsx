@@ -12,6 +12,7 @@ import {
 import { useForm, Controller } from "react-hook-form";
 import dayjs from "dayjs";
 import Toast from "react-native-toast-message";
+import uuid from "react-native-uuid";
 import DatePicker from "../../../components/DatePicker";
 import { repeatArr, remindArr } from "../../../constant";
 import storage from "../../../utils/storage";
@@ -32,6 +33,7 @@ export default function ImportantDay() {
   const onSubmit = async (data) => {
     const newData = {
       ...data,
+      id: "" + uuid.v4(),
       dateString: data.dateString.slice(0, 10),
       category: "importantDay",
     };
