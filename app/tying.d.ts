@@ -19,7 +19,7 @@ declare namespace RNType {
     dateString: string;
     startTime: string; // eg： '2022-10-09 10:00'
     endTime: string; // eg： '2022-10-09 15:00'
-    remind: Array<string>; // 提醒
+    remind: number; // 提醒
     desc?: string;
   };
 
@@ -27,9 +27,9 @@ declare namespace RNType {
     id: string;
     category: "importantDay"; // importantDay
     title: string;
-    startTime: string;
+    dateString: string;
     repeat: number; // 重复提醒，eg：不重复
-    remind: Array<string>; // 提醒
+    remind: number; // 提醒
     desc?: string;
   };
 }
