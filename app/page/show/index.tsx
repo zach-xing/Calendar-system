@@ -8,9 +8,12 @@ import {
   Text,
   Divider,
   Card,
+  ButtonGroup,
+  Modal,
 } from "@ui-kitten/components";
 import InfoShow from "./components/InfoShow";
 import { remindArr, repeatArr } from "../../constant";
+import ScheduleEdit from "../../components/Edit/ScheduleEdit";
 
 /**
  * 显示某个事件详情
@@ -20,7 +23,12 @@ export default function ShowScreen() {
   const data: RNType.ScheduleType | RNType.ImportantDayType =
     route.params as any;
   const navigation = useNavigation();
-  console.log(data);
+  const [visible, setVisible] = React.useState(false);
+  // console.log(data);
+
+  const openEditModal = () => {
+    setVisible(true);
+  };
 
   return (
     <Layout style={styles.container}>
@@ -77,6 +85,17 @@ export default function ShowScreen() {
           </Card>
         )}
       </View>
+
+      <ButtonGroup style={styles.buttonGroup} appearance="ghost">
+        <Button onPress={openEditModal}>编辑</Button>
+        <Button>删除</Button>
+      </ButtonGroup>
+
+      <Modal visible={visible} onBackdropPress={() => setVisible(false)}>
+        {data.category === "schedule" ? (
+          <ScheduleEdit data={data as RNType.ScheduleType} />
+        ) : null}
+      </Modal>
     </Layout>
   );
 }
@@ -100,5 +119,14 @@ const styles = StyleSheet.create({
   listStyle: {
     display: "flex",
     flexDirection: "row",
+  },
+  buttonGroup: {
+    width: "100%",
+    position: "absolute",
+    bottom: 0,
+    paddingHorizontal: 20,
+    paddingBottom: 10,
+    display: "flex",
+    justifyContent: "center",
   },
 });
