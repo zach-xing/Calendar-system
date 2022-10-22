@@ -5,7 +5,7 @@ import uuid from "react-native-uuid";
  * 处理两个日期之间的间隔
  * startTime 和 endTime 就比如: "2022-10-22 10:00")
  */
-export function handleDateGap(data: RNType.ScheduleType) {
+export function handleDateGap(data: RNType.ScheduleType, id: string) {
   if (data.isFullDay) {
     return [data];
   }
@@ -19,14 +19,14 @@ export function handleDateGap(data: RNType.ScheduleType) {
     for (; start.isBefore(endDateString); start = start.add(1, "day")) {
       arr.push({
         ...data,
-        id: "" + uuid.v4(),
+        id: id,
         isFullDay: true,
         dateString: start.format("YYYY-MM-DD"),
       });
     }
     arr.push({
       ...data,
-      id: "" + uuid.v4(),
+      id: id,
       isFullDay: false,
       dateString: start.format("YYYY-MM-DD"),
     });
@@ -47,4 +47,11 @@ export function sortEvent(arr) {
     return new Date(a.startTime).getTime() - new Date(b.startTime).getTime();
   });
   return arr2.concat(arr1);
+}
+
+/**
+ * 删除 arr 中指定 id 的事件
+ */
+export function removeEvent(id: string, arr: Array<any>) {
+  
 }

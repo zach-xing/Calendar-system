@@ -13,6 +13,7 @@ import { Controller, useForm } from "react-hook-form";
 import dayjs from "dayjs";
 import { remindArr } from "../../constant";
 import DatePicker from "../DatePicker";
+import storage from "../../utils/storage";
 
 interface IProps {
   data: RNType.ScheduleType;
@@ -39,14 +40,33 @@ export default function ScheduleEdit(props: IProps) {
   const [isFullDay, setIsFullDay] = React.useState(false);
   const nowDateString = dayjs(new Date()).format("YYYY-MM-DD HH:mm");
 
-  const onSubmit = (newData) => {
-    console.log({
-      // ...data,
-      dateString: data.dateString, // 这里得变一下
-      category: 'schedule',
-      id: data.id,
-      ...newData,
-    });
+  const onSubmit = async (newData) => {
+    const list = await getStorageData();
+    const idx = list.findIndex(
+      (el) => el.id === data.id && el.dateString === data.dateString
+    );
+    console.log(idx);
+    console.log(list[idx]);
+    // console.log({
+    //   // ...data,
+    //   dateString: data.dateString, // 这里得变一下
+    //   category: "schedule",
+    //   id: data.id,
+    //   ...newData,
+    // });
+  };
+
+  // 从 storage 获取数据，返回值长度肯定大于等于 1
+  const getStorageData = async () => {
+    try {
+      const list = await storage.load({
+        key: "event",
+        id: data.dateString.slice(0, 7),
+      });
+      return list;
+    } catch (error) {
+      return [];
+    }
   };
 
   return (

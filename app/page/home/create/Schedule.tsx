@@ -36,15 +36,15 @@ export default function Schedule() {
   const onSubmit = async (data) => {
     // storage.clearMapForKey("event");
     const tmpDate = data.startTime.slice(0, 7);
-    
-    const newData = { 
+    const newId = "" + uuid.v4();
+    const newData = {
       ...data,
-      id: "" + uuid.v4(),
+      id: newId,
       category: "schedule",
       isFullDay: isFullDay,
       dateString: data.startTime.slice(0, 10),
     };
-    const resArr = handleDateGap(newData);
+    const resArr = handleDateGap(newData, newId);
     // 初始化 事件数组
     let prevData: RNType.ScheduleType[];
     try {
