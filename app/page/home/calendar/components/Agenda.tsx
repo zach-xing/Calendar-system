@@ -1,14 +1,9 @@
-import { View, Text, TouchableOpacity, Alert, StyleSheet } from "react-native";
+import { View, Text, StyleSheet } from "react-native";
 import React from "react";
-import {
-  Agenda,
-  DateData,
-  AgendaEntry,
-  AgendaSchedule,
-} from "react-native-calendars";
-import { Card } from "@ui-kitten/components";
+import { Agenda, DateData, AgendaSchedule } from "react-native-calendars";
 import AgendaItem from "./AgendaItem";
 import storage from "../../../../utils/storage";
+import { event, REFRESH_DATE } from "../../../../events";
 
 const renderEmptyDate = () => {
   return (
@@ -18,9 +13,15 @@ const renderEmptyDate = () => {
   );
 };
 
+
+/**
+ * 事件视图
+ */
 export default function AgendaComp() {
-  const dateString = new Date().toISOString().slice(0, 10);
   const [items, setItems] = React.useState<AgendaSchedule>(undefined);
+  const [selectedDateString, setSelectedDateString] = React.useState(
+    new Date().toISOString().slice(0, 10)
+  );
 
   const loadMonthItems = async (day: DateData) => {
     const storageArr = await getStorageData(day.dateString.slice(0, 7));
@@ -36,8 +37,8 @@ export default function AgendaComp() {
     setItems(newItems);
   };
 
-  const rowHasChanged = (r1: AgendaEntry, r2: AgendaEntry) => {
-    return r1.name !== r2.name;
+  const rowHasChanged = (r1: any, r2: any) => {
+    return r1.id !== r2.id;
   };
 
   const getStorageData = async (month: string) => {
@@ -56,7 +57,7 @@ export default function AgendaComp() {
     <Agenda
       items={items}
       loadItemsForMonth={loadMonthItems}
-      selected={dateString}
+      selected={selectedDateString}
       renderItem={AgendaItem}
       renderEmptyDate={renderEmptyDate}
       rowHasChanged={rowHasChanged}

@@ -17,7 +17,7 @@ export default function CalendarPage() {
       const data = await storage.load({ key: "settings" });
       setView(data.calendarView);
     })();
-  }, [])
+  }, []);
 
   React.useEffect(() => {
     event.on(CHANGE_VIEW, changeView);

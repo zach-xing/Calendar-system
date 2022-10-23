@@ -45,8 +45,6 @@ export default function CalendarCustomComp() {
 
   // 刷新数据
   const refreshData = async () => {
-    console.log("refreshData");
-
     const data = await getStorageData();
     const tmpMap = new Map();
     data.map((v) => {
