@@ -2,17 +2,44 @@ import { View, StyleSheet, TouchableWithoutFeedback } from "react-native";
 import React from "react";
 import { Button, Icon, Input, Layout, Text } from "@ui-kitten/components";
 import { Controller, useForm } from "react-hook-form";
+import Toast from "react-native-toast-message";
+import { useLinkTo } from "@react-navigation/native";
+import { login } from "../../data/user";
+import storage from "../../utils/storage";
 
 /**
  * 登录 Screen
  */
 export default function Login({ navigation }) {
+  const linkTo = useLinkTo();
   const {
     control,
     handleSubmit,
     formState: { errors },
   } = useForm();
-  const onSubmit = (data) => console.log(data);
+  const onSubmit = async (data) => {
+    try {
+      const info = await login(data);
+      console.log(info);
+      storage
+        .save({
+          key: "user",
+          data: { token: info.token },
+        })
+        .then(() => {
+          linkTo("/home");
+          Toast.show({
+            type: "success",
+            text1: "登录成功",
+          });
+        });
+    } catch (error) {
+      Toast.show({
+        type: "error",
+        text1: "登录失败",
+      });
+    }
+  };
 
   const [secureTextEntry, setSecureTextEntry] = React.useState(true);
 

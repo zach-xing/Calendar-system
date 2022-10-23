@@ -9,6 +9,7 @@
     "@react-navigation/native-stack": "^6.9.0",
     "@ui-kitten/components": "^5.1.2",
     "@ui-kitten/eva-icons": "^5.1.2",
+    "axios": "^1.1.3",
     "dayjs": "^1.11.5",
     "expo": "^46.0.0",
     "react": "18.0.0",
