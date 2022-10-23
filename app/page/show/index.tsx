@@ -18,6 +18,7 @@ import ScheduleEdit from "../../components/Edit/ScheduleEdit";
 import { removeEventById } from "../../utils/handleDate";
 import storage from "../../utils/storage";
 import { event, REFRESH_DATE } from "../../events";
+import ImportantDayEdit from "../../components/Edit/ImportantDayEdit";
 
 /**
  * 显示某个事件详情
@@ -152,7 +153,12 @@ export default function ShowScreen() {
             data={data as RNType.ScheduleType}
             goBack={() => navigation.goBack()}
           />
-        ) : null}
+        ) : (
+          <ImportantDayEdit
+            data={data as RNType.ImportantDayType}
+            goBack={() => navigation.goBack()}
+          />
+        )}
       </Modal>
     </Layout>
   );
