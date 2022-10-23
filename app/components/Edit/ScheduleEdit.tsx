@@ -16,7 +16,11 @@ import { useNavigation } from "@react-navigation/native";
 import { remindArr } from "../../constant";
 import DatePicker from "../DatePicker";
 import storage from "../../utils/storage";
-import { handleDateGap, removeEvent, sortEvent } from "../../utils/handleDate";
+import {
+  handleDateGap,
+  removeEventById,
+  sortEvent,
+} from "../../utils/handleDate";
 import { event, REFRESH_DATE } from "../../events";
 
 interface IProps {
@@ -47,7 +51,7 @@ export default function ScheduleEdit(props: IProps) {
 
   const onSubmit = async (newData) => {
     const list = await getStorageData();
-    const removedArr = removeEvent(data.id, list);
+    const removedArr = removeEventById(data.id, list);
     console.log(newData);
 
     const arr = handleDateGap(

@@ -12,7 +12,6 @@ const importantDay = {
   color: "green",
   selectedDotColor: "green",
 };
-const markedObj = {};
 
 /**
  * 自定义日历组件
@@ -25,6 +24,7 @@ export default function CalendarCustomComp() {
   );
   const [curData, setCurData] = React.useState([]); // 当前“月”的所有数据
   const [curEvent, setCurEvent] = React.useState([]); // 当前选中“日”的数据
+  const [markedObj, setMarkedObj] = React.useState({});
 
   // 当月更改后
   React.useEffect(() => {
@@ -45,6 +45,8 @@ export default function CalendarCustomComp() {
 
   // 刷新数据
   const refreshData = async () => {
+    console.log("refreshData");
+
     const data = await getStorageData();
     const tmpMap = new Map();
     data.map((v) => {
@@ -57,10 +59,12 @@ export default function CalendarCustomComp() {
           : tmpMap.set(dateString, { dots: [importantDay] });
       }
     });
+    const obj = {};
     for (const key of tmpMap.keys()) {
-      markedObj[key] = tmpMap.get(key);
+      obj[key] = tmpMap.get(key);
     }
-    setCurData(data);
+    setMarkedObj(obj);
+    setCurData([...data]);
   };
 
   // 从 storage 获取数据
