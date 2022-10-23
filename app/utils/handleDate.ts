@@ -53,5 +53,5 @@ export function sortEvent(arr) {
  * 删除 arr 中指定 id 的事件
  */
 export function removeEvent(id: string, arr: Array<any>) {
-  
+  return arr.filter((el) => el.id !== id);
 }

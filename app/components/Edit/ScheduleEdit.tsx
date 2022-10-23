@@ -11,12 +11,17 @@ import {
 } from "@ui-kitten/components";
 import { Controller, useForm } from "react-hook-form";
 import dayjs from "dayjs";
+import Toast from "react-native-toast-message";
+import { useNavigation } from "@react-navigation/native";
 import { remindArr } from "../../constant";
 import DatePicker from "../DatePicker";
 import storage from "../../utils/storage";
+import { handleDateGap, removeEvent, sortEvent } from "../../utils/handleDate";
+import { event, REFRESH_DATE } from "../../events";
 
 interface IProps {
   data: RNType.ScheduleType;
+  goBack: Function;
 }
 
 /**
@@ -42,18 +47,39 @@ export default function ScheduleEdit(props: IProps) {
 
   const onSubmit = async (newData) => {
     const list = await getStorageData();
-    const idx = list.findIndex(
-      (el) => el.id === data.id && el.dateString === data.dateString
+    const removedArr = removeEvent(data.id, list);
+    console.log(newData);
+
+    const arr = handleDateGap(
+      {
+        category: "schedule",
+        id: data.id,
+        isFullDay: isFullDay,
+        dateString: data.startTime.slice(0, 10),
+        ...newData,
+      },
+      data.id
     );
-    console.log(idx);
-    console.log(list[idx]);
-    // console.log({
-    //   // ...data,
-    //   dateString: data.dateString, // 这里得变一下
-    //   category: "schedule",
-    //   id: data.id,
-    //   ...newData,
-    // });
+    storage
+      .save({
+        key: "event",
+        id: newData.startTime.slice(0, 7),
+        data: sortEvent([...arr, ...removedArr]),
+      })
+      .then(() => {
+        event.emit(REFRESH_DATE, undefined);
+        Toast.show({
+          type: "success",
+          text1: "修改成功",
+        });
+        props.goBack();
+      })
+      .catch((err) => {
+        Toast.show({
+          type: "error",
+          text1: "修改失败",
+        });
+      });
   };
 
   // 从 storage 获取数据，返回值长度肯定大于等于 1

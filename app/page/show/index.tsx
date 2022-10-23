@@ -93,7 +93,10 @@ export default function ShowScreen() {
 
       <Modal visible={visible} onBackdropPress={() => setVisible(false)}>
         {data.category === "schedule" ? (
-          <ScheduleEdit data={data as RNType.ScheduleType} />
+          <ScheduleEdit
+            data={data as RNType.ScheduleType}
+            goBack={() => navigation.goBack()}
+          />
         ) : null}
       </Modal>
     </Layout>
