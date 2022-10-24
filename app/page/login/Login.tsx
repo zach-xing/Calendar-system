@@ -20,11 +20,10 @@ export default function Login({ navigation }) {
   const onSubmit = async (data) => {
     try {
       const info = await login(data);
-      console.log(info);
       storage
         .save({
           key: "user",
-          data: { token: info.token },
+          data: info,
         })
         .then(() => {
           linkTo("/home");

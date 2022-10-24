@@ -3,6 +3,7 @@ import { Image, StyleSheet, View } from "react-native";
 import { Icon, Layout, Menu, MenuItem, Text } from "@ui-kitten/components";
 import { useLinkTo } from "@react-navigation/native";
 import storage from "../../../utils/storage";
+import Toast from "react-native-toast-message";
 
 const ForwardIcon = () => (
   <Icon name="chevron-right" style={{ width: 24, height: 24 }} fill="black" />
@@ -13,19 +14,36 @@ const ForwardIcon = () => (
  */
 export default function Person() {
   const linkTo = useLinkTo();
+  const [isLogin, setIsLogin] = React.useState(false);
+  const [user, setUser] = React.useState<RNType.User>(undefined);
 
   React.useEffect(() => {
     storage
       .load({
-        key: "login",
+        key: "user",
       })
       .then((res) => {
-        console.log("is login true");
+        setIsLogin(true);
+        setUser(res);
       })
-      .catch((err) => {
-        console.log("error, login false");
+      .catch(() => {
+        Toast.show({
+          type: "error",
+          text1: "登录失效",
+        });
       });
   }, []);
+
+  const onPressUserName = () => {
+    if (!isLogin) {
+      linkTo("/login-or-register");
+    }
+  };
+
+  // 退出登录
+  const pressLogout = () => {
+    // TODO:退出登录功能
+  }
 
   return (
     <Layout
@@ -40,12 +58,8 @@ export default function Person() {
           style={styles.avatar}
           source={require("../../../assets/avatar.png")}
         />
-        <Text
-          category="h5"
-          style={{ marginTop: 5 }}
-          onPress={() => linkTo("/login-or-register")}
-        >
-          未登录
+        <Text category="h5" style={{ marginTop: 5 }} onPress={onPressUserName}>
+          {isLogin ? user?.name : "未登录"}
         </Text>
       </View>
 
@@ -84,6 +98,19 @@ export default function Person() {
               />
             }
           />
+          {isLogin && (
+            <MenuItem
+              title="退出登录"
+              accessoryLeft={
+                <Icon
+                  name="alert-triangle-outline"
+                  style={{ width: 24, height: 24 }}
+                  fill="red"
+                />
+              }
+              onPress={pressLogout}
+            />
+          )}
         </Menu>
       </View>
     </Layout>

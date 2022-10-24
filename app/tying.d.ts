@@ -32,4 +32,12 @@ declare namespace RNType {
     remind: number; // 提醒
     desc?: string;
   };
+
+  /**
+   * 用户信息
+   */
+  type User = {
+    name: string;
+    token: string;
+  }
 }
