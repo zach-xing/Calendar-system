@@ -1,0 +1,26 @@
+.root {
+  overflow: hidden;
+}
+
+.header {
+  height: 64px;
+  background-color: white;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  .logo {
+    width: 50px;
+  }
+}
+
+.body {
+  display: flex;
+  height: calc(100vh - 64px);
+  .sider {
+    background-color: beige;
+  }
+
+  .content {
+    background-color: pink;
+  }
+}

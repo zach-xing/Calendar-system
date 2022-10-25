@@ -6,5 +6,5 @@
 
 - React
 - Ant design
-- less
+- scss
 - react-router-dom
