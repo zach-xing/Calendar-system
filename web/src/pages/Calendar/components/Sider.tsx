@@ -4,6 +4,7 @@ import { Button, Calendar, Dropdown, Menu, MenuProps, Modal } from "antd";
 import type { CalendarMode } from "antd/es/calendar/generateCalendar";
 import type { Moment } from "moment";
 import ScheduleForm from "../../../components/ScheduleForm";
+import ImportantDayForm from "../../../components/ImportantDayForm";
 
 /**
  * 侧边布局组件
@@ -59,7 +60,11 @@ export default function Sider() {
         onCancel={() => setCurOpenEventModal("")}
         footer={null}
       >
-        <ScheduleForm />
+        {curOpenEventModal === "schedule" ? (
+          <ScheduleForm />
+        ) : (
+          <ImportantDayForm />
+        )}
       </Modal>
     </div>
   );
