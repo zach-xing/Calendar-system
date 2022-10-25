@@ -8,5 +8,16 @@ export default function Content() {
     console.log(value.format("YYYY-MM-DD"), mode);
   };
 
-  return <Calendar onPanelChange={onPanelChange} />;
+  const renderItem = (date: Moment) => {
+    if (date.format("YYYY-MM-DD") === "2022-10-26")
+      return (
+        <>
+          <div style={{ backgroundColor: "pink" }}>123</div>
+          <div style={{ backgroundColor: "green" }}>456</div>
+          <div style={{}}>...more...</div>
+        </>
+      );
+  };
+
+  return <Calendar onPanelChange={onPanelChange} dateCellRender={renderItem} />;
 }
