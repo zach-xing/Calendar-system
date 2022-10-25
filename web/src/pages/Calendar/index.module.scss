@@ -1,5 +1,6 @@
 .root {
   overflow: hidden;
+  background-color: white;
 }
 
 .header {
@@ -8,6 +9,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
   .logo {
     width: 50px;
   }
@@ -17,10 +19,12 @@
   display: flex;
   height: calc(100vh - 64px);
   .sider {
-    background-color: beige;
+    width: 40%;
+    border-right: 1px solid rgba(0, 0, 0, 0.1);
+    background-color: white;
   }
 
   .content {
-    background-color: pink;
+    background-color: white;
   }
 }

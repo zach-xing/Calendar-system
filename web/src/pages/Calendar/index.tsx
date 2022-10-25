@@ -1,8 +1,10 @@
-import { Layout, Image, Button, Avatar, Space } from "antd";
 import React from "react";
-import { SettingOutlined, SearchOutlined } from "@ant-design/icons";
+import { Layout, Image, Button, Avatar, Space } from "antd";
+import { SettingOutlined } from "@ant-design/icons";
 import styles from "./index.module.scss";
 import logo from "../../assets/avatar.png";
+import SiderComp from "./components/Sider";
+import ContentComp from "./components/Content";
 
 const { Header, Content, Sider } = Layout;
 
@@ -36,10 +38,12 @@ export default function Calendar() {
 
       <Layout className={styles.body}>
         <Sider width={300} className={styles.sider}>
-          Sider
+          <SiderComp />
         </Sider>
         <Layout>
-          <Content className={styles.content}>Content</Content>
+          <Content className={styles.content}>
+            <ContentComp />
+          </Content>
         </Layout>
       </Layout>
     </Layout>
