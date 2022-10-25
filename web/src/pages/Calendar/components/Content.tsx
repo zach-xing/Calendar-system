@@ -19,5 +19,15 @@ export default function Content() {
       );
   };
 
-  return <Calendar onPanelChange={onPanelChange} dateCellRender={renderItem} />;
+  return (
+    <Calendar
+      onPanelChange={onPanelChange}
+      dateCellRender={renderItem}
+      headerRender={({ value }) => (
+        <div style={{ fontSize: 18, fontWeight: "bold", padding: 10 }}>
+          {value.format("YYYY年MM月")}
+        </div>
+      )}
+    />
+  );
 }
