@@ -1,6 +1,15 @@
 import React from "react";
-import { Layout, Image, Button, Avatar, Space } from "antd";
-import { SettingOutlined } from "@ant-design/icons";
+import {
+  Layout,
+  Image,
+  Button,
+  Avatar,
+  Space,
+  Dropdown,
+  Menu,
+  Modal,
+} from "antd";
+import { HolderOutlined } from "@ant-design/icons";
 import styles from "./index.module.scss";
 import logo from "../../assets/avatar.png";
 import SiderComp from "./components/Sider";
@@ -12,6 +21,8 @@ const { Header, Content, Sider } = Layout;
  * 日历 page
  */
 export default function Calendar() {
+  const [open, setOpen] = React.useState(false);
+
   return (
     <Layout className={styles.root}>
       {/* header 部分 */}
@@ -26,7 +37,30 @@ export default function Calendar() {
           <span style={{ fontSize: 18, marginLeft: 10 }}>日历</span>
         </div>
         <Space>
-          <Button shape="circle" icon={<SettingOutlined />} />
+          <Dropdown
+            placement="bottom"
+            overlay={
+              <Menu
+                items={[
+                  {
+                    label: <div onClick={() => setOpen(true)}>设置</div>,
+                    key: "0",
+                  },
+                  {
+                    type: "divider",
+                  },
+                  {
+                    label: <span style={{ color: "red" }}>退出登录</span>,
+                    key: "1",
+                  },
+                ]}
+              />
+            }
+            trigger={["click"]}
+          >
+            <Button shape="circle" icon={<HolderOutlined />} />
+          </Dropdown>
+
           <Avatar
             style={{ color: "#f56a00", backgroundColor: "#fde3cf" }}
             size="large"
@@ -46,6 +80,19 @@ export default function Calendar() {
           </Content>
         </Layout>
       </Layout>
+
+      <Modal
+        title="Modal 1000px width"
+        centered
+        open={open}
+        onOk={() => setOpen(false)}
+        onCancel={() => setOpen(false)}
+        width={"100vw"}
+      >
+        <p>some contents...</p>
+        <p>some contents...</p>
+        <p>some contents...</p>
+      </Modal>
     </Layout>
   );
 }
