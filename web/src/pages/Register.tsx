@@ -1,49 +1,59 @@
-import { UserOutlined, LockOutlined } from "@ant-design/icons";
+import { UserOutlined, LockOutlined, PhoneOutlined } from "@ant-design/icons";
 import { Input, Button, Form, Typography } from "antd";
 import React from "react";
-import LoginOrRegisterBg from "../../components/LoginOrRegisterBg";
+import { useNavigate } from "react-router-dom";
+import LoginOrRegisterBg from "../components/LoginOrRegisterBg";
 
 /**
  * 登录界面
  */
-export default function Login() {
+export default function Register() {
+  const navigate = useNavigate();
+
   const onFinish = (values: any) => {
     console.log("Received values of form: ", values);
   };
 
   return (
     <LoginOrRegisterBg>
-      <Typography.Title level={2}>Welcome back</Typography.Title>
+      <Typography.Title level={2}>Welcome! New User</Typography.Title>
       <Typography.Title level={5} type="secondary" style={{ marginBottom: 30 }}>
-        Welcome back!Please enter your details
+        Welcome !Please enter your details
       </Typography.Title>
 
       <Form name="login" style={{ width: "50%" }} onFinish={onFinish}>
         <Form.Item
+          name="name"
+          rules={[{ required: true, message: "Please input your Name!" }]}
+        >
+          <Input prefix={<UserOutlined />} placeholder="名称" />
+        </Form.Item>
+
+        <Form.Item
           name="username"
           rules={[{ required: true, message: "Please input your Account!" }]}
         >
-          <Input prefix={<UserOutlined />} placeholder="Account" />
+          <Input prefix={<PhoneOutlined />} placeholder="账号" />
         </Form.Item>
 
         <Form.Item
           name="password"
           rules={[{ required: true, message: "Please input your Password!" }]}
         >
-          <Input
-            prefix={<LockOutlined />}
-            type="password"
-            placeholder="Password"
-          />
+          <Input prefix={<LockOutlined />} type="password" placeholder="密码" />
         </Form.Item>
 
-        <Button type="link" style={{ marginBottom: 30 }}>
-          Register now!
+        <Button
+          type="link"
+          style={{ marginBottom: 30 }}
+          onClick={() => navigate("/login")}
+        >
+          跳转登录
         </Button>
 
         <Form.Item>
           <Button type="primary" htmlType="submit" block>
-            Log in
+            Register
           </Button>
         </Form.Item>
       </Form>
