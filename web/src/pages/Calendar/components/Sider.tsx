@@ -5,6 +5,7 @@ import type { CalendarMode } from "antd/es/calendar/generateCalendar";
 import type { Moment } from "moment";
 import ScheduleForm from "../../../components/ScheduleForm";
 import ImportantDayForm from "../../../components/ImportantDayForm";
+import { CHANGE_CUR_MONTH, event } from "../../../events";
 
 /**
  * 侧边布局组件
@@ -15,7 +16,8 @@ export default function Sider() {
   >("");
 
   const onPanelChange = (value: Moment, mode: CalendarMode) => {
-    console.log(value.format("YYYY-MM-DD"), mode);
+    // console.log(value.format("YYYY-MM-DD"), mode);
+    event.emit(CHANGE_CUR_MONTH, value.format("YYYY-MM-DD"));
   };
 
   const handleOpenModal: MenuProps["onClick"] = (e) => {
