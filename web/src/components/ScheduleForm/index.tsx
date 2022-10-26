@@ -2,10 +2,14 @@ import React from "react";
 import { Button, DatePicker, Form, Input, Select, Switch } from "antd";
 import { remindArr } from "../../constant";
 
+interface IProps {
+  data?: any;
+}
+
 /**
  * schedule 事件的表单组件
  */
-export default function ScheduleForm() {
+export default function ScheduleForm(props: IProps) {
   const [form] = Form.useForm();
   const [isFullday, setIsFullDay] = React.useState<boolean>(false);
 

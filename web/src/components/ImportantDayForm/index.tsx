@@ -2,10 +2,13 @@ import React from "react";
 import { Button, DatePicker, Form, Input, Select } from "antd";
 import { remindArr, repeatArr } from "../../constant";
 
+interface IProps {
+  data?: any;
+}
 /**
  * ImportantDay 事件的表单组件
  */
-export default function ImportantDayForm() {
+export default function ImportantDayForm(props: IProps) {
   const [form] = Form.useForm();
 
   const onFinish = (values: any) => {
