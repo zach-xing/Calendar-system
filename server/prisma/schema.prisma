@@ -16,3 +16,8 @@ model User {
   account  String @unique()
   password String
 }
+
+model event {
+  id   String @unique() // 类似 2022-10
+  list String
+}

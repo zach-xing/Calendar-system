@@ -10,10 +10,12 @@ import {
   Modal,
 } from "antd";
 import { HolderOutlined } from "@ant-design/icons";
+import { useNavigate } from "react-router-dom";
 import styles from "./index.module.scss";
 import logo from "../../assets/avatar.png";
 import SiderComp from "./components/Sider";
 import ContentComp from "./components/Content";
+import { isLogined } from "../../utils/auth";
 
 const { Header, Content, Sider } = Layout;
 
@@ -21,7 +23,15 @@ const { Header, Content, Sider } = Layout;
  * 日历 page
  */
 export default function Calendar() {
+  const navigate = useNavigate();
   const [open, setOpen] = React.useState(false);
+
+  React.useEffect(() => {
+    if (!isLogined()) {
+      navigate("/login");
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <Layout className={styles.root}>

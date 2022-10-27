@@ -10,3 +10,4 @@
 - react-router-dom
 - dayjs
 - axios
+- js-cookie

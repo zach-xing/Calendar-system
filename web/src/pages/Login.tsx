@@ -3,6 +3,7 @@ import { Input, Button, Form, Typography } from "antd";
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import LoginOrRegisterBg from "../components/LoginOrRegisterBg";
+import { login } from "../data/user";
 
 /**
  * 登录界面
@@ -10,8 +11,8 @@ import LoginOrRegisterBg from "../components/LoginOrRegisterBg";
 export default function Login() {
   const navigate = useNavigate();
 
-  const onFinish = (values: any) => {
-    console.log("Received values of form: ", values);
+  const onFinish = async (values: any) => {
+    // const data = await login(values);
   };
 
   return (
@@ -33,11 +34,7 @@ export default function Login() {
           name="password"
           rules={[{ required: true, message: "Please input your Password!" }]}
         >
-          <Input
-            prefix={<LockOutlined />}
-            type="password"
-            placeholder="密码"
-          />
+          <Input prefix={<LockOutlined />} type="password" placeholder="密码" />
         </Form.Item>
 
         <Button
