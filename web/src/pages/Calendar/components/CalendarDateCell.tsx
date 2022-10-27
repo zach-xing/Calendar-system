@@ -1,6 +1,16 @@
-import { Badge, Button, Descriptions, Modal, Popover } from "antd";
+import {
+  Badge,
+  Button,
+  Descriptions,
+  message,
+  Modal,
+  Popover,
+  Space,
+} from "antd";
 import React from "react";
 import { remindArr, repeatArr } from "../../../constant";
+import { removeEvent } from "../../../data/event";
+import { event, REFRESH_DATA } from "../../../events";
 import styles from "../index.module.scss";
 
 interface IProps {
@@ -23,6 +33,17 @@ export default function CalendarDateCell(props: IProps) {
     setCurOpenEditEventModal(category);
     setCurEditEvent(curData);
     setCurData(undefined);
+  };
+
+  const handleRemove = async (eventId: string, monthString: string) => {
+    try {
+      const user = JSON.parse(localStorage.getItem("user") || "{}");
+      await removeEvent(user.id, monthString.slice(0, 7), eventId);
+      event.emit(REFRESH_DATA, undefined);
+      message.success("删除成功");
+    } catch (error: any) {
+      message.error(error?.message || "删除失败");
+    }
   };
 
   return (
@@ -98,14 +119,22 @@ export default function CalendarDateCell(props: IProps) {
           )}
           <Descriptions.Item label="描述">{curData?.desc}</Descriptions.Item>
         </Descriptions>
-        <Button
-          style={{ marginTop: 20 }}
-          type="primary"
-          size="large"
-          onClick={() => handleEdit(curData?.category)}
-        >
-          编辑
-        </Button>
+        <Space style={{ marginTop: 20 }}>
+          <Button
+            type="primary"
+            size="large"
+            onClick={() => handleEdit(curData?.category)}
+          >
+            编辑
+          </Button>
+          <Button
+            danger
+            size="large"
+            onClick={() => handleRemove(curData?.id, curData?.dateString)}
+          >
+            删除
+          </Button>
+        </Space>
       </Modal>
     </>
   );
