@@ -1,6 +1,7 @@
 import React from "react";
-import { Button, DatePicker, Form, Input, Select } from "antd";
+import { Button, DatePicker, Form, Input, message, Select } from "antd";
 import { remindArr, repeatArr } from "../../constant";
+import { createImportantDay } from "../../data/event";
 
 interface IProps {
   data?: any;
@@ -11,8 +12,22 @@ interface IProps {
 export default function ImportantDayForm(props: IProps) {
   const [form] = Form.useForm();
 
-  const onFinish = (values: any) => {
-    console.log("Success:", values);
+  const onFinish = async (values: any) => {
+    const newData = {
+      category: "importantDay",
+      title: values.title,
+      dateString: values.selectedDate.format("YYYY-MM-DD"),
+      remind: values.remind,
+      repeat: values.repeat,
+      desc: values.desc || "",
+    };
+    try {
+      const user = JSON.parse(localStorage.getItem("user") || "{}");
+      await createImportantDay(user.id, newData);
+      message.success("操作成功");
+    } catch (error: any) {
+      message.error(error.message || "操作失败");
+    }
   };
 
   return (
