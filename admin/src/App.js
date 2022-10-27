@@ -28,7 +28,7 @@ function App(props) {
               },
             },
             {
-              itemKey: "person",
+              itemKey: "user",
               text: "用户管理",
               icon: <IconUser size="large" />,
               onClick: ({ itemKey }) => {
@@ -77,8 +77,8 @@ function App(props) {
               />
               <Route
                 exact
-                path="/person"
-                component={lazy(() => import("./pages/Person"))}
+                path="/user"
+                component={lazy(() => import("./pages/User"))}
               />
             </Switch>
           </React.Suspense>

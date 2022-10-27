@@ -1,4 +1,12 @@
-import { Controller, Get, Post, Body, Param, Query } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Param,
+  Query,
+  Delete,
+} from '@nestjs/common';
 import { EventsService } from './events.service';
 import { CreateScheduleDto } from './dto/create-schedule.dto';
 import { UpdateScheduleDto } from './dto/update-schedule.dto';
@@ -14,8 +22,6 @@ export class EventsController {
    */
   @Get()
   async findList(@Query() query: { dateString: string; userId: string }) {
-    console.log(`${query.userId}#${query.dateString}`);
-
     return await this.eventsService.findList(
       `${query.userId}#${query.dateString}`,
     );
@@ -63,5 +69,19 @@ export class EventsController {
     @Body() body: UpdateImportantDayDto,
   ) {
     return await this.eventsService.updateImportantDay(userId, body);
+  }
+
+  /**
+   * 删除 事件
+   */
+  @Delete('remove')
+  async removeEvent(
+    @Query() query: { userId: string; monthString: string; eventId: string },
+  ) {
+    return await this.eventsService.removeEvent(
+      query.userId,
+      query.monthString,
+      query.eventId,
+    );
   }
 }

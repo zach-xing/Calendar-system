@@ -5,7 +5,7 @@ import { Instruction } from "./styled";
 function Home() {
   return (
     <>
-      <Card title="排班系统">
+      <Card title="日历系统">
         <h2>技术栈</h2>
         <Instruction>
           前端： <code>React (Hooks)</code> <br />

@@ -8,6 +8,14 @@ export class UserService {
   constructor(private prisma: PrismaService) {}
 
   /**
+   * 获取用户列表
+   */
+  async fetchUserList() {
+    const user = await this.prisma.user.findMany();
+    return user;
+  }
+
+  /**
    * 登录操作
    */
   async login(loginUserDto: LoginUserDto) {

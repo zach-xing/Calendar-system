@@ -37,7 +37,7 @@ export class EventsService {
   /**
    * 处理创建或更改事件
    */
-  async handleCreateOrUpdateEvent(id: string, newList: string) {
+  async handleOperateEvent(id: string, newList: string) {
     try {
       await this.prisma.event.update({
         where: { id: id },
@@ -62,7 +62,7 @@ export class EventsService {
     const oldList = await this.findList(key);
     const id = '' + uuidv4();
     const list = handleDateGap({ ...event, id }, id);
-    return await this.handleCreateOrUpdateEvent(
+    return await this.handleOperateEvent(
       key,
       JSON.stringify(sortEvent([...oldList, ...list])),
     );
@@ -76,7 +76,7 @@ export class EventsService {
     const oldList = await this.findList(key);
     const removedList = removeEventById(event.id, oldList);
     const newList = handleDateGap(event, event.id);
-    return await this.handleCreateOrUpdateEvent(
+    return await this.handleOperateEvent(
       key,
       JSON.stringify(sortEvent([...newList, ...removedList])),
     );
@@ -89,7 +89,7 @@ export class EventsService {
     const key = `${userId}#${event.dateString.slice(0, 7)}`;
     const oldList = await this.findList(key);
     const id = '' + uuidv4();
-    return await this.handleCreateOrUpdateEvent(
+    return await this.handleOperateEvent(
       key,
       JSON.stringify(
         sortEvent([
@@ -110,9 +110,19 @@ export class EventsService {
     const key = `${userId}#${event.dateString.slice(0, 7)}`;
     const oldList = await this.findList(key);
     const removedList = removeEventById(event.id, oldList);
-    return await this.handleCreateOrUpdateEvent(
+    return await this.handleOperateEvent(
       key,
       JSON.stringify(sortEvent([...removedList, event])),
     );
+  }
+
+  /**
+   * 删除 事件
+   */
+  async removeEvent(userId: string, monthString: string, eventId: string) {
+    const key = `${userId}#${monthString}`;
+    const oldList = await this.findList(key);
+    const removedList = removeEventById(eventId, oldList);
+    return await this.handleOperateEvent(key, JSON.stringify(removedList));
   }
 }
