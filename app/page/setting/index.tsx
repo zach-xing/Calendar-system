@@ -12,6 +12,7 @@ import {
 import { useNavigation } from "@react-navigation/native";
 import storage from "../../utils/storage";
 import { CHANGE_VIEW, event } from "../../events";
+import { remindArr, repeatArr } from "../../constant";
 
 const ForwardIcon = () => (
   <Icon name="chevron-right" style={{ width: 24, height: 24 }} fill="black" />
@@ -75,8 +76,36 @@ export default function Setting() {
             </Select>
           )}
         />
-        <MenuItem title="默认提醒时间" accessoryRight={ForwardIcon} />
-        <MenuItem title="全天时间默认提醒时间" accessoryRight={ForwardIcon} />
+        {/* <MenuItem
+          title="默认提醒时间"
+          accessoryRight={() => (
+            <Select
+              style={{ width: "40%" }}
+              value={remindArr[curSettings?.remind || 0].value}
+              size="small"
+              onSelect={selectRemind}
+            >
+              {remindArr.map((item) => (
+                <SelectItem key={item.id} title={item.value} />
+              ))}
+            </Select>
+          )}
+        />
+        <MenuItem
+          title="全天时间默认提醒时间"
+          accessoryRight={() => (
+            <Select
+              style={{ width: "40%" }}
+              value={repeatArr[curSettings?.repeat || 0].value}
+              size="small"
+              onSelect={selectRepeat}
+            >
+              {remindArr.map((item) => (
+                <SelectItem key={item.id} title={item.value} />
+              ))}
+            </Select>
+          )}
+        /> */}
       </Menu>
     </Layout>
   );

@@ -2,6 +2,8 @@ import { View, StyleSheet, TouchableWithoutFeedback } from "react-native";
 import React from "react";
 import { Button, Icon, Input, Layout, Text } from "@ui-kitten/components";
 import { Controller, useForm } from "react-hook-form";
+import { register } from "../../data/user";
+import Toast from "react-native-toast-message";
 
 /**
  * 登录 Screen
@@ -12,9 +14,22 @@ export default function Login({ navigation }) {
     handleSubmit,
     formState: { errors },
   } = useForm();
-  const onSubmit = (data) => {
-    navigation.goBack();
-    console.log(data);
+
+  const onSubmit = async (data) => {
+    // navigation.goBack();
+    try {
+      await register(data);
+      navigation.goBack();
+      Toast.show({
+        type: "success",
+        text1: "注册成功!",
+      });
+    } catch (error) {
+      Toast.show({
+        type: "error",
+        text1: error.message || "注册失败",
+      });
+    }
   };
 
   const [secureTextEntry, setSecureTextEntry] = React.useState(true);

@@ -4,8 +4,8 @@ declare namespace RNType {
    */
   type SettingsType = {
     calendarView: "calendar" | "event";
-    remindTime: string;
-    alldayRemindTime: string;
+    remind: number;
+    repeat: number;
   };
 
   /**

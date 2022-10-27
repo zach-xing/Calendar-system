@@ -41,9 +41,24 @@ export default function Person() {
   };
 
   // 退出登录
-  const pressLogout = () => {
-    // TODO:退出登录功能
-  }
+  const pressLogout = async () => {
+    try {
+      await storage.remove({
+        key: "user",
+        id: "user",
+      });
+      Toast.show({
+        type: "success",
+        text1: "退出成功",
+      });
+      linkTo("/login-or-register");
+    } catch (error) {
+      Toast.show({
+        type: "error",
+        text1: "退出失败",
+      });
+    }
+  };
 
   return (
     <Layout
@@ -76,17 +91,6 @@ export default function Person() {
             }
             accessoryRight={ForwardIcon}
             onPress={() => linkTo("/setting")}
-          />
-          <MenuItem
-            title="同步至 Web 端"
-            accessoryLeft={
-              <Icon
-                name="cloud-upload"
-                style={{ width: 24, height: 24 }}
-                fill="black"
-              />
-            }
-            accessoryRight={ForwardIcon}
           />
           <MenuItem
             title="关于"

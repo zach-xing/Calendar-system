@@ -16,17 +16,14 @@ const Stack = createNativeStackNavigator();
  */
 export default function Main() {
   React.useEffect(() => {
-    // storage.remove({
-    //   key: "user",
-    // });
     storage.load({ key: "settings" }).catch(() => {
       // 若不存在 setttings，则初始化
       storage.save({
         key: "settings",
         data: {
           calendarView: "calendar",
-          remindTime: "10 min",
-          alldayRemindTime: "9:00",
+          // remind: 0,
+          // repeat: 0,
         },
       });
     });

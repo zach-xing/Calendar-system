@@ -13,11 +13,9 @@ import {
 import { useForm, Controller } from "react-hook-form";
 import dayjs from "dayjs";
 import Toast from "react-native-toast-message";
-import uuid from "react-native-uuid";
 import DatePicker from "../../../components/DatePicker";
 import { remindArr } from "../../../constant";
 import storage from "../../../utils/storage";
-import { handleDateGap, sortEvent } from "../../../utils/handleDate";
 import { event, REFRESH_DATE } from "../../../events";
 import { createSchedule } from "../../../data/events";
 
