@@ -19,14 +19,14 @@ import { removeEventById } from "../../utils/handleDate";
 import storage from "../../utils/storage";
 import { event, REFRESH_DATE } from "../../events";
 import ImportantDayEdit from "../../components/Edit/ImportantDayEdit";
+import { removeEvent as requsetRemoveEvent } from "../../data/events";
 
 /**
  * 显示某个事件详情
  */
 export default function ShowScreen() {
   const route = useRoute();
-  const data: RNType.ScheduleType | RNType.ImportantDayType =
-    route.params as any;
+  const data: any = route.params as any;
   const navigation = useNavigation();
   const [visible, setVisible] = React.useState(false);
 
@@ -49,28 +49,25 @@ export default function ShowScreen() {
 
   // 删除某个事件
   const removeEvent = async () => {
-    // removeEventById()
-    const arr = await getStorageData();
-    storage
-      .save({
-        key: "event",
-        id: data.dateString.slice(0, 7),
-        data: removeEventById(data.id, arr),
-      })
-      .then(() => {
-        event.emit(REFRESH_DATE, undefined);
-        Toast.show({
-          type: "success",
-          text1: "删除成功",
-        });
-        navigation.goBack();
-      })
-      .catch((err) => {
-        Toast.show({
-          type: "error",
-          text1: "删除失败",
-        });
+    try {
+      const user = await storage.load({
+        key: "user",
       });
+      console.log(user.id, data.dateString.slice(0, 7), data.id);
+      
+      await requsetRemoveEvent(user.id, data.dateString.slice(0, 7), data.id);
+      event.emit(REFRESH_DATE, undefined);
+      navigation.goBack();
+      Toast.show({
+        type: "success",
+        text1: "删除成功",
+      });
+    } catch (error) {
+      Toast.show({
+        type: "error",
+        text1: "删除失败",
+      });
+    }
   };
 
   // 从 storage 获取数据，返回值长度肯定大于等于 1

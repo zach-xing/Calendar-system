@@ -62,3 +62,17 @@ export function updateImportantDay(
     data: data,
   });
 }
+
+/**
+ * 删除 事件
+ */
+export function removeEvent(
+  userId: string,
+  monthString: string,
+  eventId: string
+) {
+  return requset({
+    url: `/events/remove?userId=${userId}&monthString=${monthString}&eventId=${eventId}`,
+    method: "DELETE",
+  });
+}

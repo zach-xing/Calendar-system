@@ -72,41 +72,6 @@ export default function ImportantDayEdit(props: IProps) {
         text1: error?.message || "编辑失败",
       });
     }
-    // const list = await getStorageData();
-    // const removedArr = removeEventById(data.id, list);
-    // console.log({
-    //   ...newData,
-    //   id: data.id,
-    //   dateString: newData.dateString.slice(0, 10),
-    // });
-
-    // storage
-    //   .save({
-    //     key: "event",
-    //     id: newData.dateString.slice(0, 7),
-    //     data: sortEvent([
-    //       {
-    //         ...newData,
-    //         id: data.id,
-    //         dateString: newData.dateString.slice(0, 10),
-    //       },
-    //       ...removedArr,
-    //     ]),
-    //   })
-    //   .then(() => {
-    //     event.emit(REFRESH_DATE, undefined);
-    //     Toast.show({
-    //       type: "success",
-    //       text1: "修改成功",
-    //     });
-    //     props.goBack();
-    //   })
-    //   .catch((err) => {
-    //     Toast.show({
-    //       type: "error",
-    //       text1: "修改失败",
-    //     });
-    //   });
   };
 
   // 从 storage 获取数据，返回值长度肯定大于等于 1

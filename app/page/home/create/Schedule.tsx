@@ -58,40 +58,6 @@ export default function Schedule() {
         text1: error?.message || "创建失败",
       });
     }
-    // const resArr = handleDateGap(newData, newId);
-    // // 初始化 事件数组
-    // let prevData: RNType.ScheduleType[];
-    // try {
-    //   prevData = [
-    //     ...(await storage.load({
-    //       key: "event",
-    //       id: tmpDate,
-    //     })),
-    //     ...resArr,
-    //   ];
-    // } catch (error) {
-    //   prevData = [...resArr];
-    // }
-
-    // storage
-    //   .save({
-    //     key: "event",
-    //     id: tmpDate,
-    //     data: sortEvent(prevData),
-    //   })
-    //   .then(() => {
-    //     event.emit(REFRESH_DATE, undefined);
-    //     Toast.show({
-    //       type: "success",
-    //       text1: "创建成功",
-    //     });
-    //   })
-    //   .catch((err) => {
-    //     Toast.show({
-    //       type: "error",
-    //       text1: "创建失败",
-    //     });
-    //   });
   };
 
   return (
