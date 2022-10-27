@@ -1,21 +1,24 @@
 import React from "react";
 import { Calendar, Modal } from "antd";
 import type { CalendarMode } from "antd/es/calendar/generateCalendar";
-import type { Moment } from "moment";
-import { CHANGE_CUR_MONTH, event } from "../../../events";
 import moment from "moment";
+import type { Moment } from "moment";
+import { CHANGE_CUR_MONTH, event, REFRESH_DATA } from "../../../events";
 import CalendarDateCell from "./CalendarDateCell";
-import ScheduleForm from "../../../components/ScheduleForm";
-import ImportantDayForm from "../../../components/ImportantDayForm";
 import { fetchEventList } from "../../../data/event";
+import EditScheduleForm from "../../../components/EditScheduleForm";
+import EditImportantDayForm from "../../../components/EditImportantDayForm";
 
 export default function Content() {
   const [curDate, setCurDate] = React.useState(
     new Date().toISOString().slice(0, 10)
   );
+  // 类似 {'2022-10-25': Array<Schedule | ImportantDay>}
+  const [curMonthData, setCurMonthData] = React.useState<any>({});
   const [curOpenEventModal, setCurOpenEventModal] = React.useState<
     "" | "schedule" | "importantDay"
   >("");
+  const [curEditEvent, setCurEditEvent] = React.useState<any>();
 
   // 监听左部分的卡片日历组件的改变
   React.useEffect(() => {
@@ -27,23 +30,40 @@ export default function Content() {
   }, []);
 
   React.useEffect(() => {
-    (async () => {
-      try {
-        const user = JSON.parse(localStorage.getItem("user") || "{}");
-        const list = await fetchEventList(curDate.slice(0, 7), user.id);
-        console.log(list);
-      } catch (error) {
-        console.error("获取失败");
-      }
-    })();
-  }, [curDate]);
+    fetchData();
+    event.on(REFRESH_DATA, fetchData);
+    return () => {
+      event.off(REFRESH_DATA, fetchData);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const listenChangeMonth = (dateString: string) => {
     setCurDate(dateString);
   };
 
+  // 获取数据
+  const fetchData = async () => {
+    try {
+      const user = JSON.parse(localStorage.getItem("user") || "{}");
+      const list = await fetchEventList(curDate.slice(0, 7), user.id);
+      const obj: any = {};
+      list.forEach((item: any) => {
+        const flag = item.dateString.slice(0, 10) as string;
+        if (Object.hasOwn(obj, flag)) {
+          obj[flag].push(item);
+        } else {
+          obj[flag] = [item];
+        }
+      });
+      setCurMonthData(obj);
+    } catch (error) {
+      console.error("获取失败");
+    }
+  };
+
   const onPanelChange = (value: Moment, mode: CalendarMode) => {
-    console.log(value.format("YYYY-MM-DD"), mode);
+    setCurDate(value.format("YYYY-MM-DD"));
   };
 
   // 点击某个单元格
@@ -52,9 +72,13 @@ export default function Content() {
   };
 
   const renderItem = (date: Moment) => {
-    if (date.format("YYYY-MM-DD") === "2022-10-26")
+    if (Object.hasOwn(curMonthData, date.format("YYYY-MM-DD")))
       return (
-        <CalendarDateCell setCurOpenEditEventModal={setCurOpenEventModal} />
+        <CalendarDateCell
+          list={curMonthData[date.format("YYYY-MM-DD")] as any}
+          setCurOpenEditEventModal={setCurOpenEventModal}
+          setCurEditEvent={setCurEditEvent}
+        />
       );
   };
 
@@ -79,9 +103,10 @@ export default function Content() {
         footer={null}
       >
         {curOpenEventModal === "schedule" ? (
-          <ScheduleForm />
+          <EditScheduleForm data={curEditEvent} />
         ) : (
-          <ImportantDayForm />
+          //  initialData={curEditEvent}
+          <EditImportantDayForm data={curEditEvent} />
         )}
       </Modal>
     </>

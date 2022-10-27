@@ -1,27 +1,34 @@
 import React from "react";
-import { Button, DatePicker, Form, Input, message, Select, Switch } from "antd";
-import { remindArr } from "../../constant";
-import { createSchedule } from "../../data/event";
+import { Button, DatePicker, Form, Input, message, Select } from "antd";
+import { remindArr } from "../constant";
+import { updateSchedule } from "../data/event";
+import moment from "moment";
+import { event, REFRESH_DATA } from "../events";
+
+interface IProps {
+  data: DataType.ScheduleType;
+}
 
 /**
  * schedule 事件的表单组件
  */
-export default function ScheduleForm() {
+export default function EditScheduleForm(props: IProps) {
+  const { data } = props;
   const [form] = Form.useForm();
-  const [isFullday, setIsFullDay] = React.useState<boolean>(false);
 
   const onFinish = async (values: any) => {
     let startTime, endTime;
-    if (values.isFullDay) {
+    if (data.isFullDay) {
       startTime = endTime = values.selectedDate.format("YYYY-MM-DD HH:mm:ss");
     } else {
       startTime = values.selectedDate[0].format("YYYY-MM-DD HH:mm:ss");
       endTime = values.selectedDate[1].format("YYYY-MM-DD HH:mm:ss");
     }
-    const newData: Omit<DataType.ScheduleType, "id"> = {
+    const newData: DataType.ScheduleType = {
+      id: data.id,
       category: "schedule",
       title: values.title,
-      isFullDay: values.isFullDay,
+      isFullDay: data.isFullDay,
       dateString: startTime.slice(0, 10),
       startTime: startTime,
       endTime: endTime,
@@ -30,7 +37,8 @@ export default function ScheduleForm() {
     };
     try {
       const user = JSON.parse(localStorage.getItem("user") || "{}");
-      await createSchedule(user.id, newData);
+      await updateSchedule(user.id, newData);
+      event.emit(REFRESH_DATA, undefined);
       message.success("操作成功");
     } catch (error: any) {
       message.error(error.message || "操作失败");
@@ -46,9 +54,10 @@ export default function ScheduleForm() {
       onFinish={onFinish}
       autoComplete="off"
       initialValues={{
-        isFullDay: false,
-        remind: 0,
-        desc: "",
+        ...data,
+        selectedDate: data.isFullDay
+          ? [moment(data.startTime)]
+          : [moment(data.startTime), moment(data.endTime)],
       }}
     >
       <Form.Item
@@ -59,16 +68,12 @@ export default function ScheduleForm() {
         <Input />
       </Form.Item>
 
-      <Form.Item label="全天" name="isFullDay">
-        <Switch checked={isFullday} onChange={(val) => setIsFullDay(val)} />
-      </Form.Item>
-
       <Form.Item
         label="日期"
         name="selectedDate"
         rules={[{ required: true, message: "请选择日期" }]}
       >
-        {isFullday ? <DatePicker /> : <DatePicker.RangePicker showTime />}
+        {data.isFullDay ? <DatePicker /> : <DatePicker.RangePicker showTime />}
       </Form.Item>
 
       <Form.Item label="提醒" name="remind">

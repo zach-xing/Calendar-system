@@ -3,13 +3,10 @@ import { Button, DatePicker, Form, Input, message, Select } from "antd";
 import { remindArr, repeatArr } from "../../constant";
 import { createImportantDay } from "../../data/event";
 
-interface IProps {
-  data?: any;
-}
 /**
  * ImportantDay 事件的表单组件
  */
-export default function ImportantDayForm(props: IProps) {
+export default function ImportantDayForm() {
   const [form] = Form.useForm();
 
   const onFinish = async (values: any) => {
