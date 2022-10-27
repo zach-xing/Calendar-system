@@ -17,21 +17,30 @@ export default function Login({ navigation }) {
     handleSubmit,
     formState: { errors },
   } = useForm();
+
+  React.useEffect(() => {
+    storage
+      .load({
+        key: "user",
+        id: "user",
+      })
+      .then((res) => {
+        linkTo("/home");
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }, []);
+
   const onSubmit = async (data) => {
     try {
       const info = await login(data);
-      storage
-        .save({
-          key: "user",
-          data: info,
-        })
-        .then(() => {
-          linkTo("/home");
-          Toast.show({
-            type: "success",
-            text1: "登录成功",
-          });
-        });
+      await storage.save({ key: "user", data: info });
+      linkTo("/home");
+      Toast.show({
+        type: "success",
+        text1: "登录成功",
+      });
     } catch (error) {
       Toast.show({
         type: "error",

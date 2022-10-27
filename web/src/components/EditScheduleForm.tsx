@@ -19,10 +19,10 @@ export default function EditScheduleForm(props: IProps) {
   const onFinish = async (values: any) => {
     let startTime, endTime;
     if (data.isFullDay) {
-      startTime = endTime = values.selectedDate.format("YYYY-MM-DD HH:mm:ss");
+      startTime = endTime = values.selectedDate.format("YYYY-MM-DD HH:mm");
     } else {
-      startTime = values.selectedDate[0].format("YYYY-MM-DD HH:mm:ss");
-      endTime = values.selectedDate[1].format("YYYY-MM-DD HH:mm:ss");
+      startTime = values.selectedDate[0].format("YYYY-MM-DD HH:mm");
+      endTime = values.selectedDate[1].format("YYYY-MM-DD HH:mm");
     }
     const newData: DataType.ScheduleType = {
       id: data.id,

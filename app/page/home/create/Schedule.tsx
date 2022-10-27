@@ -19,6 +19,7 @@ import { remindArr } from "../../../constant";
 import storage from "../../../utils/storage";
 import { handleDateGap, sortEvent } from "../../../utils/handleDate";
 import { event, REFRESH_DATE } from "../../../events";
+import { createSchedule } from "../../../data/events";
 
 /**
  * 日程 screen
@@ -34,50 +35,63 @@ export default function Schedule() {
 
   // schedule 提交
   const onSubmit = async (data) => {
-    // storage.clearMapForKey("event");
-    const tmpDate = data.startTime.slice(0, 7);
-    const newId = "" + uuid.v4();
-    const newData = {
-      ...data,
-      id: newId,
-      category: "schedule",
-      isFullDay: isFullDay,
-      dateString: data.startTime.slice(0, 10),
-    };
-    const resArr = handleDateGap(newData, newId);
-    // 初始化 事件数组
-    let prevData: RNType.ScheduleType[];
     try {
-      prevData = [
-        ...(await storage.load({
-          key: "event",
-          id: tmpDate,
-        })),
-        ...resArr,
-      ];
-    } catch (error) {
-      prevData = [...resArr];
-    }
-
-    storage
-      .save({
-        key: "event",
-        id: tmpDate,
-        data: sortEvent(prevData),
-      })
-      .then(() => {
-        event.emit(REFRESH_DATE, undefined);
-        Toast.show({
-          type: "success",
-          text1: "创建成功",
-        });
-      })
-      .catch((err) => {
-        Toast.show({
-          type: "error",
-          text1: "创建失败",
-        });
+      const newData = {
+        ...data,
+        category: "schedule",
+        isFullDay: isFullDay,
+        dateString: data.startTime.slice(0, 10),
+        desc: data?.desc || "",
+      };
+      const user = await storage.load({
+        key: "user",
       });
+      await createSchedule(user.id, newData);
+      event.emit(REFRESH_DATE, undefined);
+      Toast.show({
+        type: "success",
+        text1: "创建成功",
+      });
+    } catch (error) {
+      Toast.show({
+        type: "error",
+        text1: error?.message || "创建失败",
+      });
+    }
+    // const resArr = handleDateGap(newData, newId);
+    // // 初始化 事件数组
+    // let prevData: RNType.ScheduleType[];
+    // try {
+    //   prevData = [
+    //     ...(await storage.load({
+    //       key: "event",
+    //       id: tmpDate,
+    //     })),
+    //     ...resArr,
+    //   ];
+    // } catch (error) {
+    //   prevData = [...resArr];
+    // }
+
+    // storage
+    //   .save({
+    //     key: "event",
+    //     id: tmpDate,
+    //     data: sortEvent(prevData),
+    //   })
+    //   .then(() => {
+    //     event.emit(REFRESH_DATE, undefined);
+    //     Toast.show({
+    //       type: "success",
+    //       text1: "创建成功",
+    //     });
+    //   })
+    //   .catch((err) => {
+    //     Toast.show({
+    //       type: "error",
+    //       text1: "创建失败",
+    //     });
+    //   });
   };
 
   return (

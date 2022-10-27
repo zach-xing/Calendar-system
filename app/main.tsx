@@ -16,6 +16,9 @@ const Stack = createNativeStackNavigator();
  */
 export default function Main() {
   React.useEffect(() => {
+    // storage.remove({
+    //   key: "user",
+    // });
     storage.load({ key: "settings" }).catch(() => {
       // 若不存在 setttings，则初始化
       storage.save({
@@ -34,6 +37,13 @@ export default function Main() {
       <NavigationContainer>
         <Stack.Navigator>
           <Stack.Screen
+            name="login-or-register"
+            component={LoginOrRegisterScreen}
+            options={() => ({
+              header: () => null,
+            })}
+          />
+          <Stack.Screen
             name="home"
             component={HomeScreen}
             options={() => ({
@@ -50,13 +60,6 @@ export default function Main() {
           <Stack.Screen
             name="setting"
             component={SettingScreen}
-            options={() => ({
-              header: () => null,
-            })}
-          />
-          <Stack.Screen
-            name="login-or-register"
-            component={LoginOrRegisterScreen}
             options={() => ({
               header: () => null,
             })}

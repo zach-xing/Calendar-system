@@ -13,23 +13,23 @@ declare namespace RNType {
    */
   type ScheduleType = {
     id: string;
-    category: "schedule"; // schedule
-    title: string; // 标题
-    isFullDay: boolean; // 是否全天
+    category: string;
+    title: string;
+    isFullDay: boolean;
     dateString: string;
-    startTime: string; // eg： '2022-10-09 10:00'
-    endTime: string; // eg： '2022-10-09 15:00'
-    remind: number; // 提醒
+    startTime: string;
+    endTime: string;
+    remind: number;
     desc?: string;
   };
 
   type ImportantDayType = {
     id: string;
-    category: "importantDay"; // importantDay
+    category: string;
     title: string;
     dateString: string;
-    repeat: number; // 重复提醒，eg：不重复
-    remind: number; // 提醒
+    remind: number;
+    repeat: number;
     desc?: string;
   };
 
@@ -37,7 +37,9 @@ declare namespace RNType {
    * 用户信息
    */
   type User = {
+    id: string;
     name: string;
+    account: string;
     token: string;
-  }
+  };
 }

@@ -21,6 +21,7 @@ import {
   sortEvent,
 } from "../../utils/handleDate";
 import { event, REFRESH_DATE } from "../../events";
+import { updateSchedule } from "../../data/events";
 
 interface IProps {
   data: RNType.ScheduleType;
@@ -49,40 +50,30 @@ export default function ScheduleEdit(props: IProps) {
   const nowDateString = dayjs(new Date()).format("YYYY-MM-DD HH:mm");
 
   const onSubmit = async (newData) => {
-    const list = await getStorageData();
-    const removedArr = removeEventById(data.id, list);
-    console.log(newData);
-
-    const arr = handleDateGap(
-      {
+    try {
+      const editedData = {
         category: "schedule",
         id: data.id,
         isFullDay: isFullDay,
         dateString: data.startTime.slice(0, 10),
         ...newData,
-      },
-      data.id
-    );
-    storage
-      .save({
-        key: "event",
-        id: newData.startTime.slice(0, 7),
-        data: sortEvent([...arr, ...removedArr]),
-      })
-      .then(() => {
-        event.emit(REFRESH_DATE, undefined);
-        Toast.show({
-          type: "success",
-          text1: "修改成功",
-        });
-        props.goBack();
-      })
-      .catch((err) => {
-        Toast.show({
-          type: "error",
-          text1: "修改失败",
-        });
+      };
+      const user = await storage.load({
+        key: "user",
       });
+      await updateSchedule(user.id, editedData);
+      event.emit(REFRESH_DATE, undefined);
+      props.goBack();
+      Toast.show({
+        type: "success",
+        text1: "编辑成功",
+      });
+    } catch (error) {
+      Toast.show({
+        type: "error",
+        text1: error?.message || "编辑失败",
+      });
+    }
   };
 
   // 从 storage 获取数据，返回值长度肯定大于等于 1

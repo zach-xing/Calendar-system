@@ -5,6 +5,8 @@ import { List, Text } from "@ui-kitten/components";
 import ListItem from "./CalendarItem";
 import storage from "../../../../utils/storage";
 import { event, REFRESH_DATE } from "../../../../events";
+import { fetchEventList } from "../../../../data/events";
+import Toast from "react-native-toast-message";
 
 const schedule = { key: "schedule", color: "blue", selectedDotColor: "blue" };
 const importantDay = {
@@ -45,36 +47,35 @@ export default function CalendarCustomComp() {
 
   // 刷新数据
   const refreshData = async () => {
-    const data = await getStorageData();
-    const tmpMap = new Map();
-    data.map((v) => {
-      const dateString = v.dateString;
-      if (tmpMap.has(dateString)) {
-        tmpMap.set(dateString, { dots: [schedule, importantDay] });
-      } else {
-        v.category === "schedule"
-          ? tmpMap.set(dateString, { dots: [schedule] })
-          : tmpMap.set(dateString, { dots: [importantDay] });
-      }
-    });
-    const obj = {};
-    for (const key of tmpMap.keys()) {
-      obj[key] = tmpMap.get(key);
-    }
-    setMarkedObj(obj);
-    setCurData([...data]);
-  };
-
-  // 从 storage 获取数据
-  const getStorageData = async () => {
     try {
-      const data = await storage.load({
-        key: "event",
-        id: selectedMouth,
+      const user = await storage.load({
+        key: "user",
       });
-      return data;
+
+      const data = await fetchEventList(selectedMouth, user.id);
+
+      const tmpMap = new Map();
+      data.map((v) => {
+        const dateString = v.dateString;
+        if (tmpMap.has(dateString)) {
+          tmpMap.set(dateString, { dots: [schedule, importantDay] });
+        } else {
+          v.category === "schedule"
+            ? tmpMap.set(dateString, { dots: [schedule] })
+            : tmpMap.set(dateString, { dots: [importantDay] });
+        }
+      });
+      const obj = {};
+      for (const key of tmpMap.keys()) {
+        obj[key] = tmpMap.get(key);
+      }
+      setMarkedObj(obj);
+      setCurData([...data]);
     } catch (error) {
-      return [];
+      Toast.show({
+        type: "error",
+        text1: "获取数据出错",
+      });
     }
   };
 

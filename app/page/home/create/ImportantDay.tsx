@@ -18,6 +18,7 @@ import { repeatArr, remindArr } from "../../../constant";
 import storage from "../../../utils/storage";
 import { event, REFRESH_DATE } from "../../../events";
 import { sortEvent } from "../../../utils/handleDate";
+import { createImportantDay } from "../../../data/events";
 
 /**
  * 重要日 screen
@@ -31,46 +32,28 @@ export default function ImportantDay() {
   const nowDateString = dayjs(new Date()).format("YYYY-MM-DD 00:00");
 
   const onSubmit = async (data) => {
-    const newData = {
-      ...data,
-      id: "" + uuid.v4(),
-      dateString: data.dateString.slice(0, 10),
-      category: "importantDay",
-    };
-    const tmpString = newData.dateString.slice(0, 7);
-    // 初始化 事件数组
-    let prevData: RNType.ScheduleType[];
     try {
-      prevData = [
-        ...(await storage.load({
-          key: "event",
-          id: tmpString,
-        })),
-        newData,
-      ];
-    } catch (error) {
-      prevData = [newData];
-    }
-
-    storage
-      .save({
-        key: "event",
-        id: tmpString,
-        data: sortEvent(prevData),
-      })
-      .then(() => {
-        event.emit(REFRESH_DATE, undefined);
-        Toast.show({
-          type: "success",
-          text1: "创建成功",
-        });
-      })
-      .catch(() => {
-        Toast.show({
-          type: "error",
-          text1: "创建失败",
-        });
+      const newData = {
+        ...data,
+        dateString: data.dateString.slice(0, 10),
+        category: "importantDay",
+        desc: data?.desc || "",
+      };
+      const user = await storage.load({
+        key: "user",
       });
+      await createImportantDay(user.id, newData);
+      event.emit(REFRESH_DATE, undefined);
+      Toast.show({
+        type: "success",
+        text1: "创建成功",
+      });
+    } catch (error) {
+      Toast.show({
+        type: "error",
+        text1: "创建失败",
+      });
+    }
   };
 
   return (

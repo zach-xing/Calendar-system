@@ -21,6 +21,7 @@ import {
   sortEvent,
 } from "../../utils/handleDate";
 import { event, REFRESH_DATE } from "../../events";
+import { updateImportantDay } from "../../data/events";
 
 interface IProps {
   data: RNType.ImportantDayType;
@@ -42,47 +43,70 @@ export default function ImportantDayEdit(props: IProps) {
       remind: data.remind,
       repeat: data.repeat,
       dateString: data.dateString,
-      desc: data.desc,
+      desc: data.desc || "",
     },
   });
   const nowDateString = dayjs(new Date()).format("YYYY-MM-DD HH:mm");
 
   const onSubmit = async (newData) => {
-    const list = await getStorageData();
-    const removedArr = removeEventById(data.id, list);
-    console.log({
-      ...newData,
-      id: data.id,
-      dateString: newData.dateString.slice(0, 10),
-    });
-
-    storage
-      .save({
-        key: "event",
-        id: newData.dateString.slice(0, 7),
-        data: sortEvent([
-          {
-            ...newData,
-            id: data.id,
-            dateString: newData.dateString.slice(0, 10),
-          },
-          ...removedArr,
-        ]),
-      })
-      .then(() => {
-        event.emit(REFRESH_DATE, undefined);
-        Toast.show({
-          type: "success",
-          text1: "修改成功",
-        });
-        props.goBack();
-      })
-      .catch((err) => {
-        Toast.show({
-          type: "error",
-          text1: "修改失败",
-        });
+    try {
+      const editedData = {
+        ...newData,
+        category: "importantDay",
+        id: data.id,
+        dateString: newData.dateString.slice(0, 10),
+      };
+      const user = await storage.load({
+        key: "user",
       });
+      await updateImportantDay(user.id, editedData);
+      event.emit(REFRESH_DATE, undefined);
+      props.goBack();
+      Toast.show({
+        type: "success",
+        text1: "编辑成功",
+      });
+    } catch (error) {
+      Toast.show({
+        type: "error",
+        text1: error?.message || "编辑失败",
+      });
+    }
+    // const list = await getStorageData();
+    // const removedArr = removeEventById(data.id, list);
+    // console.log({
+    //   ...newData,
+    //   id: data.id,
+    //   dateString: newData.dateString.slice(0, 10),
+    // });
+
+    // storage
+    //   .save({
+    //     key: "event",
+    //     id: newData.dateString.slice(0, 7),
+    //     data: sortEvent([
+    //       {
+    //         ...newData,
+    //         id: data.id,
+    //         dateString: newData.dateString.slice(0, 10),
+    //       },
+    //       ...removedArr,
+    //     ]),
+    //   })
+    //   .then(() => {
+    //     event.emit(REFRESH_DATE, undefined);
+    //     Toast.show({
+    //       type: "success",
+    //       text1: "修改成功",
+    //     });
+    //     props.goBack();
+    //   })
+    //   .catch((err) => {
+    //     Toast.show({
+    //       type: "error",
+    //       text1: "修改失败",
+    //     });
+    //   });
   };
 
   // 从 storage 获取数据，返回值长度肯定大于等于 1

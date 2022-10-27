@@ -14,6 +14,8 @@ export class EventsController {
    */
   @Get()
   async findList(@Query() query: { dateString: string; userId: string }) {
+    console.log(`${query.userId}#${query.dateString}`);
+
     return await this.eventsService.findList(
       `${query.userId}#${query.dateString}`,
     );

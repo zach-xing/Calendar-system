@@ -4,6 +4,7 @@ import { Agenda, DateData, AgendaSchedule } from "react-native-calendars";
 import AgendaItem from "./AgendaItem";
 import storage from "../../../../utils/storage";
 import { event, REFRESH_DATE } from "../../../../events";
+import { fetchEventList } from "../../../../data/events";
 
 const renderEmptyDate = () => {
   return (
@@ -12,7 +13,6 @@ const renderEmptyDate = () => {
     </View>
   );
 };
-
 
 /**
  * 事件视图
@@ -24,10 +24,14 @@ export default function AgendaComp() {
   );
 
   const loadMonthItems = async (day: DateData) => {
-    const storageArr = await getStorageData(day.dateString.slice(0, 7));
+    const user = await storage.load({
+      key: "user",
+    });
+
+    const arr = await fetchEventList(day.dateString.slice(0, 7), user.id);
 
     const newItems = {};
-    storageArr.forEach((item) => {
+    arr.forEach((item) => {
       if (newItems.hasOwnProperty(item.dateString)) {
         newItems[item.dateString].push({ ...item });
       } else {
