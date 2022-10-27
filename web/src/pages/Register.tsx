@@ -1,8 +1,9 @@
 import { UserOutlined, LockOutlined, PhoneOutlined } from "@ant-design/icons";
-import { Input, Button, Form, Typography } from "antd";
+import { Input, Button, Form, Typography, message } from "antd";
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import LoginOrRegisterBg from "../components/LoginOrRegisterBg";
+import { register } from "../data/user";
 
 /**
  * 登录界面
@@ -10,8 +11,15 @@ import LoginOrRegisterBg from "../components/LoginOrRegisterBg";
 export default function Register() {
   const navigate = useNavigate();
 
-  const onFinish = (values: any) => {
-    console.log("Received values of form: ", values);
+  const onFinish = async (values: any) => {
+    try {
+      await register(values);
+      // window.localStorage.setItem("user", JSON.stringify(data));
+      message.success("注册成功, 去登录吧");
+      navigate('/login')
+    } catch (error: any) {
+      message.error(error.message ?? "注册失败");
+    }
   };
 
   return (
@@ -30,7 +38,7 @@ export default function Register() {
         </Form.Item>
 
         <Form.Item
-          name="username"
+          name="account"
           rules={[{ required: true, message: "Please input your Account!" }]}
         >
           <Input prefix={<PhoneOutlined />} placeholder="账号" />

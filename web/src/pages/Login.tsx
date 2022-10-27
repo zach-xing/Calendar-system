@@ -1,5 +1,5 @@
 import { LockOutlined, PhoneOutlined } from "@ant-design/icons";
-import { Input, Button, Form, Typography } from "antd";
+import { Input, Button, Form, Typography, message } from "antd";
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import LoginOrRegisterBg from "../components/LoginOrRegisterBg";
@@ -11,8 +11,16 @@ import { login } from "../data/user";
 export default function Login() {
   const navigate = useNavigate();
 
+  // 登录
   const onFinish = async (values: any) => {
-    // const data = await login(values);
+    try {
+      const data = await login(values);
+      window.localStorage.setItem("user", JSON.stringify(data));
+      message.success("登录成功");
+      navigate("/");
+    } catch (error: any) {
+      message.error(error.message ?? "登录失败");
+    }
   };
 
   return (

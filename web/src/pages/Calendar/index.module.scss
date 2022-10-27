@@ -1,5 +1,4 @@
 .root {
-  overflow: hidden;
   background-color: white;
 }
 
@@ -26,6 +25,7 @@
 
   .content {
     background-color: white;
+    overflow: auto;
   }
 }
 

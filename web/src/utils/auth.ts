@@ -27,5 +27,5 @@ export function removeCookie(key: string): void {
  * true 则登录，否则未登录
  */
 export function isLogined() {
-  return !!getCookie('token');
+  return !!getCookie('user');
 }
