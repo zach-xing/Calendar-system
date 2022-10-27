@@ -7,6 +7,7 @@ import moment from "moment";
 import CalendarDateCell from "./CalendarDateCell";
 import ScheduleForm from "../../../components/ScheduleForm";
 import ImportantDayForm from "../../../components/ImportantDayForm";
+import { fetchEventList } from "../../../data/event";
 
 export default function Content() {
   const [curDate, setCurDate] = React.useState(
@@ -16,6 +17,7 @@ export default function Content() {
     "" | "schedule" | "importantDay"
   >("");
 
+  // 监听左部分的卡片日历组件的改变
   React.useEffect(() => {
     event.on(CHANGE_CUR_MONTH, listenChangeMonth);
     return () => {
@@ -23,6 +25,18 @@ export default function Content() {
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  React.useEffect(() => {
+    (async () => {
+      try {
+        const user = JSON.parse(localStorage.getItem("user") || "{}");
+        const list = await fetchEventList(curDate.slice(0, 7), user.id);
+        console.log(list);
+      } catch (error) {
+        console.error("获取失败");
+      }
+    })();
+  }, [curDate]);
 
   const listenChangeMonth = (dateString: string) => {
     setCurDate(dateString);

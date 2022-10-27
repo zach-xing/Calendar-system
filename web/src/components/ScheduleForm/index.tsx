@@ -1,6 +1,7 @@
 import React from "react";
-import { Button, DatePicker, Form, Input, Select, Switch } from "antd";
+import { Button, DatePicker, Form, Input, message, Select, Switch } from "antd";
 import { remindArr } from "../../constant";
+import { createSchedule } from "../../data/event";
 
 interface IProps {
   data?: any;
@@ -13,8 +14,31 @@ export default function ScheduleForm(props: IProps) {
   const [form] = Form.useForm();
   const [isFullday, setIsFullDay] = React.useState<boolean>(false);
 
-  const onFinish = (values: any) => {
-    console.log("Success:", values);
+  const onFinish = async (values: any) => {
+    let startTime, endTime;
+    if (values.isFullDay) {
+      startTime = endTime = values.selectedDate.format("YYYY-MM-DD HH:mm:ss");
+    } else {
+      startTime = values.selectedDate[0].format("YYYY-MM-DD HH:mm:ss");
+      endTime = values.selectedDate[1].format("YYYY-MM-DD HH:mm:ss");
+    }
+    const newData: Omit<DataType.ScheduleType, "id"> = {
+      category: "schedule",
+      title: values.title,
+      isFullDay: values.isFullDay,
+      dateString: startTime.slice(0, 10),
+      startTime: startTime,
+      endTime: endTime,
+      remind: values.remind,
+      desc: values.desc || "",
+    };
+    try {
+      const user = JSON.parse(localStorage.getItem("user") || "{}");
+      await createSchedule(user.id, newData);
+      message.success("操作成功");
+    } catch (error: any) {
+      message.error(error.message || "操作失败");
+    }
   };
 
   return (
@@ -26,8 +50,9 @@ export default function ScheduleForm(props: IProps) {
       onFinish={onFinish}
       autoComplete="off"
       initialValues={{
-        isFullday: false,
+        isFullDay: false,
         remind: 0,
+        desc: "",
       }}
     >
       <Form.Item
@@ -38,7 +63,7 @@ export default function ScheduleForm(props: IProps) {
         <Input />
       </Form.Item>
 
-      <Form.Item label="全天" name="isFullday">
+      <Form.Item label="全天" name="isFullDay">
         <Switch checked={isFullday} onChange={(val) => setIsFullDay(val)} />
       </Form.Item>
 
