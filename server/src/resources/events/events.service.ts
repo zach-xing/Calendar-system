@@ -39,12 +39,12 @@ export class EventsService {
    */
   async handleCreateOrUpdateEvent(id: string, newList: string) {
     try {
-      this.prisma.event.update({
+      await this.prisma.event.update({
         where: { id: id },
         data: { list: newList },
       });
     } catch (error) {
-      this.prisma.event.create({
+      await this.prisma.event.create({
         data: {
           id: id,
           list: newList,
@@ -61,7 +61,7 @@ export class EventsService {
     const key = `${userId}#${event.dateString.slice(0, 7)}`;
     const oldList = await this.findList(key);
     const id = '' + uuidv4();
-    const list = handleDateGap(event, id);
+    const list = handleDateGap({ ...event, id }, id);
     return await this.handleCreateOrUpdateEvent(
       key,
       JSON.stringify(sortEvent([...oldList, ...list])),

@@ -19,5 +19,5 @@ model User {
 
 model event {
   id   String @id @unique() // 类似 {userId}#2022-10
-  list String
+  list String @db.Text()
 }
