@@ -39,10 +39,7 @@ export default function ScheduleForm(props: IProps) {
       </Form.Item>
 
       <Form.Item label="全天" name="isFullday">
-        <Switch
-          defaultChecked={isFullday}
-          onChange={(val) => setIsFullDay(val)}
-        />
+        <Switch checked={isFullday} onChange={(val) => setIsFullDay(val)} />
       </Form.Item>
 
       <Form.Item

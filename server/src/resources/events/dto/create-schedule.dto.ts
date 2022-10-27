@@ -1,6 +1,6 @@
 import { IsBoolean, IsNumber, IsString } from 'class-validator';
 
-export class CreateEventDto {
+export class CreateScheduleDto {
   @IsString()
   category: string;
 
@@ -14,14 +14,12 @@ export class CreateEventDto {
   dateString: string;
 
   @IsString()
-  startTime?: string;
+  startTime: string;
   @IsString()
-  endTime?: string;
+  endTime: string;
 
   @IsNumber()
   remind: number; // 提醒
-  @IsNumber()
-  repeat?: number; // 重复
 
   @IsString()
   desc?: string;
