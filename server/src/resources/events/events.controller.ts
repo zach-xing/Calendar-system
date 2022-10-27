@@ -13,9 +13,9 @@ export class EventsController {
    * 获取事件列表
    */
   @Get()
-  async findList(@Query() params: { dateString: string; userId: string }) {
+  async findList(@Query() query: { dateString: string; userId: string }) {
     return await this.eventsService.findList(
-      `${params.userId}#${params.dateString}`,
+      `${query.userId}#${query.dateString}`,
     );
   }
 

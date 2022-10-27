@@ -19,15 +19,19 @@ export class EventsService {
    * 获取事件列表
    */
   async findList(id: string) {
-    const { list: listString } = await this.prisma.event.findUnique({
-      where: {
-        id: id,
-      },
-      select: {
-        list: true,
-      },
-    });
-    return listString !== null ? JSON.parse(listString) : [];
+    try {
+      const { list } = await this.prisma.event.findUniqueOrThrow({
+        where: {
+          id: id,
+        },
+        select: {
+          list: true,
+        },
+      });
+      return JSON.parse(list);
+    } catch (error) {
+      return [];
+    }
   }
 
   /**

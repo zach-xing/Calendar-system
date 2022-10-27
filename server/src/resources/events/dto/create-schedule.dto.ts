@@ -8,7 +8,7 @@ export class CreateScheduleDto {
   title: string;
 
   @IsBoolean()
-  isFullDay?: boolean;
+  isFullDay: boolean;
 
   @IsString()
   dateString: string;
