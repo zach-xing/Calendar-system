@@ -5,9 +5,10 @@
 ## 涉及技术栈
 
 - React
-- Semi UI
+- antd
 - scss
 - react-router-dom
 - dayjs
 - axios
 - js-cookie
+- moment
