@@ -1,12 +1,10 @@
-# 日历的 Admin 端
+# admin-zk
 
-日历项目的 Admin 端，也就是管理端
+后台管理的一个模板
 
-## 使用技术栈
+## 技术栈
 
-In the project directory, you can run:
-
-- react
-- semi-ui
-- axios
-- react-router-dom
+- 使用 [React](https://beta.reactjs.org/) + [TypeScript](https://www.typescriptlang.org/) 来实现
+- 使用 [Vite](https://vitejs.dev/) 来做构建工作
+- 使用 [ant design](https://ant.design/index-cn) 做 UI 库
+- 使用 less 做预处理样式
