@@ -1,3 +1,5 @@
+<img src="./doc/imgs/logo-full.png" width="100%" />
+
 # 日历 App 设计与实现
 
 ## 使用的技术栈
