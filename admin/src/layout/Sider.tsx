@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import type { IRoute } from '@/router';
 import { routes } from '@/router';
 import { ExportOutlined, SettingOutlined } from '@ant-design/icons';
+import LogoComp from '@/assets/logo-full.png';
 
 interface MenuItemType {
   key: string;
@@ -53,7 +54,7 @@ const Sider: React.FC = () => {
 
   return (
     <Layout.Sider theme="light" width="240">
-      <Image width={240} src={`https://picsum.photos/240/100`} />
+      <Image width={240} height={100} src={LogoComp} preview={false} />
       <Menu
         mode="inline"
         selectedKeys={[selectedKey]}
