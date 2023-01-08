@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react';
 import {
   Layout,
   Image,
@@ -8,14 +8,14 @@ import {
   Dropdown,
   Menu,
   Modal,
-} from "antd";
-import { HolderOutlined } from "@ant-design/icons";
-import { useNavigate } from "react-router-dom";
-import styles from "./index.module.scss";
-import logo from "../../assets/avatar.png";
-import SiderComp from "./components/Sider";
-import ContentComp from "./components/Content";
-import { isLogined } from "../../utils/auth";
+} from 'antd';
+import { HolderOutlined } from '@ant-design/icons';
+import { useNavigate } from 'react-router-dom';
+import styles from './index.module.scss';
+import logo from '../../assets/logo.png';
+import SiderComp from './components/Sider';
+import ContentComp from './components/Content';
+import { isLogined } from '../../utils/auth';
 
 const { Header, Content, Sider } = Layout;
 
@@ -28,12 +28,10 @@ export default function Calendar() {
 
   React.useEffect(() => {
     if (!isLogined()) {
-      navigate("/login");
+      navigate('/login');
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-
-
 
   return (
     <Layout className={styles.root}>
@@ -56,25 +54,25 @@ export default function Calendar() {
                 items={[
                   {
                     label: <div onClick={() => setOpen(true)}>设置</div>,
-                    key: "0",
+                    key: '0',
                   },
                   {
-                    type: "divider",
+                    type: 'divider',
                   },
                   {
-                    label: <span style={{ color: "red" }}>退出登录</span>,
-                    key: "1",
+                    label: <span style={{ color: 'red' }}>退出登录</span>,
+                    key: '1',
                   },
                 ]}
               />
             }
-            trigger={["click"]}
+            trigger={['click']}
           >
             <Button shape="circle" icon={<HolderOutlined />} />
           </Dropdown>
 
           <Avatar
-            style={{ color: "#f56a00", backgroundColor: "#fde3cf" }}
+            style={{ color: '#f56a00', backgroundColor: '#fde3cf' }}
             size="large"
           >
             U
@@ -99,7 +97,7 @@ export default function Calendar() {
         open={open}
         onOk={() => setOpen(false)}
         onCancel={() => setOpen(false)}
-        width={"100vw"}
+        width={'100vw'}
       >
         <p>some contents...</p>
         <p>some contents...</p>
