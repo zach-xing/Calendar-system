@@ -1,15 +1,6 @@
 import React from 'react';
-import {
-  Layout,
-  Image,
-  Button,
-  Avatar,
-  Space,
-  Dropdown,
-  Menu,
-  Modal,
-} from 'antd';
-import { HolderOutlined } from '@ant-design/icons';
+import { Layout, Image, Space, Dropdown, Modal } from 'antd';
+import { DownOutlined } from '@ant-design/icons';
 import { useNavigate } from 'react-router-dom';
 import styles from './index.module.scss';
 import logo from '../../assets/logo.png';
@@ -36,7 +27,7 @@ export default function Calendar() {
   return (
     <Layout className={styles.root}>
       {/* header 部分 */}
-      <Header className={styles.header}>
+      <Header className={styles.header} style={{ backgroundColor: 'white' }}>
         <div>
           <Image
             src={logo}
@@ -46,38 +37,33 @@ export default function Calendar() {
           />
           <span style={{ fontSize: 18, marginLeft: 10 }}>日历</span>
         </div>
-        <Space>
+        <div>
           <Dropdown
-            placement="bottom"
-            overlay={
-              <Menu
-                items={[
-                  {
-                    label: <div onClick={() => setOpen(true)}>设置</div>,
-                    key: '0',
-                  },
-                  {
-                    type: 'divider',
-                  },
-                  {
-                    label: <span style={{ color: 'red' }}>退出登录</span>,
-                    key: '1',
-                  },
-                ]}
-              />
-            }
-            trigger={['click']}
+            menu={{
+              items: [
+                {
+                  label: <div onClick={() => setOpen(true)}>设置</div>,
+                  key: '0',
+                },
+                {
+                  type: 'divider',
+                },
+                {
+                  label: <span style={{ color: 'red' }}>退出登录</span>,
+                  key: '1',
+                },
+              ],
+            }}
           >
-            <Button shape="circle" icon={<HolderOutlined />} />
+            {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
+            <a onClick={(e) => e.preventDefault()}>
+              <Space>
+                Zeekg
+                <DownOutlined />
+              </Space>
+            </a>
           </Dropdown>
-
-          <Avatar
-            style={{ color: '#f56a00', backgroundColor: '#fde3cf' }}
-            size="large"
-          >
-            U
-          </Avatar>
-        </Space>
+        </div>
       </Header>
 
       <Layout className={styles.body}>
