@@ -1,4 +1,4 @@
-<img src="./doc/imgs/logo-full.png" width="100%" />
+<p align="center"><img src="./doc/imgs/logo-full.png" style="width: '60%'" /></p>
 
 # 日历 App 设计与实现
 
