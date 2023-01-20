@@ -2,7 +2,7 @@ import React from "react";
 import { DownOutlined } from "@ant-design/icons";
 import { Button, Calendar, Dropdown, Menu, MenuProps, Modal } from "antd";
 import type { CalendarMode } from "antd/es/calendar/generateCalendar";
-import type { Moment } from "moment";
+import type { Dayjs } from 'dayjs';
 import ScheduleForm from "../../../components/ScheduleForm";
 import ImportantDayForm from "../../../components/ImportantDayForm";
 import { CHANGE_CUR_MONTH, event } from "../../../events";
@@ -15,9 +15,9 @@ export default function Sider() {
     "" | "schedule" | "importantDay"
   >("");
 
-  const onPanelChange = (value: Moment, mode: CalendarMode) => {
+  const onPanelChange = (value: Dayjs, mode: CalendarMode) => {
     // console.log(value.format("YYYY-MM-DD"), mode);
-    event.emit(CHANGE_CUR_MONTH, value.format("YYYY-MM-DD"));
+    event.emit(CHANGE_CUR_MONTH, value.format('YYYY-MM-DD'));
   };
 
   const handleOpenModal: MenuProps["onClick"] = (e) => {

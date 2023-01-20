@@ -1,13 +1,13 @@
-import React from "react";
-import { Calendar, Modal } from "antd";
-import type { CalendarMode } from "antd/es/calendar/generateCalendar";
-import moment from "moment";
-import type { Moment } from "moment";
-import { CHANGE_CUR_MONTH, event, REFRESH_DATA } from "../../../events";
-import CalendarDateCell from "./CalendarDateCell";
-import { fetchEventList } from "../../../data/event";
-import EditScheduleForm from "../../../components/EditScheduleForm";
-import EditImportantDayForm from "../../../components/EditImportantDayForm";
+import React from 'react';
+import { Calendar, Modal } from 'antd';
+import type { CalendarMode } from 'antd/es/calendar/generateCalendar';
+import dayjs from 'dayjs';
+import type { Dayjs } from 'dayjs';
+import { CHANGE_CUR_MONTH, event, REFRESH_DATA } from '../../../events';
+import CalendarDateCell from './CalendarDateCell';
+import { fetchEventList } from '../../../data/event';
+import EditScheduleForm from '../../../components/EditScheduleForm';
+import EditImportantDayForm from '../../../components/EditImportantDayForm';
 
 export default function Content() {
   const [curDate, setCurDate] = React.useState(
@@ -16,8 +16,8 @@ export default function Content() {
   // 类似 {'2022-10-25': Array<Schedule | ImportantDay>}
   const [curMonthData, setCurMonthData] = React.useState<any>({});
   const [curOpenEventModal, setCurOpenEventModal] = React.useState<
-    "" | "schedule" | "importantDay"
-  >("");
+    '' | 'schedule' | 'importantDay'
+  >('');
   const [curEditEvent, setCurEditEvent] = React.useState<any>();
 
   // 监听左部分的卡片日历组件的改变
@@ -45,7 +45,7 @@ export default function Content() {
   // 获取数据
   const fetchData = async () => {
     try {
-      const user = JSON.parse(localStorage.getItem("user") || "{}");
+      const user = JSON.parse(localStorage.getItem('user') || '{}');
       const list = await fetchEventList(curDate.slice(0, 7), user.id);
       const obj: any = {};
       list.forEach((item: any) => {
@@ -58,24 +58,24 @@ export default function Content() {
       });
       setCurMonthData(obj);
     } catch (error) {
-      console.error("获取失败");
+      console.error('获取失败');
     }
   };
 
-  const onPanelChange = (value: Moment, mode: CalendarMode) => {
-    setCurDate(value.format("YYYY-MM-DD"));
+  const onPanelChange = (value: Dayjs, mode: CalendarMode) => {
+    setCurDate(value.format('YYYY-MM-DD'));
   };
 
   // 点击某个单元格
-  const handleSelect = (newValue: Moment) => {
-    setCurDate(newValue.format("YYYY-MM-DD"));
+  const handleSelect = (newValue: Dayjs) => {
+    setCurDate(newValue.format('YYYY-MM-DD'));
   };
 
-  const renderItem = (date: Moment) => {
-    if (Object.hasOwn(curMonthData, date.format("YYYY-MM-DD")))
+  const renderItem = (date: Dayjs) => {
+    if (Object.hasOwn(curMonthData, date.format('YYYY-MM-DD')))
       return (
         <CalendarDateCell
-          list={curMonthData[date.format("YYYY-MM-DD")] as any}
+          list={curMonthData[date.format('YYYY-MM-DD')] as any}
           setCurOpenEditEventModal={setCurOpenEventModal}
           setCurEditEvent={setCurEditEvent}
         />
@@ -85,24 +85,24 @@ export default function Content() {
   return (
     <>
       <Calendar
-        value={moment(curDate)}
+        value={dayjs(curDate)}
         onPanelChange={onPanelChange}
         dateCellRender={renderItem}
         headerRender={({ value }) => (
-          <div style={{ fontSize: 18, fontWeight: "bold", padding: 10 }}>
-            {value.format("YYYY年MM月")}
+          <div style={{ fontSize: 18, fontWeight: 'bold', padding: 10 }}>
+            {value.format('YYYY年MM月')}
           </div>
         )}
         onSelect={handleSelect}
       />
 
       <Modal
-        title={curOpenEventModal === "schedule" ? "编辑日程" : "编辑重要日"}
+        title={curOpenEventModal === 'schedule' ? '编辑日程' : '编辑重要日'}
         open={curOpenEventModal.length !== 0}
-        onCancel={() => setCurOpenEventModal("")}
+        onCancel={() => setCurOpenEventModal('')}
         footer={null}
       >
-        {curOpenEventModal === "schedule" ? (
+        {curOpenEventModal === 'schedule' ? (
           <EditScheduleForm data={curEditEvent} />
         ) : (
           //  initialData={curEditEvent}
