@@ -2,7 +2,7 @@ import React from "react";
 import { Button, DatePicker, Form, Input, message, Select } from "antd";
 import { remindArr, repeatArr } from "../constant";
 import { updateImportantDay } from "../data/event";
-import moment from "moment";
+import dayjs from "dayjs";
 
 interface IProps {
   data: DataType.ImportantDayType;
@@ -43,7 +43,7 @@ export default function EditImportantDayForm(props: IProps) {
       autoComplete="off"
       initialValues={{
         ...data,
-        selectedDate: moment(data.dateString),
+        selectedDate: dayjs(data.dateString),
       }}
     >
       <Form.Item

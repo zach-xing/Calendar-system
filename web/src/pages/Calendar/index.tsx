@@ -39,6 +39,7 @@ export default function Calendar() {
         </div>
         <div>
           <Dropdown
+            trigger={['click']}
             menu={{
               items: [
                 {
