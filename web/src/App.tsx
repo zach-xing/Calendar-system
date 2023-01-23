@@ -1,26 +1,26 @@
-import React from "react";
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import Calendar from "./pages/Calendar";
-import Login from "./pages/Login";
-import Register from "./pages/Register";
+import React from 'react';
+import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+import Calendar from './pages/Calendar';
+import Login from './pages/Login';
+import Register from './pages/Register';
 
-const router = createBrowserRouter([
+const routes = createBrowserRouter([
   {
-    path: "/",
+    path: `/`,
     element: <Calendar />,
   },
   {
-    path: "/login",
+    path: '/login',
     element: <Login />,
   },
   {
-    path: "/register",
+    path: '/register',
     element: <Register />,
   },
 ]);
 
 function App() {
-  return <RouterProvider router={router} />;
+  return <RouterProvider router={routes} />;
 }
 
 export default App;
