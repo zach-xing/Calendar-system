@@ -9,9 +9,13 @@ const HeaderComp = () => {
 
   return (
     <>
-      <Layout.Header
-        className={styles.header}
-        style={{ backgroundColor: 'white' }}
+      <div
+        style={{
+          width: '100%',
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+        }}
       >
         <div>
           <Image
@@ -50,7 +54,7 @@ const HeaderComp = () => {
             </a>
           </Dropdown>
         </div>
-      </Layout.Header>
+      </div>
 
       <Modal
         title="Modal 1000px width"
