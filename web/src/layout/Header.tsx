@@ -1,6 +1,6 @@
 import React from 'react';
 import { DownOutlined } from '@ant-design/icons';
-import { Dropdown, Space, Image, Layout, Modal } from 'antd';
+import { Dropdown, Space, Image, Modal } from 'antd';
 import logo from '../assets/logo.png';
 import styles from './layout.module.scss';
 
