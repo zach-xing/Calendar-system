@@ -31,15 +31,12 @@ export default function Sider() {
   return (
     <div style={{ textAlign: 'center' }}>
       <Dropdown
-        overlay={
-          <Menu
-            items={[
-              { label: '日程', key: 'schedule' }, // 菜单项务必填写 key
-              { label: '重要日', key: 'importantDay' },
-            ]}
-            onClick={handleOpenModal}
-          />
-        }
+        menu={{
+          items: [
+            { label: '日程', key: 'schedule', onClick: handleOpenModal }, // 菜单项务必填写 key
+            { label: '重要日', key: 'importantDay', onClick: handleOpenModal },
+          ],
+        }}
         trigger={['click']}
       >
         <Button

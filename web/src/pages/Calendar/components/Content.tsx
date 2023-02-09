@@ -90,7 +90,7 @@ export default function Content() {
         dateCellRender={renderItem}
         headerRender={({ value }) => (
           <div style={{ fontSize: 18, fontWeight: 'bold', padding: 10 }}>
-            {value.format('YYYY年MM月')}
+            {value.format('YYYY 年 MM 月')}
           </div>
         )}
         onSelect={handleSelect}

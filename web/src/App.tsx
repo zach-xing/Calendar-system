@@ -20,10 +20,6 @@ const routes = createBrowserRouter([
 ]);
 
 function App() {
-  React.useEffect(() => {
-    
-  }, []);
-
   return <RouterProvider router={routes} />;
 }
 
