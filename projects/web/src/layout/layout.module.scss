@@ -1,0 +1,28 @@
+.root {
+  background-color: white;
+}
+
+.header {
+  height: 64px;
+  background-color: white;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  .logo {
+    width: 40px;
+    height: 40px;
+  }
+}
+
+.body {
+  display: flex;
+  height: calc(100vh - 64px);
+  .sider {
+    width: 40%;
+    border-right: 1px solid rgba(0, 0, 0, 0.1);
+    background-color: white;
+  }
+
+  .content {
+    background-color: white;
+    overflow: auto;
+  }
+}
