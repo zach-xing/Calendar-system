@@ -34,7 +34,7 @@ export default function Sider() {
         menu={{
           items: [
             { label: "日程", key: "schedule", onClick: handleOpenModal }, // 菜单项务必填写 key
-            { label: "重要日", key: "task", onClick: handleOpenModal },
+            { label: "任务", key: "task", onClick: handleOpenModal },
           ],
         }}
         trigger={["click"]}
@@ -53,13 +53,17 @@ export default function Sider() {
       <Calendar fullscreen={false} onPanelChange={onPanelChange} />
 
       <Modal
-        title={curOpenEventModal === "schedule" ? "创建日程" : "创建重要日"}
+        title={curOpenEventModal === "schedule" ? "创建日程" : "创建任务"}
         open={curOpenEventModal.length !== 0}
         onOk={handleOk}
         onCancel={() => setCurOpenEventModal("")}
         footer={null}
       >
-        {curOpenEventModal === "schedule" ? <ScheduleForm /> : <TaskForm />}
+        {curOpenEventModal === "schedule" ? (
+          <ScheduleForm isCreate={true} />
+        ) : (
+          <TaskForm />
+        )}
       </Modal>
     </div>
   );

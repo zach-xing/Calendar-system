@@ -1,12 +1,16 @@
 import React from "react";
 import { Button, DatePicker, Form, Input, message, Select, Switch } from "antd";
-import { remindArr } from "../../constant";
+import { remindArr } from "@zk/types";
 import { createSchedule } from "../../data/event";
+
+interface IProps {
+  isCreate: boolean;
+}
 
 /**
  * schedule 事件的表单组件
  */
-export default function ScheduleForm() {
+const ScheduleForm: React.FC<IProps> = (props) => {
   const [form] = Form.useForm();
   const [isFullday, setIsFullDay] = React.useState<boolean>(false);
 
@@ -48,9 +52,9 @@ export default function ScheduleForm() {
 
       <Form.Item label='提醒' name='remind'>
         <Select>
-          {remindArr.map((item) => (
-            <Select.Option key={item.id} title={item.value} value={item.id}>
-              {item.value}
+          {Object.keys(remindArr).map((item) => (
+            <Select.Option key={item} title={item} value={remindArr[item]}>
+              {item}
             </Select.Option>
           ))}
         </Select>
@@ -70,4 +74,6 @@ export default function ScheduleForm() {
       </Form.Item>
     </Form>
   );
-}
+};
+
+export default ScheduleForm;

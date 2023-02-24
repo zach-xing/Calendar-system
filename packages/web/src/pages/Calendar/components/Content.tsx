@@ -97,7 +97,7 @@ export default function Content() {
       />
 
       <Modal
-        title={curOpenEventModal === "schedule" ? "编辑日程" : "编辑重要日"}
+        title={curOpenEventModal === "schedule" ? "编辑日程" : "编辑任务"}
         open={curOpenEventModal.length !== 0}
         onCancel={() => setCurOpenEventModal("")}
         footer={null}
