@@ -1,16 +1,15 @@
 import React from "react";
 import { Button, DatePicker, Form, Input, message, Select } from "antd";
 import { remindArr, repeatArr } from "../constant";
-import { updateImportantDay } from "../data/event";
 import dayjs from "dayjs";
 
 interface IProps {
   data: any;
 }
 /**
- * ImportantDay 事件的表单组件
+ * Task 事件的表单组件
  */
-export default function EditImportantDayForm(props: IProps) {
+export default function EditTaskForm(props: IProps) {
   const { data } = props;
   const [form] = Form.useForm();
 

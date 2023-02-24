@@ -14,9 +14,9 @@ import { event, REFRESH_DATA } from "../../../events";
 import styles from "../index.module.scss";
 
 interface IProps {
-  list: Array<DataType.ImportantDayType | DataType.ScheduleType>;
+  list: Array<any>;
   setCurOpenEditEventModal: React.Dispatch<
-    React.SetStateAction<"" | "schedule" | "importantDay">
+    React.SetStateAction<"" | "schedule" | "task">
   >;
   setCurEditEvent: React.Dispatch<React.SetStateAction<any>>;
 }
@@ -29,7 +29,7 @@ export default function CalendarDateCell(props: IProps) {
   const [curData, setCurData] = React.useState<any>();
 
   // 点击编辑按钮
-  const handleEdit = (category: "schedule" | "importantDay") => {
+  const handleEdit = (category: "schedule" | "task") => {
     setCurOpenEditEventModal(category);
     setCurEditEvent(curData);
     setCurData(undefined);
@@ -65,16 +65,16 @@ export default function CalendarDateCell(props: IProps) {
             ))}
             <li className={styles.cellLiItem}>
               <Popover
-                trigger="click"
+                trigger='click'
                 content={
                   <div>
                     <p>222</p>
                     <p>Content</p>
                   </div>
                 }
-                title="事件列表"
+                title='事件列表'
               >
-                <Badge color="yellow" text="more" />
+                <Badge color='yellow' text='more' />
               </Popover>
             </li>
           </>
@@ -100,36 +100,36 @@ export default function CalendarDateCell(props: IProps) {
         width={1000}
         footer={null}
       >
-        <Descriptions title="查看" bordered column={{ xs: 2, sm: 2, md: 2 }}>
-          <Descriptions.Item label="标题">{curData?.title}</Descriptions.Item>
-          <Descriptions.Item label="日期">
+        <Descriptions title='查看' bordered column={{ xs: 2, sm: 2, md: 2 }}>
+          <Descriptions.Item label='标题'>{curData?.title}</Descriptions.Item>
+          <Descriptions.Item label='日期'>
             {curData?.category === "schedule"
               ? curData.isFullDay
                 ? curData.dateString
                 : `${curData.startTime}-${curData.endTime}`
               : curData?.dateString}
           </Descriptions.Item>
-          <Descriptions.Item label="提醒">
+          <Descriptions.Item label='提醒'>
             {remindArr[curData?.remind || 0].value}
           </Descriptions.Item>
           {curData?.repeat !== undefined && (
-            <Descriptions.Item label="重复">
+            <Descriptions.Item label='重复'>
               {repeatArr[curData?.repeat || 0].value}
             </Descriptions.Item>
           )}
-          <Descriptions.Item label="描述">{curData?.desc}</Descriptions.Item>
+          <Descriptions.Item label='描述'>{curData?.desc}</Descriptions.Item>
         </Descriptions>
         <Space style={{ marginTop: 20 }}>
           <Button
-            type="primary"
-            size="large"
+            type='primary'
+            size='large'
             onClick={() => handleEdit(curData?.category)}
           >
             编辑
           </Button>
           <Button
             danger
-            size="large"
+            size='large'
             onClick={() => handleRemove(curData?.id, curData?.dateString)}
           >
             删除

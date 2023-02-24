@@ -12,7 +12,7 @@ import { CHANGE_CUR_MONTH, event } from "../events";
  */
 export default function Sider() {
   const [curOpenEventModal, setCurOpenEventModal] = React.useState<
-    "" | "schedule" | "importantDay"
+    "" | "schedule" | "task"
   >("");
 
   const onPanelChange = (value: Dayjs, mode: CalendarMode) => {
@@ -21,7 +21,7 @@ export default function Sider() {
   };
 
   const handleOpenModal: MenuProps["onClick"] = (e) => {
-    setCurOpenEventModal(e.key as "schedule" | "importantDay");
+    setCurOpenEventModal(e.key as "schedule" | "task");
   };
 
   const handleOk = () => {
@@ -34,7 +34,7 @@ export default function Sider() {
         menu={{
           items: [
             { label: "日程", key: "schedule", onClick: handleOpenModal }, // 菜单项务必填写 key
-            { label: "重要日", key: "importantDay", onClick: handleOpenModal },
+            { label: "重要日", key: "task", onClick: handleOpenModal },
           ],
         }}
         trigger={["click"]}

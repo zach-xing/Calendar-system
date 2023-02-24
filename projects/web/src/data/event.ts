@@ -13,10 +13,7 @@ export function fetchEventList(dateString: string, userId: string) {
 /**
  * 创建 schedule
  */
-export function createSchedule(
-  userId: string,
-  data: Omit<DataType.ScheduleType, "id">
-) {
+export function createSchedule(userId: string, data: any) {
   return requset({
     url: `/events/create/schedule/${userId}`,
     method: "POST",
@@ -27,7 +24,7 @@ export function createSchedule(
 /**
  * 编辑 schedule
  */
-export function updateSchedule(userId: string, data: DataType.ScheduleType) {
+export function updateSchedule(userId: string, data: any) {
   return requset({
     url: `/events/update/schedule/${userId}`,
     method: "POST",
@@ -36,28 +33,22 @@ export function updateSchedule(userId: string, data: DataType.ScheduleType) {
 }
 
 /**
- * 创建 importantDay
+ * 创建 Task
  */
-export function createImportantDay(
-  userId: string,
-  data: Omit<DataType.ImportantDayType, "id">
-) {
+export function createTask(userId: string, data: any) {
   return requset({
-    url: `/events/create/importantDay/${userId}`,
+    url: `/events/create/task/${userId}`,
     method: "POST",
     data: data,
   });
 }
 
 /**
- * 编辑 importantDay
+ * 编辑 Task
  */
-export function updateImportantDay(
-  userId: string,
-  data: DataType.ImportantDayType
-) {
+export function updateTask(userId: string, data: any) {
   return requset({
-    url: `/events/update/importantDay/${userId}`,
+    url: `/events/update/task/${userId}`,
     method: "POST",
     data: data,
   });

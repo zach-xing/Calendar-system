@@ -13,10 +13,10 @@ export default function Content() {
   const [curDate, setCurDate] = React.useState(
     new Date().toISOString().slice(0, 10)
   );
-  // 类似 {'2022-10-25': Array<Schedule | ImportantDay>}
+  // 类似 {'2022-10-25': Array<Schedule | task>}
   const [curMonthData, setCurMonthData] = React.useState<any>({});
   const [curOpenEventModal, setCurOpenEventModal] = React.useState<
-    "" | "schedule" | "importantDay"
+    "" | "schedule" | "task"
   >("");
   const [curEditEvent, setCurEditEvent] = React.useState<any>();
 
