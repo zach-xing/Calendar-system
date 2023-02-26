@@ -7,7 +7,8 @@ import {
 import { useFonts } from "expo-font";
 import { SplashScreen, Stack } from "expo-router";
 import { useEffect } from "react";
-import { useColorScheme } from "react-native";
+import { useColorScheme, View } from "react-native";
+import Toast from "react-native-toast-message";
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -46,10 +47,14 @@ function RootLayoutNav() {
     <>
       <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
         <Stack>
-          <Stack.Screen name='(tabs)' options={{ headerShown: false }} />
+          <Stack.Screen
+            name='index'
+            options={{ header: () => <View style={{ height: 36 }}></View> }}
+          />
           <Stack.Screen name='modal' options={{ presentation: "modal" }} />
         </Stack>
       </ThemeProvider>
+      <Toast />
     </>
   );
 }
