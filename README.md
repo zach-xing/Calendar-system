@@ -2,6 +2,8 @@
 
 # 日历 App 设计与实现
 
+这个 repo 只包括 App 端，其他端在 [Calendar-monorepo](https://github.com/zach-xing/Calendar-monorepo)
+
 ## 使用的技术栈
 
 ![](.\doc\imgs\01.png)
