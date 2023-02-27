@@ -1,1 +1,10 @@
-export interface IProps {}
+export interface ISchedule {
+  id: string;
+  title: string;
+  isFullDay: boolean; // 是否全天
+  // 若isFullDay为 true，则下面两个字段为相同值
+  startTime: string; // '2022-10-09 10:00'
+  endTime: string;
+  remind: string; // 提前多久提醒
+  desc?: string;
+}

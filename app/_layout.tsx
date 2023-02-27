@@ -7,7 +7,7 @@ import {
 import { useFonts } from "expo-font";
 import { SplashScreen, Stack } from "expo-router";
 import { useEffect } from "react";
-import { useColorScheme, View } from "react-native";
+import { StatusBar, useColorScheme, View } from "react-native";
 import Toast from "react-native-toast-message";
 
 export {
@@ -46,11 +46,14 @@ function RootLayoutNav() {
   return (
     <>
       <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
-        <Stack>
-          <Stack.Screen
-            name='index'
-            options={{ header: () => <View style={{ height: 36 }}></View> }}
-          />
+        <Stack
+          screenOptions={{
+            header: () => (
+              <View style={{ height: StatusBar.currentHeight }}></View>
+            ),
+          }}
+        >
+          <Stack.Screen name='index' />
           <Stack.Screen name='modal' options={{ presentation: "modal" }} />
         </Stack>
       </ThemeProvider>

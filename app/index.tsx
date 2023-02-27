@@ -1,18 +1,102 @@
 import React from "react";
-import { StyleSheet, TouchableOpacity, View } from "react-native";
+import {
+  FlatList,
+  LayoutChangeEvent,
+  SafeAreaView,
+  StyleSheet,
+  TouchableOpacity,
+  View,
+  Dimensions,
+} from "react-native";
 import { Link, Stack } from "expo-router";
 import Toast from "react-native-toast-message";
 import { Button, Icon, ListItem } from "@rneui/base";
 import { Calendar } from "react-native-calendars";
 import type { DateData } from "react-native-calendars";
-import { SpeedDial, Tab, Text } from "@rneui/themed";
+import { SpeedDial, Text } from "@rneui/themed";
 import dayjs from "dayjs";
+import ScheduleItem from "../components/ScheduleItem";
+import { ISchedule } from "../types";
+
+const cclist: ISchedule[] = [
+  {
+    id: "sdf",
+    title: "123",
+    isFullDay: false,
+    startTime: "2023-02-27 10:00",
+    endTime: "2023-02-27 10:00",
+    remind: "0",
+    desc: "123123131231sdgsgsdfgdgsdgsd",
+  },
+  {
+    id: "sdf1",
+    title: "123",
+    isFullDay: false,
+    startTime: "2023-02-27 10:00",
+    endTime: "2023-02-27 10:00",
+    remind: "0",
+    desc: "123123131231sdgsgsdfgdgsdgsd",
+  },
+  {
+    id: "sdf111",
+    title: "123",
+    isFullDay: false,
+    startTime: "2023-02-27 10:00",
+    endTime: "2023-02-27 10:00",
+    remind: "0",
+    desc: "123123131231sdgsgsdfgdgsdgsd",
+  },
+  {
+    id: "sd12f1",
+    title: "123",
+    isFullDay: false,
+    startTime: "2023-02-27 10:00",
+    endTime: "2023-02-27 10:00",
+    remind: "0",
+    desc: "123123131231sdgsgsdfgdgsdgsd",
+  },
+  {
+    id: "s3df1",
+    title: "123",
+    isFullDay: false,
+    startTime: "2023-02-27 10:00",
+    endTime: "2023-02-27 10:00",
+    remind: "0",
+    desc: "123123131231sdgsgsdfgdgsdgsd",
+  },
+  {
+    id: "sd4f2",
+    title: "123",
+    isFullDay: false,
+    startTime: "2023-02-27 10:00",
+    endTime: "2023-02-27 10:00",
+    remind: "0",
+    desc: "123123131231sdgsgsdfgdgsdgsd",
+  },
+  {
+    id: "sdf3",
+    title: "123",
+    isFullDay: false,
+    startTime: "2023-02-27 10:00",
+    endTime: "2023-02-27 10:00",
+    remind: "0",
+    desc: "123123131231sdgsgsdfgdgsdgsd",
+  },
+  {
+    id: "sdf4",
+    title: "123",
+    isFullDay: false,
+    startTime: "2023-02-27 10:00",
+    endTime: "2023-02-27 10:00",
+    remind: "0",
+    desc: "123123131231sdgsgsdfgdgsdgsd",
+  },
+];
 
 export default function CalendarPage() {
   const [open, setOpen] = React.useState(false);
-  const [index, setIndex] = React.useState(0);
-  const [list, setList] = React.useState([{}]);
-  const [nowDateString, setNowDateString] = React.useState<string>(); // 现实中当前的时间
+  const [list, setList] = React.useState<ISchedule[]>(cclist);
+  const [nowDateString, setNowDateString] = React.useState<string>(""); // 现实中当前的时间
   const [curDateString, setCurDateString] = React.useState<string>(); // 当前正在选中的日期
 
   React.useEffect(() => {
@@ -22,13 +106,7 @@ export default function CalendarPage() {
   }, []);
 
   const handlePressDay = (val: DateData) => {
-    // console.log(JSON.stringify(val, null, 2));
-    // console.log(new Date(val.dateString));
     setCurDateString(val.dateString);
-  };
-
-  const handleMonthChange = (val: DateData) => {
-    console.log("handleMonthChange", val);
   };
 
   // 处理回到 today
@@ -117,19 +195,37 @@ export default function CalendarPage() {
         onDayPress={handlePressDay}
       />
 
-      <View style={styles.info}>
+      <View style={{ backgroundColor: "white" }}>
         <Text
           h3
           h3Style={{
-            padding: 5,
-            paddingLeft: 10,
-            fontWeight: "600",
+            padding: 20,
+            fontWeight: "700",
             fontSize: 20,
             color: "#4b4e6d",
           }}
         >
           Schedule
         </Text>
+
+        <SafeAreaView
+          style={{
+            ...styles.info,
+            height: Dimensions.get("window").height - 355,
+          }}
+        >
+          <FlatList
+            data={list}
+            renderItem={({ item }) => (
+              <ScheduleItem
+                key={item.id}
+                data={item}
+                nowDateStr={nowDateString}
+              />
+            )}
+            keyExtractor={(item) => item.id}
+          />
+        </SafeAreaView>
       </View>
 
       <SpeedDial
@@ -179,8 +275,8 @@ const styles = StyleSheet.create({
     paddingRight: 15,
   },
   info: {
-    backgroundColor: "white",
-    minHeight: "100%",
+    backgroundColor: "pink",
+    paddingLeft: 20,
   },
   icon: {
     padding: 5,
