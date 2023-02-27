@@ -12,10 +12,13 @@ export default function CalendarPage() {
   const [open, setOpen] = React.useState(false);
   const [index, setIndex] = React.useState(0);
   const [list, setList] = React.useState([{}]);
-  const [curDateString, setCurDateString] = React.useState<string>();
+  const [nowDateString, setNowDateString] = React.useState<string>(); // 现实中当前的时间
+  const [curDateString, setCurDateString] = React.useState<string>(); // 当前正在选中的日期
 
   React.useEffect(() => {
-    setCurDateString(dayjs(Date.now()).format("YYYY-MM-DD"));
+    const nowDateStr = dayjs(Date.now()).format("YYYY-MM-DD");
+    setCurDateString(nowDateStr);
+    setNowDateString(nowDateStr);
   }, []);
 
   const handlePressDay = (val: DateData) => {
@@ -28,22 +31,49 @@ export default function CalendarPage() {
     console.log("handleMonthChange", val);
   };
 
+  // 处理回到 today
+  const handleBack2Today = () => {
+    setCurDateString(nowDateString);
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.headerDivision} />
       <Calendar
-        theme={{ dayTextColor: "#a6a6a6" }}
+        theme={{
+          dayTextColor: "#101629",
+        }}
         customHeader={(val: any) => (
           <View>
             <View style={styles.calendarHeader}>
-              <View>
+              <View
+                style={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                  flexDirection: "row",
+                }}
+              >
                 <Text h4>{dayjs(curDateString).format("MMM DD")}</Text>
-                {/* TODO: 加个回到 today 的按钮 */}
+                <TouchableOpacity
+                  style={{
+                    paddingTop: 5,
+                    paddingLeft: 10,
+                    display: curDateString === nowDateString ? "none" : "flex",
+                  }}
+                  onPress={handleBack2Today}
+                >
+                  <Icon
+                    name='settings-backup-restore'
+                    style={{ fontSize: 12 }}
+                  />
+                </TouchableOpacity>
               </View>
               <View
                 style={{
                   display: "flex",
                   justifyContent: "space-between",
+                  alignItems: "center",
                   flexDirection: "row",
                 }}
               >
@@ -70,7 +100,7 @@ export default function CalendarPage() {
               {["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].map((item) => (
                 <Text
                   key={item}
-                  style={{ flex: 1, textAlign: "center", color: "#1c242e" }}
+                  style={{ flex: 1, textAlign: "center", color: "#3e434c" }}
                 >
                   {item}
                 </Text>
@@ -85,7 +115,6 @@ export default function CalendarPage() {
         enableSwipeMonths={true}
         hideExtraDays={true}
         onDayPress={handlePressDay}
-        onMonthChange={handleMonthChange}
       />
 
       <View style={styles.info}>
@@ -100,15 +129,7 @@ export default function CalendarPage() {
           }}
         >
           Schedule
-          {/* TODO: 看这里可不可以加个切换成 Task 的效果 */}
         </Text>
-
-        <View style={{ width: 150 }}>
-          <Button type='clear' size='lg'>
-            Save
-            <Icon name='save' color='blue' />
-          </Button>
-        </View>
       </View>
 
       <SpeedDial
