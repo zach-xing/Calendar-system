@@ -275,7 +275,6 @@ const styles = StyleSheet.create({
     paddingRight: 15,
   },
   info: {
-    backgroundColor: "pink",
     paddingLeft: 20,
   },
   icon: {
