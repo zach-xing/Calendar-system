@@ -16,6 +16,10 @@ interface IProps {
 const ScheduleItem: React.FC<IProps> = (props) => {
   const { data } = props;
 
+  const handleOpenSchedule = React.useCallback(() => {
+
+  }, []);
+
   return (
     <View style={styles.container}>
       {/* 信息展示 */}
@@ -69,6 +73,7 @@ const ScheduleItem: React.FC<IProps> = (props) => {
                 paddingRight: 15,
                 marginLeft: 35,
               }}
+              onPress={handleOpenSchedule}
             />
           </View>
         </View>

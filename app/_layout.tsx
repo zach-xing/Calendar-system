@@ -9,16 +9,12 @@ import { SplashScreen, Stack } from "expo-router";
 import { useEffect } from "react";
 import { StatusBar, useColorScheme, View } from "react-native";
 import Toast from "react-native-toast-message";
+import HeaderBackButton from "../components/HeaderBackButton";
 
 export {
   // Catch any errors thrown by the Layout component.
   ErrorBoundary,
 } from "expo-router";
-
-export const unstable_settings = {
-  // Ensure that reloading on `/modal` keeps a back button present.
-  initialRouteName: "(tabs)",
-};
 
 export default function RootLayout() {
   const [loaded, error] = useFonts({
@@ -54,6 +50,12 @@ function RootLayoutNav() {
           }}
         >
           <Stack.Screen name='index' />
+          <Stack.Screen
+            name='schedule'
+            options={{
+              header: () => <HeaderBackButton />,
+            }}
+          />
           <Stack.Screen name='modal' options={{ presentation: "modal" }} />
         </Stack>
       </ThemeProvider>
