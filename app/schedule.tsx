@@ -211,7 +211,7 @@ export default function CalendarPage() {
         <SafeAreaView
           style={{
             ...styles.info,
-            height: Dimensions.get("window").height - 355,
+            height: Dimensions.get("window").height - 400,
           }}
         >
           <FlatList
