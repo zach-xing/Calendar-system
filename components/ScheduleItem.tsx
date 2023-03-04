@@ -1,5 +1,5 @@
 import React from "react";
-import { StyleSheet, TouchableOpacity, View } from "react-native";
+import { StyleSheet, View } from "react-native";
 import { Icon, Text, Button } from "@rneui/themed";
 import { ISchedule } from "../types";
 import { isDateToday } from "../utils";
@@ -43,7 +43,34 @@ const ScheduleItem: React.FC<IProps> = (props) => {
           <Text style={styles.title}>{data.title}</Text>
 
           {/* 操作 */}
-          <Button title='Solid' radius='20' />
+          <View
+            style={{
+              display: "flex",
+              flexDirection: "row",
+              justifyContent: "flex-end",
+              width: "95%",
+            }}
+          >
+            <Button
+              type='outline'
+              title='删除'
+              radius='15'
+              color='warning'
+              buttonStyle={{
+                paddingLeft: 15,
+                paddingRight: 15,
+              }}
+            />
+            <Button
+              title='详情'
+              radius='15'
+              buttonStyle={{
+                paddingLeft: 15,
+                paddingRight: 15,
+                marginLeft: 35,
+              }}
+            />
+          </View>
         </View>
       </View>
     </View>
@@ -68,6 +95,7 @@ const styles = StyleSheet.create({
     color: "#3c364e",
     paddingTop: 8,
     paddingBottom: 8,
+    width: "95%",
   },
 });
 

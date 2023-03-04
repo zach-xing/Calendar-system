@@ -21,7 +21,7 @@ import { ISchedule } from "../types";
 const cclist: ISchedule[] = [
   {
     id: "sdf",
-    title: "123",
+    title: "说法水电费水电费水电费水电费胜多负少的",
     isFullDay: false,
     startTime: "2023-02-27 10:00",
     endTime: "2023-02-27 10:00",
@@ -264,8 +264,6 @@ const styles = StyleSheet.create({
   headerDivision: {
     backgroundColor: "white",
     height: 10,
-    // borderTopLeftRadius: 100,
-    // borderTopRightRadius: 100,
   },
   calendarHeader: {
     display: "flex",
