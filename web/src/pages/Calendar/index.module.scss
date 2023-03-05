@@ -1,0 +1,14 @@
+.cellulStyle {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  width: 100%;
+  .cellLiItem {
+    display: block;
+    width: 100%;
+    padding-left: 10px;
+    &:hover {
+      background-color: rgba(0, 0, 0, 0.2);
+    }
+  }
+}

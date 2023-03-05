@@ -1,0 +1,42 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id       String     @id @default(uuid())
+  name     String     @default("")
+  account  String     @unique()
+  password String
+  Schedule Schedule[]
+  Task     Task[]
+}
+
+model Schedule {
+  id        String  @id @unique() @default(uuid())
+  title     String  @default("")
+  isFullDay Boolean
+  startTime String
+  endTime   String
+  remind    Int
+  desc      String
+  user      User    @relation(fields: [uid], references: [id])
+  uid       String
+}
+
+model Task {
+  id     String  @id @unique() @default(uuid())
+  title  String  @default("")
+  isDone Boolean
+  time   String
+  desc   String
+  user   User    @relation(fields: [uid], references: [id])
+  uid    String
+}
