@@ -2,6 +2,8 @@ import React from "react";
 import { StyleSheet, View, TouchableOpacity } from "react-native";
 import { Icon, Text } from "@rneui/base";
 import { useRouter } from "expo-router";
+import dayjs from "dayjs";
+import ScheduleItem from "../components/ScheduleItem";
 
 /** 展示样式块 */
 const InfoBlock: React.FC<{
@@ -71,6 +73,30 @@ export default function Home() {
           />
         </View>
       </View>
+
+      <View style={styles.todayBlock}>
+        <Text h4 h4Style={{ margin: 10, marginLeft: 0 }}>
+          Today
+          <Text style={{ fontSize: 12, color: "grey" }}>
+            {" "}
+            {dayjs().format("YYYY MM-DD")}
+          </Text>
+        </Text>
+
+        {/* TODO: 这里需要加 Schedule 和 task 的显示 */}
+        <ScheduleItem
+          data={{
+            id: "sdf",
+            title: "说法水电费水电费水电111",
+            isFullDay: false,
+            startTime: "2023-02-27 10:00",
+            endTime: "2023-02-27 10:00",
+            remind: "0",
+            desc: "123123131231sdgsgsdfgdgsdgsd",
+          }}
+          nowDateStr={""}
+        />
+      </View>
     </View>
   );
 }
@@ -81,5 +107,14 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
     minHeight: "100%",
     paddingTop: 20,
+  },
+  todayBlock: {
+    backgroundColor: "#e9ebf599",
+    marginTop: 30,
+    borderTopLeftRadius: 35,
+    borderTopRightRadius: 35,
+    minHeight: "100%",
+    paddingLeft: 30,
+    paddingRight: 30,
   },
 });

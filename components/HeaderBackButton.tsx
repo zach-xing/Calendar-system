@@ -1,4 +1,4 @@
-import { View, TouchableOpacity } from "react-native";
+import { View } from "react-native";
 import { useRouter } from "expo-router";
 import { StatusBar } from "react-native";
 import { Button, Icon } from "@rneui/base";
