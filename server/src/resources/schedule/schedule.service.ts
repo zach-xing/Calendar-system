@@ -1,5 +1,4 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
-import { IScheduleListArgs } from 'types';
 import { PrismaService } from '../../prisma/prisma.service';
 import { CreateScheduleDto } from './dto/create-schedule.dto';
 import { ModifyScheduleDto } from './dto/modify-schedule.dto';
@@ -9,23 +8,20 @@ export class ScheduleService {
   constructor(private db: PrismaService) {}
 
   /** 根据 args 获取对应的 scheduleList */
-  async getScheduleList(args: IScheduleListArgs) {
-    if (Object.keys(args).length === 0) {
-      throw new HttpException('uid 不能为空', HttpStatus.BAD_REQUEST);
-    }
+  async getScheduleList(uid: string, dateString?: string) {
     try {
       const list = await this.db.schedule.findMany({
         where: {
-          uid: args.uid,
+          uid: uid,
           OR: [
             {
               startTime: {
-                contains: args.dateString || '',
+                contains: dateString || '',
               },
             },
             {
               endTime: {
-                contains: args.dateString || '',
+                contains: dateString || '',
               },
             },
           ],
@@ -88,6 +84,23 @@ export class ScheduleService {
     } catch (error) {
       console.error(error);
       throw new HttpException('修改失败', HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+  }
+
+  /** 根据参数删除对应的 schedule */
+  async deleteScheduleById(id: string) {
+    try {
+      await this.db.schedule.delete({
+        where: {
+          id,
+        },
+      });
+      return { message: 'delete successed' };
+    } catch (error) {
+      throw new HttpException(
+        error.meta.cause || '删除失败',
+        HttpStatus.BAD_REQUEST,
+      );
     }
   }
 }

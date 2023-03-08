@@ -1,4 +1,13 @@
-import { Body, Controller, Get, Post, Put, Query } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Post,
+  Put,
+  Query,
+} from '@nestjs/common';
 import { ScheduleService } from './schedule.service';
 import { IScheduleListArgs } from 'types';
 import { CreateScheduleDto } from './dto/create-schedule.dto';
@@ -11,9 +20,12 @@ export class ScheduleController {
   /**
    * 根据 args 获取对应的 scheduleList
    */
-  @Get()
-  async getScheuleList(@Query() args: IScheduleListArgs) {
-    return this.scheduleService.getScheduleList(args);
+  @Get(':uid')
+  async getScheuleList(
+    @Param('uid') uid: string,
+    @Query('dateString') dateString?: string,
+  ) {
+    return this.scheduleService.getScheduleList(uid, dateString);
   }
 
   /** 创建 schedule */
@@ -26,5 +38,10 @@ export class ScheduleController {
   @Put()
   async modifySchedule(@Body() dto: ModifyScheduleDto) {
     return this.scheduleService.modifySchedule(dto);
+  }
+
+  @Delete(':id')
+  async deleteSchedule(@Param('id') id: string) {
+    return this.scheduleService.deleteScheduleById(id);
   }
 }
