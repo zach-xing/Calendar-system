@@ -9,7 +9,6 @@ import {
   Query,
 } from '@nestjs/common';
 import { ScheduleService } from './schedule.service';
-import { IScheduleListArgs } from 'types';
 import { CreateScheduleDto } from './dto/create-schedule.dto';
 import { ModifyScheduleDto } from './dto/modify-schedule.dto';
 
