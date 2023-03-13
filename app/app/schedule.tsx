@@ -1,7 +1,6 @@
 import React from "react";
 import {
   FlatList,
-  LayoutChangeEvent,
   SafeAreaView,
   StyleSheet,
   TouchableOpacity,

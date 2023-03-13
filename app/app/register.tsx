@@ -1,18 +1,14 @@
+import { View, StyleSheet } from "react-native";
 import React from "react";
-import {
-  StyleSheet,
-  View,
-  TouchableOpacity,
-  TouchableWithoutFeedback,
-} from "react-native";
-import { Button, Icon, Input, Text } from "@rneui/base";
-import { useRouter } from "expo-router";
-import dayjs from "dayjs";
-import storage from "../utils/storage";
-import Toast from "react-native-toast-message";
 import { Controller, useForm } from "react-hook-form";
+import Toast from "react-native-toast-message";
+import { useRouter } from "expo-router";
+import { Input, Text, Button } from "@rneui/base";
 
-export default function Index() {
+/**
+ * 登录 Screen
+ */
+export default function Login() {
   const router = useRouter();
   const {
     control,
@@ -20,48 +16,54 @@ export default function Index() {
     formState: { errors },
   } = useForm();
 
-  React.useEffect(() => {
-    storage
-      .load({
-        key: "user",
-        id: "user",
-      })
-      .then((res) => {
-        router.replace("/home");
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  }, []);
-
-  const onSubmit = async () => {
+  const onSubmit = async (data: any) => {
     try {
-      // const info = await login(data);
-      await storage.save({ key: "user", data: "info" });
-      router.replace("/home");
+      // await register(data);
+      router.back();
       Toast.show({
         type: "success",
-        text1: "登录成功",
+        text1: "注册成功!",
       });
-    } catch (error) {
+    } catch (error: any) {
       Toast.show({
         type: "error",
-        text1: "登录失败",
+        text1: error.message || "注册失败",
       });
     }
+  };
+
+  const [secureTextEntry, setSecureTextEntry] = React.useState(true);
+
+  const toggleSecureEntry = () => {
+    setSecureTextEntry(!secureTextEntry);
   };
 
   return (
     <View style={styles.container}>
       <View style={styles.titleStyle}>
-        <Text style={{ marginVertical: 20, color: "#2089dc", fontSize: 20 }}>
-          Welcome Back👋👋👋
-        </Text>
-        <Text style={{ color: "grey" }}>We are very glad to meet you.</Text>
-        <Text style={{ color: "grey" }}>
-          To use your account, you should log in first.
+        <Text style={{ marginVertical: 20, color: "blue", fontSize: 20 }}>
+          Sign Up
         </Text>
       </View>
+
+      <Controller
+        name='name'
+        control={control}
+        rules={{
+          required: true,
+        }}
+        render={({ field: { onChange, onBlur, value } }) => (
+          <Input
+            style={{ marginVertical: 10 }}
+            value={value}
+            label='名称'
+            placeholder='Place your Name'
+            onBlur={onBlur}
+            onChangeText={onChange}
+            errorMessage={errors.account ? "必填项" : ""}
+          />
+        )}
+      />
 
       <Controller
         name='account'
@@ -96,21 +98,14 @@ export default function Index() {
             placeholder='Place your Password'
             onBlur={onBlur}
             onChangeText={onChange}
-            errorMessage={errors.password ? "必填项" : ""}
+            errorMessage={errors.account ? "必填项" : ""}
           />
         )}
       />
 
-      <View style={{ marginBottom: 30 }}>
-        <Text
-          style={{ color: "grey" }}
-          onPress={() => router.push("/register")}
-        >
-          注册账号👈
-        </Text>
-      </View>
-
-      <Button onPress={handleSubmit(onSubmit)}>Login</Button>
+      <Button style={{ marginTop: 50 }} onPress={handleSubmit(onSubmit)}>
+        Register
+      </Button>
     </View>
   );
 }
@@ -122,6 +117,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 15,
   },
   titleStyle: {
-    marginVertical: 40,
+    marginTop: 40,
+    marginBottom: 20,
   },
 });

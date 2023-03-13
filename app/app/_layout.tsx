@@ -50,6 +50,8 @@ function RootLayoutNav() {
           }}
         >
           <Stack.Screen name='index' />
+          <Stack.Screen name='home' />
+          <Stack.Screen name='register' />
           <Stack.Screen
             name='schedule'
             options={{
@@ -59,7 +61,7 @@ function RootLayoutNav() {
           <Stack.Screen name='modal' options={{ presentation: "modal" }} />
         </Stack>
       </ThemeProvider>
-      <Toast />
+      <Toast topOffset={70} />
     </>
   );
 }
