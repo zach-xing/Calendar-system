@@ -4,6 +4,7 @@ import { Icon, Text } from "@rneui/base";
 import { useRouter } from "expo-router";
 import dayjs from "dayjs";
 import ScheduleItem from "../components/ScheduleItem";
+import storage from "../utils/storage";
 
 /** 展示样式块 */
 const InfoBlock: React.FC<{
@@ -34,6 +35,17 @@ const InfoBlock: React.FC<{
 };
 
 export default function Home() {
+  const [userName, setUserName] = React.useState("Friend");
+
+  React.useEffect(() => {
+    (async () => {
+      const userData = await storage.load({
+        key: "user",
+      });
+      setUserName(userData.name);
+    })();
+  }, []);
+
   return (
     <View style={styles.container}>
       <View style={{ paddingLeft: 30, paddingRight: 30 }}>
@@ -42,7 +54,7 @@ export default function Home() {
             Hello! Welcome
           </Text>
           <Text h3 h3Style={{ fontFamily: "monospace" }}>
-            Zeekg
+            {userName}
           </Text>
           <Text h4 h4Style={{ fontFamily: "monospace" }}>
             Have a nice day!

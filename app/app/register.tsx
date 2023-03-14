@@ -4,6 +4,7 @@ import { Controller, useForm } from "react-hook-form";
 import Toast from "react-native-toast-message";
 import { useRouter } from "expo-router";
 import { Input, Text, Button } from "@rneui/base";
+import { register } from "../api";
 
 /**
  * 登录 Screen
@@ -18,7 +19,7 @@ export default function Login() {
 
   const onSubmit = async (data: any) => {
     try {
-      // await register(data);
+      await register(data);
       router.back();
       Toast.show({
         type: "success",
@@ -30,12 +31,6 @@ export default function Login() {
         text1: error.message || "注册失败",
       });
     }
-  };
-
-  const [secureTextEntry, setSecureTextEntry] = React.useState(true);
-
-  const toggleSecureEntry = () => {
-    setSecureTextEntry(!secureTextEntry);
   };
 
   return (

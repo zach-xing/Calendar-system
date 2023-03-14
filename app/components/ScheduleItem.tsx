@@ -2,7 +2,7 @@ import React from "react";
 import { StyleSheet, View } from "react-native";
 import { Icon, Text, Button } from "@rneui/themed";
 import { ISchedule } from "../types";
-import { isDateToday } from "../utils";
+import { isDateToday } from "../utils/shared";
 import dayjs from "dayjs";
 
 interface IProps {

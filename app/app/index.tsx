@@ -1,16 +1,11 @@
 import React from "react";
-import {
-  StyleSheet,
-  View,
-  TouchableOpacity,
-  TouchableWithoutFeedback,
-} from "react-native";
-import { Button, Icon, Input, Text } from "@rneui/base";
+import { StyleSheet, View } from "react-native";
+import { Button, Input, Text } from "@rneui/base";
 import { useRouter } from "expo-router";
-import dayjs from "dayjs";
 import storage from "../utils/storage";
 import Toast from "react-native-toast-message";
 import { Controller, useForm } from "react-hook-form";
+import { login } from "../api";
 
 export default function Index() {
   const router = useRouter();
@@ -31,19 +26,24 @@ export default function Index() {
       })
       .catch((err) => {
         console.log(err);
+        Toast.show({
+          type: "error",
+          text1: "需要登录",
+        });
       });
   }, []);
 
-  const onSubmit = async () => {
+  const onSubmit = async (data: any) => {
     try {
-      // const info = await login(data);
-      await storage.save({ key: "user", data: "info" });
+      const info = await login(data);
+      await storage.save({ key: "user", data: info });
       router.replace("/home");
       Toast.show({
         type: "success",
         text1: "登录成功",
       });
     } catch (error) {
+      console.log("这里是登录失败的error", error);
       Toast.show({
         type: "error",
         text1: "登录失败",
