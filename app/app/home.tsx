@@ -1,6 +1,6 @@
 import React from "react";
 import { StyleSheet, View, TouchableOpacity } from "react-native";
-import { Icon, Text } from "@rneui/base";
+import { Icon, SpeedDial, Text } from "@rneui/base";
 import { useRouter } from "expo-router";
 import dayjs from "dayjs";
 import ScheduleItem from "../components/ScheduleItem";
@@ -36,6 +36,7 @@ const InfoBlock: React.FC<{
 
 export default function Home() {
   const [userName, setUserName] = React.useState("Friend");
+  const [open, setOpen] = React.useState(false);
 
   React.useEffect(() => {
     (async () => {
@@ -83,6 +84,12 @@ export default function Home() {
             icon={"assignment"}
             goPath='/task'
           />
+          <InfoBlock
+            title={"Memo"}
+            color={"#fc977e"}
+            icon={"book"}
+            goPath='/task'
+          />
         </View>
       </View>
 
@@ -109,6 +116,35 @@ export default function Home() {
           nowDateStr={""}
         />
       </View>
+
+      <SpeedDial
+        isOpen={open}
+        icon={{ name: "add", color: "#fff" }}
+        openIcon={{ name: "close", color: "#fff" }}
+        onOpen={() => setOpen(!open)}
+        onClose={() => setOpen(!open)}
+        color='#00adf5'
+        style={{ paddingBottom: 80 }}
+      >
+        <SpeedDial.Action
+          icon={{ name: "date-range", color: "#fff" }}
+          title='Schedule'
+          color='#00adf5'
+          onPress={() => console.log("Add schedule")}
+        />
+        <SpeedDial.Action
+          icon={{ name: "assignment", color: "#fff" }}
+          title='Task'
+          color='#00adf5'
+          onPress={() => console.log("Add task")}
+        />
+        <SpeedDial.Action
+          icon={{ name: "book", color: "#fff" }}
+          title='Memo'
+          color='#00adf5'
+          onPress={() => console.log("Add Memo")}
+        />
+      </SpeedDial>
     </View>
   );
 }
