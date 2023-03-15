@@ -81,7 +81,7 @@ export default function Home() {
             title={"Task"}
             color={"#7a7fe8"}
             icon={"assignment"}
-            goPath='/schedule'
+            goPath='/task'
           />
         </View>
       </View>

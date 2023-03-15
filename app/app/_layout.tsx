@@ -58,6 +58,12 @@ function RootLayoutNav() {
               header: () => <HeaderBackButton />,
             }}
           />
+          <Stack.Screen
+            name='task'
+            options={{
+              header: () => <HeaderBackButton />,
+            }}
+          />
           <Stack.Screen name='modal' options={{ presentation: "modal" }} />
         </Stack>
       </ThemeProvider>
