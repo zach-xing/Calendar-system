@@ -69,7 +69,7 @@ export default function Home() {
             flexDirection: "row",
             justifyContent: "space-around",
             alignItems: "center",
-            gap: 30,
+            gap: 20,
           }}
         >
           <InfoBlock
@@ -88,7 +88,7 @@ export default function Home() {
             title={"Memo"}
             color={"#fc977e"}
             icon={"book"}
-            goPath='/task'
+            goPath='/memorandum'
           />
         </View>
       </View>
@@ -97,7 +97,6 @@ export default function Home() {
         <Text h4 h4Style={{ margin: 10, marginLeft: 0 }}>
           Today
           <Text style={{ fontSize: 12, color: "grey" }}>
-            {" "}
             {dayjs().format("YYYY MM-DD")}
           </Text>
         </Text>
