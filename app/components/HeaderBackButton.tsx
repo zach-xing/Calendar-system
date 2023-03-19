@@ -9,7 +9,7 @@ export default function HeaderBackButton() {
   return (
     <View
       style={{
-        paddingTop: StatusBar.currentHeight,
+        backgroundColor: 'white',
         display: "flex",
         flexDirection: "row",
       }}

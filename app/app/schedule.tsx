@@ -16,6 +16,7 @@ import { SpeedDial, Text } from "@rneui/themed";
 import dayjs from "dayjs";
 import ScheduleItem from "../components/ScheduleItem";
 import { ISchedule } from "../types";
+import HeaderBackButton from "../components/HeaderBackButton";
 
 const cclist: ISchedule[] = [
   {
@@ -115,6 +116,7 @@ export default function CalendarPage() {
 
   return (
     <View style={styles.container}>
+      <HeaderBackButton />
       <View style={styles.headerDivision} />
       <Calendar
         theme={{

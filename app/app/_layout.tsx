@@ -5,11 +5,10 @@ import {
   ThemeProvider,
 } from "@react-navigation/native";
 import { useFonts } from "expo-font";
-import { SplashScreen, Stack } from "expo-router";
+import { SplashScreen, Slot } from "expo-router";
 import { useEffect } from "react";
 import { StatusBar, useColorScheme, View } from "react-native";
 import Toast from "react-native-toast-message";
-import HeaderBackButton from "../components/HeaderBackButton";
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -41,7 +40,12 @@ function RootLayoutNav() {
 
   return (
     <>
+      <View style={{ height: StatusBar.currentHeight }}></View>
       <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
+        <Slot />
+      </ThemeProvider>
+      <Toast topOffset={70} />
+      {/* <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
         <Stack
           screenOptions={{
             header: () => (
@@ -73,7 +77,7 @@ function RootLayoutNav() {
           <Stack.Screen name='modal' options={{ presentation: "modal" }} />
         </Stack>
       </ThemeProvider>
-      <Toast topOffset={70} />
+      <Toast topOffset={70} /> */}
     </>
   );
 }
