@@ -17,6 +17,7 @@ model User {
   password String
   Schedule Schedule[]
   Task     Task[]
+  Memo     Memo[]
 }
 
 model Schedule {
@@ -40,4 +41,14 @@ model Task {
   level  Int
   user   User    @relation(fields: [uid], references: [id])
   uid    String
+}
+
+model Memo {
+  id               String @id @unique() @default(uuid())
+  title            String @default("")
+  text             String @db.Text
+  createTime       String
+  lastModifiedTime String
+  user             User   @relation(fields: [uid], references: [id])
+  uid              String
 }
