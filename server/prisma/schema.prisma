@@ -37,6 +37,7 @@ model Task {
   isDone Boolean
   time   String
   desc   String
+  level  Int
   user   User    @relation(fields: [uid], references: [id])
   uid    String
 }

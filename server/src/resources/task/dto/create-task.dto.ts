@@ -1,4 +1,4 @@
-import { IsString, IsBoolean } from 'class-validator';
+import { IsString, IsBoolean, IsNumber } from 'class-validator';
 
 export class CreateTaskDto {
   @IsString()
@@ -12,6 +12,9 @@ export class CreateTaskDto {
 
   @IsString()
   time: string;
+
+  @IsNumber()
+  level: number;
 
   @IsString()
   desc: string;
