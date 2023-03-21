@@ -7,16 +7,17 @@ import {
   View,
   Dimensions,
 } from "react-native";
-import { Link, Stack } from "expo-router";
+import { Link, Stack, useRouter } from "expo-router";
 import Toast from "react-native-toast-message";
 import { Button, Icon, ListItem } from "@rneui/base";
 import { Calendar } from "react-native-calendars";
 import type { DateData } from "react-native-calendars";
 import { SpeedDial, Text } from "@rneui/themed";
 import dayjs from "dayjs";
-import ScheduleItem from "../components/ScheduleItem";
-import { ISchedule } from "../types";
-import HeaderBackButton from "../components/HeaderBackButton";
+import ScheduleItem from "../../components/ScheduleItem";
+import { ISchedule } from "../../types";
+import HeaderBackButton from "../../components/HeaderBackButton";
+import { fetchSchedule } from "../../api/schedule";
 
 const cclist: ISchedule[] = [
   {
@@ -94,6 +95,8 @@ const cclist: ISchedule[] = [
 ];
 
 export default function CalendarPage() {
+  const router = useRouter();
+
   const [open, setOpen] = React.useState(false);
   const [list, setList] = React.useState<ISchedule[]>(cclist);
   const [nowDateString, setNowDateString] = React.useState<string>(""); // 现实中当前的时间
@@ -103,6 +106,14 @@ export default function CalendarPage() {
     const nowDateStr = dayjs(Date.now()).format("YYYY-MM-DD");
     setCurDateString(nowDateStr);
     setNowDateString(nowDateStr);
+
+    fetchScheduleData(nowDateStr.slice(0, 7)).catch(console.error);
+  }, []);
+
+  const fetchScheduleData = React.useCallback(async (dateString: string) => {
+    const data = await fetchSchedule(dateString);
+    // TODO: 需要存入 useState()
+    console.log(data);
   }, []);
 
   const handlePressDay = (val: DateData) => {
@@ -112,6 +123,10 @@ export default function CalendarPage() {
   // 处理回到 today
   const handleBack2Today = () => {
     setCurDateString(nowDateString);
+  };
+
+  const linkToCreate = () => {
+    router.push(`/schedule/operate`);
   };
 
   return (
@@ -241,11 +256,11 @@ export default function CalendarPage() {
           icon={{ name: "add", color: "#fff" }}
           title='Create'
           color='#00adf5'
-          onPress={() => console.log("Add Something")}
+          onPress={linkToCreate}
         />
         <SpeedDial.Action
-          icon={{ name: "settings", color: "#fff" }}
-          title='Setting'
+          icon={{ name: "search", color: "#fff" }}
+          title='Search'
           color='#00adf5'
           onPress={() => console.log("Delete Something")}
         />

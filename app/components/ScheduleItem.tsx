@@ -4,6 +4,7 @@ import { Icon, Text, Button } from "@rneui/themed";
 import { ISchedule } from "../types";
 import { isDateToday } from "../utils/shared";
 import dayjs from "dayjs";
+import { useRouter } from "expo-router";
 
 interface IProps {
   data: ISchedule;
@@ -15,10 +16,11 @@ interface IProps {
  */
 const ScheduleItem: React.FC<IProps> = (props) => {
   const { data } = props;
+  const router = useRouter();
 
   const handleOpenSchedule = React.useCallback(() => {
-
-  }, []);
+    router.push(`/schedule/operate?data=${JSON.stringify(data)}`);
+  }, [data]);
 
   return (
     <View style={styles.container}>
