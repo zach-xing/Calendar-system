@@ -9,6 +9,15 @@ import { SplashScreen, Slot } from "expo-router";
 import { useEffect } from "react";
 import { StatusBar, useColorScheme, View } from "react-native";
 import Toast from "react-native-toast-message";
+import {
+  useQuery,
+  useMutation,
+  useQueryClient,
+  QueryClient,
+  QueryClientProvider,
+} from "react-query";
+
+const queryClient = new QueryClient();
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -42,7 +51,9 @@ function RootLayoutNav() {
     <>
       <View style={{ height: StatusBar.currentHeight }}></View>
       <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
-        <Slot />
+        <QueryClientProvider client={queryClient}>
+          <Slot />
+        </QueryClientProvider>
       </ThemeProvider>
       <Toast topOffset={70} />
       {/* <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>

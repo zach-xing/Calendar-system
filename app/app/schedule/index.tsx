@@ -7,9 +7,8 @@ import {
   View,
   Dimensions,
 } from "react-native";
-import { Link, Stack, useRouter } from "expo-router";
-import Toast from "react-native-toast-message";
-import { Button, Icon, ListItem } from "@rneui/base";
+import { useRouter } from "expo-router";
+import { Icon } from "@rneui/base";
 import { Calendar } from "react-native-calendars";
 import type { DateData } from "react-native-calendars";
 import { SpeedDial, Text } from "@rneui/themed";
@@ -17,7 +16,8 @@ import dayjs from "dayjs";
 import ScheduleItem from "../../components/ScheduleItem";
 import { ISchedule } from "../../types";
 import HeaderBackButton from "../../components/HeaderBackButton";
-import { fetchSchedule } from "../../api/schedule";
+import { useFetchSchedule } from "../../api/schedule";
+import storage from "../../utils/storage";
 
 const cclist: ISchedule[] = [
   {
@@ -100,20 +100,32 @@ export default function CalendarPage() {
   const [open, setOpen] = React.useState(false);
   const [list, setList] = React.useState<ISchedule[]>(cclist);
   const [nowDateString, setNowDateString] = React.useState<string>(""); // 现实中当前的时间
-  const [curDateString, setCurDateString] = React.useState<string>(); // 当前正在选中的日期
+  const [curDateString, setCurDateString] = React.useState<string>(""); // 当前正在选中的日期
+
+  const [uid, setUid] = React.useState<string>("");
+  const [searchDateString, setSearchDateString] = React.useState<string>("");
+  const { scheduleData, refetch, isLoading } = useFetchSchedule(
+    uid,
+    searchDateString
+  );
+
+  console.log("data", scheduleData);
 
   React.useEffect(() => {
     const nowDateStr = dayjs(Date.now()).format("YYYY-MM-DD");
     setCurDateString(nowDateStr);
     setNowDateString(nowDateStr);
 
-    fetchScheduleData(nowDateStr.slice(0, 7)).catch(console.error);
-  }, []);
-
-  const fetchScheduleData = React.useCallback(async (dateString: string) => {
-    const data = await fetchSchedule(dateString);
-    // TODO: 需要存入 useState()
-    console.log(data);
+    storage
+      .load({
+        key: "user",
+      })
+      .then((user) => {
+        setUid(user.id);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
   }, []);
 
   const handlePressDay = (val: DateData) => {
