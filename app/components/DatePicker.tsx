@@ -1,55 +1,80 @@
-import { View } from "react-native";
+import { View, TouchableOpacity } from "react-native";
 import React from "react";
 import dayjs from "dayjs";
-import DateTimePickerModal from "react-native-modal-datetime-picker";
-import { ListItem, Text } from "@rneui/base";
+import DateTimePicker, {
+  DateTimePickerEvent,
+} from "@react-native-community/datetimepicker";
+import { Input, ListItem, Text } from "@rneui/base";
 
 interface IProps {
-  label: string;
   onChange: (...event: any[]) => void;
-  mode: "date" | "time" | "datetime";
+  showMode: "date" | "datetime";
 }
 
 /**
  * 自定义 “时间选择器” 组件
  */
 export default function DatePicker(props: IProps) {
+  const id = React.useId();
   const [curTime, setCurTime] = React.useState(new Date());
+  const [mode, setMode] = React.useState<"date" | "time">("date");
   const [isDatePickerVisible, setDatePickerVisibility] = React.useState(false);
 
-  const hideDatePicker = () => {
-    setDatePickerVisibility(false);
+  const openDatePicker = (type?: "date" | "time") => {
+    setDatePickerVisibility(true);
+    setMode(type || "date");
   };
 
-  const handleConfirm = (date: any) => {
-    setCurTime(date);
-    setDatePickerVisibility(false);
-    props.onChange(
-      dayjs(date).format(
-        props.mode !== "datetime" ? "YYYY-MM-DD 00:00" : "YYYY-MM-DD HH:mm"
-      )
-    );
+  const handleConfirm = (event: DateTimePickerEvent, selectedDate?: Date) => {
+    if (selectedDate) {
+      setCurTime(selectedDate);
+      setDatePickerVisibility(false);
+      props.onChange(
+        dayjs(selectedDate).format(
+          props.showMode !== "date" ? "YYYY-MM-DD 00:00" : "YYYY-MM-DD HH:mm"
+        )
+      );
+    }
   };
 
   return (
     <View>
-      <ListItem onPress={() => setDatePickerVisibility(true)}>
-        <ListItem.Content>
-          <ListItem.Title>{props.label}</ListItem.Title>
-          <ListItem.Subtitle>
-            {dayjs(curTime).format(
-              props.mode !== "datetime" ? "YYYY-MM-DD" : "YYYY-MM-DD HH:mm"
-            )}
-          </ListItem.Subtitle>
-        </ListItem.Content>
-      </ListItem>
+      {props.showMode === "date" ? (
+        <TouchableOpacity onPress={() => openDatePicker()}>
+          <Input placeholder='日期' disabled />
+        </TouchableOpacity>
+      ) : (
+        <View
+          style={{
+            display: "flex",
+            flexDirection: "row",
+            justifyContent: "space-between",
+          }}
+        >
+          <TouchableOpacity
+            style={{ width: "45%" }}
+            onPress={() => openDatePicker("date")}
+          >
+            <Input placeholder='日期' disabled />
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={{ width: "45%" }}
+            onPress={() => openDatePicker("time")}
+          >
+            <Input placeholder='时间' disabled />
+          </TouchableOpacity>
+        </View>
+      )}
 
-      <DateTimePickerModal
-        isVisible={isDatePickerVisible}
-        mode={props.mode}
-        onConfirm={handleConfirm}
-        onCancel={hideDatePicker}
-      />
+      {isDatePickerVisible && (
+        <DateTimePicker
+          testID={id}
+          mode={mode}
+          value={curTime}
+          is24Hour={true}
+          onChange={handleConfirm}
+        />
+      )}
     </View>
   );
 }

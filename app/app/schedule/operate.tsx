@@ -8,6 +8,7 @@ import dayjs from "dayjs";
 import { ISchedule } from "../../types";
 import HeaderBackButton from "../../components/HeaderBackButton";
 import { Controller, useForm } from "react-hook-form";
+import DatePicker from "../../components/DatePicker";
 
 export default function OperateComp() {
   const searchParams = useSearchParams();
@@ -19,6 +20,7 @@ export default function OperateComp() {
   } = useForm({
     defaultValues: searchParams,
   });
+  const [selectedFullDay, setSelectedFullDay] = React.useState(false);
 
   const onSubmit = async (data: any) => {
     try {
@@ -54,23 +56,60 @@ export default function OperateComp() {
           )}
         />
 
-        <Controller
-          name='isFullDay'
-          control={control}
-          rules={{
-            required: true,
-          }}
-          render={({ field: { onChange, value } }: any) => (
-            <View style={{ display: "flex", flexDirection: "column" }}>
-              <Text style={styles.labelStyle}>是否全天</Text>
-              <Switch
-                value={value}
-                onValueChange={onChange}
-                style={{ width: 50 }}
-              />
-            </View>
-          )}
-        />
+        <View style={{ display: "flex", flexDirection: "column" }}>
+          <Text style={styles.labelStyle}>是否全天</Text>
+          <Switch
+            value={selectedFullDay}
+            onValueChange={setSelectedFullDay}
+            style={{ width: 50 }}
+          />
+        </View>
+
+        {selectedFullDay ? (
+          // 全天
+          <Controller
+            name='startTime'
+            control={control}
+            rules={{
+              required: true,
+            }}
+            render={({ field: { onChange } }) => (
+              <View style={{ display: "flex", flexDirection: "column" }}>
+                <Text style={styles.labelStyle}>日期</Text>
+                <DatePicker onChange={onChange} showMode='date' />
+              </View>
+            )}
+          />
+        ) : (
+          <>
+            <Controller
+              name='startTime'
+              control={control}
+              rules={{
+                required: true,
+              }}
+              render={({ field: { onChange } }) => (
+                <View style={{ display: "flex", flexDirection: "column" }}>
+                  <Text style={styles.labelStyle}>开始时间</Text>
+                  <DatePicker onChange={onChange} showMode='datetime' />
+                </View>
+              )}
+            />
+            <Controller
+              name='endTime'
+              control={control}
+              rules={{
+                required: true,
+              }}
+              render={({ field: { onChange } }) => (
+                <View style={{ display: "flex", flexDirection: "column" }}>
+                  <Text style={styles.labelStyle}>结束时间</Text>
+                  <DatePicker onChange={onChange} showMode='datetime' />
+                </View>
+              )}
+            />
+          </>
+        )}
 
         <Controller
           name='desc'
