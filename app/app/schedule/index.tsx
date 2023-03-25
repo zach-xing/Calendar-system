@@ -19,6 +19,7 @@ import HeaderBackButton from "../../components/HeaderBackButton";
 import { useFetchSchedule } from "../../api/schedule";
 import storage from "../../utils/storage";
 import { isBetweenWithDay } from "../../utils/shared";
+import EmptyComp from "../../components/EmptyComp";
 
 /**
  * 显示将要标记的日期
@@ -194,6 +195,7 @@ export default function CalendarPage() {
           }}
         >
           <FlatList
+            ListEmptyComponent={EmptyComp}
             data={showSelectedDateSchedule(
               scheduleData?.list || [],
               curDateString
