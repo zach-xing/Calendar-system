@@ -1,15 +1,18 @@
 import React from "react";
-import { StyleSheet, View } from "react-native";
+import { StyleSheet, View, TouchableOpacity } from "react-native";
 import { Icon, Text, Button } from "@rneui/themed";
 import { ISchedule } from "../types";
 import { isDateToday } from "../utils/shared";
 import dayjs from "dayjs";
 import { useRouter } from "expo-router";
-import ConfirmDeleteButton from "./ConfirmDeleteButton";
+import { ListItem } from "@rneui/base";
+import { deleteSchedule } from "../api/schedule";
+import { Toast } from "react-native-toast-message/lib/src/Toast";
 
 interface IProps {
   data: ISchedule;
   nowDateStr: string;
+  deletedCallback?: Function;
 }
 
 /**
@@ -23,70 +26,62 @@ const ScheduleItem: React.FC<IProps> = (props) => {
     router.push(`/schedule/operate?data=${JSON.stringify(data)}`);
   }, [data]);
 
+  const handleDeleteSchedule = React.useCallback(async () => {
+    try {
+      await deleteSchedule(data.id);
+      Toast.show({
+        type: "success",
+        text1: "删除成功",
+      });
+      props.deletedCallback && props.deletedCallback();
+    } catch (error) {
+      Toast.show({
+        type: "error",
+        text1: "删除失败",
+      });
+    }
+  }, []);
+
   return (
-    <View style={styles.container}>
+    <ListItem.Swipeable
+      rightContent={() => (
+        <Button
+          title='Delete'
+          onPress={handleDeleteSchedule}
+          icon={{ name: "delete", color: "white" }}
+          buttonStyle={{ minHeight: "100%", backgroundColor: "red" }}
+        />
+      )}
+    >
       {/* 信息展示 */}
       <View
         style={{
           display: "flex",
           flexDirection: "row",
           alignContent: "flex-start",
+          width: "100%",
         }}
       >
         <Icon name='adjust' size={16} color='#00adf5' />
         <View style={{ paddingLeft: 20 }}>
-          <Text style={styles.timeTips}>
-            {/* TODO: 需要考虑多天的情况 */}
-            {isDateToday(data.startTime)
-              ? "Today"
-              : data.isFullDay
-              ? "全天"
-              : dayjs(data.startTime).format("MM-DD")}
-            {","}
-            {dayjs(data.startTime).format("HH:mm")}
-            {" - "}
-            {dayjs(data.endTime).format("HH:mm")}
-          </Text>
-          <Text style={styles.title}>{data.title}</Text>
-
-          {/* 操作 */}
-          <View
-            style={{
-              display: "flex",
-              flexDirection: "row",
-              justifyContent: "flex-end",
-              width: "95%",
-            }}
-          >
-            <ConfirmDeleteButton
-              children={
-                <Button
-                  type='outline'
-                  title='删除'
-                  radius='15'
-                  color='warning'
-                  buttonStyle={{
-                    paddingLeft: 15,
-                    paddingRight: 15,
-                  }}
-                />
-              }
-              onConfirm={() => console.log("delete")}
-            />
-            <Button
-              title='详情'
-              radius='15'
-              buttonStyle={{
-                paddingLeft: 15,
-                paddingRight: 15,
-                marginLeft: 35,
-              }}
-              onPress={handleOpenSchedule}
-            />
-          </View>
+          <TouchableOpacity onPress={handleOpenSchedule}>
+            <Text style={styles.timeTips}>
+              {/* TODO: 需要考虑多天的情况 */}
+              {isDateToday(data.startTime)
+                ? "Today"
+                : data.isFullDay
+                ? "全天"
+                : dayjs(data.startTime).format("MM-DD")}
+              {","}
+              {dayjs(data.startTime).format("HH:mm")}
+              {" - "}
+              {dayjs(data.endTime).format("HH:mm")}
+            </Text>
+            <Text style={styles.title}>{data.title}</Text>
+          </TouchableOpacity>
         </View>
       </View>
-    </View>
+    </ListItem.Swipeable>
   );
 };
 
@@ -97,6 +92,7 @@ const styles = StyleSheet.create({
     paddingBottom: 20,
     margin: 0,
     marginBottom: 10,
+    backgroundColor: "transparent",
   },
   timeTips: {
     color: "#7d8091",

@@ -225,6 +225,7 @@ export default function CalendarPage() {
                   key={item.id}
                   data={item}
                   nowDateStr={nowDateString}
+                  deletedCallback={refetch}
                 />
               )}
               keyExtractor={(item) => item.id}
