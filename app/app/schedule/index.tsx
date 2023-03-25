@@ -69,6 +69,10 @@ export default function CalendarPage() {
       });
   }, []);
 
+  React.useEffect(() => {
+    refetch();
+  }, [curMonth]);
+
   // 当 press 某个日期时
   const handlePressDay = (val: DateData) => {
     setCurDateString(val.dateString);

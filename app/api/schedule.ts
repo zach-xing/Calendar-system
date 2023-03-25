@@ -18,7 +18,7 @@ export function useFetchSchedule(id: string, dateString: string) {
     total: number;
     list: ISchedule[];
   }>("fetch-schedule-list", () => fetchSchedule(id, dateString), {
-    enabled: !!id && dateString.length === 7,
+    enabled: true,
     refetchInterval: false,
     refetchIntervalInBackground: false,
     refetchOnWindowFocus: true,
