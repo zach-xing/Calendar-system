@@ -5,6 +5,7 @@ import { ISchedule } from "../types";
 import { isDateToday } from "../utils/shared";
 import dayjs from "dayjs";
 import { useRouter } from "expo-router";
+import ConfirmDeleteButton from "./ConfirmDeleteButton";
 
 interface IProps {
   data: ISchedule;
@@ -57,15 +58,20 @@ const ScheduleItem: React.FC<IProps> = (props) => {
               width: "95%",
             }}
           >
-            <Button
-              type='outline'
-              title='删除'
-              radius='15'
-              color='warning'
-              buttonStyle={{
-                paddingLeft: 15,
-                paddingRight: 15,
-              }}
+            <ConfirmDeleteButton
+              children={
+                <Button
+                  type='outline'
+                  title='删除'
+                  radius='15'
+                  color='warning'
+                  buttonStyle={{
+                    paddingLeft: 15,
+                    paddingRight: 15,
+                  }}
+                />
+              }
+              onConfirm={() => console.log("delete")}
             />
             <Button
               title='详情'

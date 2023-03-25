@@ -17,18 +17,22 @@ export function useFetchSchedule(id: string, dateString: string) {
   const { data, refetch, isLoading } = useQuery<{
     total: number;
     list: ISchedule[];
-  }>("fetch-schedule-list", () => fetchSchedule(id, dateString), {
-    enabled: true,
-    refetchInterval: false,
-    refetchIntervalInBackground: false,
-    refetchOnWindowFocus: true,
-    onError: (err: any) => {
-      Toast.show({
-        type: "error",
-        text1: err.message || "获取日程失败",
-      });
-    },
-  });
+  }>(
+    ["fetch-schedule-list", id, dateString],
+    async () => await fetchSchedule(id, dateString),
+    {
+      enabled: id.length !== 0 && dateString.length !== 0,
+      refetchInterval: false,
+      refetchIntervalInBackground: false,
+      refetchOnWindowFocus: true,
+      onError: (err: any) => {
+        Toast.show({
+          type: "error",
+          text1: err.message || "获取日程失败",
+        });
+      },
+    }
+  );
 
   return {
     scheduleData: data,

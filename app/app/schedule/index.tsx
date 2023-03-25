@@ -8,7 +8,7 @@ import {
   Dimensions,
 } from "react-native";
 import { useRouter } from "expo-router";
-import { Icon } from "@rneui/base";
+import { Button, Icon, Skeleton } from "@rneui/base";
 import { Calendar } from "react-native-calendars";
 import type { DateData } from "react-native-calendars";
 import { SpeedDial, Text } from "@rneui/themed";
@@ -70,7 +70,9 @@ export default function CalendarPage() {
   }, []);
 
   React.useEffect(() => {
-    refetch();
+    if (uid.length !== 0 && curMonth.length !== 0) {
+      refetch();
+    }
   }, [curMonth]);
 
   // 当 press 某个日期时
@@ -192,28 +194,43 @@ export default function CalendarPage() {
           Schedule
         </Text>
 
-        <SafeAreaView
-          style={{
-            ...styles.info,
-            height: Dimensions.get("window").height - 400,
-          }}
-        >
-          <FlatList
-            ListEmptyComponent={EmptyComp}
-            data={showSelectedDateSchedule(
-              scheduleData?.list || [],
-              curDateString
-            )}
-            renderItem={({ item }) => (
-              <ScheduleItem
-                key={item.id}
-                data={item}
-                nowDateStr={nowDateString}
-              />
-            )}
-            keyExtractor={(item) => item.id}
-          />
-        </SafeAreaView>
+        {isLoading ? (
+          <View style={{ paddingHorizontal: 20 }}>
+            <Button
+              loading={true}
+              loadingProps={{
+                size: "large",
+                color: "#2089dc",
+              }}
+              buttonStyle={{
+                backgroundColor: "white",
+              }}
+            />
+          </View>
+        ) : (
+          <SafeAreaView
+            style={{
+              ...styles.info,
+              height: Dimensions.get("window").height - 400,
+            }}
+          >
+            <FlatList
+              ListEmptyComponent={EmptyComp}
+              data={showSelectedDateSchedule(
+                scheduleData?.list || [],
+                curDateString
+              )}
+              renderItem={({ item }) => (
+                <ScheduleItem
+                  key={item.id}
+                  data={item}
+                  nowDateStr={nowDateString}
+                />
+              )}
+              keyExtractor={(item) => item.id}
+            />
+          </SafeAreaView>
+        )}
       </View>
 
       <SpeedDial
