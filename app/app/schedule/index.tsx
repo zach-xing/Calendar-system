@@ -18,103 +18,43 @@ import { ISchedule } from "../../types";
 import HeaderBackButton from "../../components/HeaderBackButton";
 import { useFetchSchedule } from "../../api/schedule";
 import storage from "../../utils/storage";
+import { isBetweenWithDay } from "../../utils/shared";
 
-const cclist: ISchedule[] = [
-  {
-    id: "sdf",
-    title: "说法水电费水电费水电费水电费胜多负少的",
-    isFullDay: false,
-    startTime: "2023-02-27 10:00",
-    endTime: "2023-02-27 10:00",
-    remind: "0",
-    desc: "123123131231sdgsgsdfgdgsdgsd",
-  },
-  {
-    id: "sdf1",
-    title: "123",
-    isFullDay: false,
-    startTime: "2023-02-27 10:00",
-    endTime: "2023-02-27 10:00",
-    remind: "0",
-    desc: "123123131231sdgsgsdfgdgsdgsd",
-  },
-  {
-    id: "sdf111",
-    title: "123",
-    isFullDay: false,
-    startTime: "2023-02-27 10:00",
-    endTime: "2023-02-27 10:00",
-    remind: "0",
-    desc: "123123131231sdgsgsdfgdgsdgsd",
-  },
-  {
-    id: "sd12f1",
-    title: "123",
-    isFullDay: false,
-    startTime: "2023-02-27 10:00",
-    endTime: "2023-02-27 10:00",
-    remind: "0",
-    desc: "123123131231sdgsgsdfgdgsdgsd",
-  },
-  {
-    id: "s3df1",
-    title: "123",
-    isFullDay: false,
-    startTime: "2023-02-27 10:00",
-    endTime: "2023-02-27 10:00",
-    remind: "0",
-    desc: "123123131231sdgsgsdfgdgsdgsd",
-  },
-  {
-    id: "sd4f2",
-    title: "123",
-    isFullDay: false,
-    startTime: "2023-02-27 10:00",
-    endTime: "2023-02-27 10:00",
-    remind: "0",
-    desc: "123123131231sdgsgsdfgdgsdgsd",
-  },
-  {
-    id: "sdf3",
-    title: "123",
-    isFullDay: false,
-    startTime: "2023-02-27 10:00",
-    endTime: "2023-02-27 10:00",
-    remind: "0",
-    desc: "123123131231sdgsgsdfgdgsdgsd",
-  },
-  {
-    id: "sdf4",
-    title: "123",
-    isFullDay: false,
-    startTime: "2023-02-27 10:00",
-    endTime: "2023-02-27 10:00",
-    remind: "0",
-    desc: "123123131231sdgsgsdfgdgsdgsd",
-  },
-];
+/**
+ * 显示将要标记的日期
+ */
+const showMarkedDate = (list?: ISchedule[]) => {
+  const newObj: any = {};
+  list
+    ?.map((item) => dayjs(item.startTime).format("YYYY-MM-DD"))
+    .forEach((key) => {
+      newObj[key] = { marked: true };
+    });
+  return newObj;
+};
+
+const showSelectedDateSchedule = (list: ISchedule[], curDate: string) => {
+  return list.filter((item) => {
+    return isBetweenWithDay(item.startTime, item.endTime, curDate);
+  });
+};
 
 export default function CalendarPage() {
   const router = useRouter();
 
   const [open, setOpen] = React.useState(false);
-  const [list, setList] = React.useState<ISchedule[]>(cclist);
   const [nowDateString, setNowDateString] = React.useState<string>(""); // 现实中当前的时间
   const [curDateString, setCurDateString] = React.useState<string>(""); // 当前正在选中的日期
+  const [curMonth, setCurMonth] = React.useState<string>(""); // eg: 2023-01
 
   const [uid, setUid] = React.useState<string>("");
-  const [searchDateString, setSearchDateString] = React.useState<string>("");
-  const { scheduleData, refetch, isLoading } = useFetchSchedule(
-    uid,
-    searchDateString
-  );
-
-  console.log("data", scheduleData);
+  const { scheduleData, refetch, isLoading } = useFetchSchedule(uid, curMonth);
 
   React.useEffect(() => {
     const nowDateStr = dayjs(Date.now()).format("YYYY-MM-DD");
     setCurDateString(nowDateStr);
     setNowDateString(nowDateStr);
+    setCurMonth(dayjs(nowDateStr).format("YYYY-MM"));
 
     storage
       .load({
@@ -128,8 +68,15 @@ export default function CalendarPage() {
       });
   }, []);
 
+  // 当 press 某个日期时
   const handlePressDay = (val: DateData) => {
     setCurDateString(val.dateString);
+  };
+
+  // 当 month 更改时
+  const handleMonthChange = (date: DateData) => {
+    setCurMonth(date.dateString.slice(0, 7));
+    setCurDateString(date.dateString);
   };
 
   // 处理回到 today
@@ -215,12 +162,16 @@ export default function CalendarPage() {
           </View>
         )}
         initialDate={curDateString}
-        markedDates={{ [`${curDateString}`]: { selected: true } }}
+        markedDates={{
+          ...showMarkedDate(scheduleData?.list),
+          [`${curDateString}`]: { selected: true },
+        }}
         monthFormat={"MMM dd"}
         markingType={"dot"}
         enableSwipeMonths={true}
         hideExtraDays={true}
         onDayPress={handlePressDay}
+        onMonthChange={handleMonthChange}
       />
 
       <View style={{ backgroundColor: "white" }}>
@@ -243,7 +194,10 @@ export default function CalendarPage() {
           }}
         >
           <FlatList
-            data={list}
+            data={showSelectedDateSchedule(
+              scheduleData?.list || [],
+              curDateString
+            )}
             renderItem={({ item }) => (
               <ScheduleItem
                 key={item.id}

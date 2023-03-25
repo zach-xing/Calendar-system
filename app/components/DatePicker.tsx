@@ -7,6 +7,7 @@ import DateTimePicker, {
 import { Input, ListItem, Text } from "@rneui/base";
 
 interface IProps {
+  defalutValue: string | Date;
   onChange: (...event: any[]) => void;
   showMode: "date" | "datetime";
 }
@@ -16,7 +17,7 @@ interface IProps {
  */
 export default function DatePicker(props: IProps) {
   const id = React.useId();
-  const [curTime, setCurTime] = React.useState(new Date());
+  const [curTime, setCurTime] = React.useState(new Date(props.defalutValue));
   const [mode, setMode] = React.useState<"date" | "time">("date");
   const [isDatePickerVisible, setDatePickerVisibility] = React.useState(false);
 
@@ -29,11 +30,7 @@ export default function DatePicker(props: IProps) {
     if (selectedDate) {
       setCurTime(selectedDate);
       setDatePickerVisibility(false);
-      props.onChange(
-        dayjs(selectedDate).format(
-          props.showMode !== "date" ? "YYYY-MM-DD 00:00" : "YYYY-MM-DD HH:mm"
-        )
-      );
+      props.onChange(dayjs(selectedDate).format("YYYY-MM-DD HH:mm"));
     }
   };
 
@@ -41,7 +38,11 @@ export default function DatePicker(props: IProps) {
     <View>
       {props.showMode === "date" ? (
         <TouchableOpacity onPress={() => openDatePicker()}>
-          <Input placeholder='日期' disabled />
+          <Input
+            value={dayjs(curTime).format("YYYY-MM-DD")}
+            placeholder='日期'
+            disabled
+          />
         </TouchableOpacity>
       ) : (
         <View
@@ -55,13 +56,21 @@ export default function DatePicker(props: IProps) {
             style={{ width: "45%" }}
             onPress={() => openDatePicker("date")}
           >
-            <Input placeholder='日期' disabled />
+            <Input
+              value={dayjs(curTime).format("YYYY-MM-DD")}
+              placeholder='日期'
+              disabled
+            />
           </TouchableOpacity>
           <TouchableOpacity
             style={{ width: "45%" }}
             onPress={() => openDatePicker("time")}
           >
-            <Input placeholder='时间' disabled />
+            <Input
+              value={dayjs(curTime).format("HH:mm")}
+              placeholder='时间'
+              disabled
+            />
           </TouchableOpacity>
         </View>
       )}

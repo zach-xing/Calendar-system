@@ -1,37 +1,69 @@
-import React from "react";
+import React, { useCallback } from "react";
 import { StyleSheet, View } from "react-native";
-import { Link, Stack, useSearchParams } from "expo-router";
+import { useRouter, useSearchParams } from "expo-router";
 import Toast from "react-native-toast-message";
-import { Button, Icon, Input, ListItem, Switch } from "@rneui/base";
+import { Button, Input, Switch } from "@rneui/base";
 import { Text } from "@rneui/themed";
 import dayjs from "dayjs";
 import { ISchedule } from "../../types";
 import HeaderBackButton from "../../components/HeaderBackButton";
 import { Controller, useForm } from "react-hook-form";
 import DatePicker from "../../components/DatePicker";
+import SelectRemindDialog from "../../components/SelectRemindDialog";
+import { createSchedule, modifySchedule } from "../../api/schedule";
 
 export default function OperateComp() {
   const searchParams = useSearchParams();
-  console.log(searchParams);
+  const router = useRouter();
+
   const {
     control,
     handleSubmit,
     formState: { errors },
   } = useForm({
-    defaultValues: searchParams,
+    defaultValues: JSON.parse(
+      searchParams.data ||
+        JSON.stringify({
+          desc: "",
+          endTime: dayjs(Date.now()).format("YYYY-MM-DD HH:mm"),
+          isFullDay: false,
+          remind: "0",
+          startTime: dayjs(Date.now()).format("YYYY-MM-DD HH:mm"),
+          title: "",
+        })
+    ),
   });
+
   const [selectedFullDay, setSelectedFullDay] = React.useState(false);
 
-  const onSubmit = async (data: any) => {
+  const onSubmit = useCallback(async (data: any) => {
     try {
-      console.log(data);
+      // TODO: 完善 schedule API
+      if (!!searchParams.data) {
+        // modify
+        await modifySchedule(data);
+      } else {
+        // create
+        await createSchedule(data);
+      }
+      console.log("最后的数据", {
+        ...data,
+        isFullDay: selectedFullDay,
+      });
+      router;
+      Toast.show({
+        type: "success",
+        text1: "保存成功",
+      });
+      router.back();
     } catch (error: any) {
+      console.error(error);
       Toast.show({
         type: "error",
-        text1: error.message || "操作失败",
+        text1: error.message || "保存失败",
       });
     }
-  };
+  }, []);
 
   return (
     <>
@@ -51,7 +83,7 @@ export default function OperateComp() {
               placeholder='Place your title'
               onBlur={onBlur}
               onChangeText={onChange}
-              errorMessage={errors.account ? "必填项" : ""}
+              errorMessage={errors.title ? "必填项" : ""}
             />
           )}
         />
@@ -73,10 +105,19 @@ export default function OperateComp() {
             rules={{
               required: true,
             }}
-            render={({ field: { onChange } }) => (
+            render={({ field: { onChange, value } }) => (
               <View style={{ display: "flex", flexDirection: "column" }}>
-                <Text style={styles.labelStyle}>日期</Text>
-                <DatePicker onChange={onChange} showMode='date' />
+                <View style={{ display: "flex", flexDirection: "row" }}>
+                  <Text style={styles.labelStyle}>日期</Text>
+                  <Text style={styles.errorText}>
+                    {errors.startTime ? "必填项" : ""}
+                  </Text>
+                </View>
+                <DatePicker
+                  defalutValue={value}
+                  onChange={onChange}
+                  showMode='date'
+                />
               </View>
             )}
           />
@@ -88,10 +129,19 @@ export default function OperateComp() {
               rules={{
                 required: true,
               }}
-              render={({ field: { onChange } }) => (
+              render={({ field: { onChange, value } }) => (
                 <View style={{ display: "flex", flexDirection: "column" }}>
-                  <Text style={styles.labelStyle}>开始时间</Text>
-                  <DatePicker onChange={onChange} showMode='datetime' />
+                  <View style={{ display: "flex", flexDirection: "row" }}>
+                    <Text style={styles.labelStyle}>开始时间</Text>
+                    <Text style={styles.errorText}>
+                      {errors.startTime ? "必填项" : ""}
+                    </Text>
+                  </View>
+                  <DatePicker
+                    defalutValue={value}
+                    onChange={onChange}
+                    showMode='datetime'
+                  />
                 </View>
               )}
             />
@@ -101,10 +151,19 @@ export default function OperateComp() {
               rules={{
                 required: true,
               }}
-              render={({ field: { onChange } }) => (
+              render={({ field: { onChange, value } }) => (
                 <View style={{ display: "flex", flexDirection: "column" }}>
-                  <Text style={styles.labelStyle}>结束时间</Text>
-                  <DatePicker onChange={onChange} showMode='datetime' />
+                  <View style={{ display: "flex", flexDirection: "row" }}>
+                    <Text style={styles.labelStyle}>结束时间</Text>
+                    <Text style={styles.errorText}>
+                      {errors.endTime ? "必填项" : ""}
+                    </Text>
+                  </View>
+                  <DatePicker
+                    defalutValue={value}
+                    onChange={onChange}
+                    showMode='datetime'
+                  />
                 </View>
               )}
             />
@@ -112,11 +171,27 @@ export default function OperateComp() {
         )}
 
         <Controller
-          name='desc'
+          name='remind'
           control={control}
           rules={{
             required: true,
           }}
+          render={({ field: { onChange, value } }) => (
+            <View style={{ display: "flex", flexDirection: "column" }}>
+              <View style={{ display: "flex", flexDirection: "row" }}>
+                <Text style={styles.labelStyle}>提醒</Text>
+                <Text style={styles.errorText}>
+                  {errors.remind ? "必填项" : ""}
+                </Text>
+              </View>
+              <SelectRemindDialog defaultValue={value} onChange={onChange} />
+            </View>
+          )}
+        />
+
+        <Controller
+          name='desc'
+          control={control}
           render={({ field: { onChange, onBlur, value } }) => (
             <Input
               style={{ marginVertical: 10 }}
@@ -125,7 +200,7 @@ export default function OperateComp() {
               placeholder='Place your description'
               onBlur={onBlur}
               onChangeText={onChange}
-              errorMessage={errors.account ? "必填项" : ""}
+              errorMessage={errors.desc ? "必填项" : ""}
             />
           )}
         />
@@ -150,5 +225,10 @@ const styles = StyleSheet.create({
     color: "#86939e",
     paddingLeft: 10,
     fontWeight: "bold",
+  },
+  errorText: {
+    color: "red",
+    fontSize: 14,
+    paddingLeft: 10,
   },
 });

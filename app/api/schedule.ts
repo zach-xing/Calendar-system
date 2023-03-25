@@ -17,8 +17,8 @@ export function useFetchSchedule(id: string, dateString: string) {
   const { data, refetch, isLoading } = useQuery<{
     total: number;
     list: ISchedule[];
-  }>("fetch-schedule-list", async () => await fetchSchedule(id, dateString), {
-    enabled: !!id,
+  }>("fetch-schedule-list", () => fetchSchedule(id, dateString), {
+    enabled: !!id && dateString.length === 7,
     refetchInterval: false,
     refetchIntervalInBackground: false,
     refetchOnWindowFocus: true,
@@ -44,8 +44,11 @@ export async function createSchedule(body: ICreateSchedule) {
   });
   return await request({
     method: "POST",
-    url: `/schedule/${userData.id}`,
-    data: body,
+    url: `/schedule`,
+    data: {
+      ...body,
+      uid: "" + userData.id,
+    },
   });
 }
 
@@ -56,8 +59,11 @@ export async function modifySchedule(body: IModifySchedule) {
   });
   return await request({
     method: "PUT",
-    url: `/schedule/${userData.id}`,
-    data: body,
+    url: `/schedule`,
+    data: {
+      ...body,
+      uid: "" + userData.id,
+    },
   });
 }
 
