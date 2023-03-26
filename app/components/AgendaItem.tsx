@@ -1,6 +1,6 @@
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import React from "react";
-import { ListItem, Button } from "@rneui/base";
+import { ListItem, Button, Icon } from "@rneui/base";
 import { Link } from "expo-router";
 import { deleteTask } from "../api/task";
 import Toast from "react-native-toast-message";
@@ -63,10 +63,19 @@ export default function AgendaItem(data: any) {
             // to={{ screen: "show", params: data }}
           >
             <View>
-              <Text>{data.dateString}</Text>
+              <View style={{ display: "flex", flexDirection: "row" }}>
+                <Text>{data.dateString}</Text>
+                {data.isDone ? (
+                  <Icon
+                    name='check-circle-outline'
+                    color='#4bd508'
+                    style={{ marginLeft: 10 }}
+                  />
+                ) : null}
+              </View>
               <Text
                 style={{
-                  fontSize: 14,
+                  fontSize: 15,
                   color: "#00adf5",
                 }}
               >
