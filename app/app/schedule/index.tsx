@@ -20,6 +20,7 @@ import { useFetchSchedule } from "../../api/schedule";
 import storage from "../../utils/storage";
 import { isBetweenWithDay } from "../../utils/shared";
 import EmptyComp from "../../components/EmptyComp";
+import LoadingComp from "../../components/LoadingComp";
 
 /**
  * 显示将要标记的日期
@@ -195,18 +196,7 @@ export default function CalendarPage() {
         </Text>
 
         {isLoading ? (
-          <View style={{ paddingHorizontal: 20 }}>
-            <Button
-              loading={true}
-              loadingProps={{
-                size: "large",
-                color: "#2089dc",
-              }}
-              buttonStyle={{
-                backgroundColor: "white",
-              }}
-            />
-          </View>
+          <LoadingComp />
         ) : (
           <SafeAreaView
             style={{

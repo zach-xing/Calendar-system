@@ -49,7 +49,6 @@ export default function OperateComp() {
         ...data,
         isFullDay: selectedFullDay,
       });
-      router;
       Toast.show({
         type: "success",
         text1: "保存成功",
