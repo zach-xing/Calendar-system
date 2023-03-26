@@ -23,7 +23,9 @@ export class MemoService {
 
   async createMemo(dto: CreateMemoDto) {
     try {
-      const now = format(Date.now(), 'YYYY-MM-DD HH:mm:ss');
+      console.log(dto);
+      const now = format(new Date(), 'yyyy-MM-dd HH:mm');
+      console.log(now);
       await this.db.memo.create({
         data: {
           ...dto,
@@ -35,13 +37,14 @@ export class MemoService {
         message: '创建成功',
       };
     } catch (error) {
+      console.error(error);
       throw new HttpException('传入数据有误', HttpStatus.BAD_REQUEST);
     }
   }
 
   async modifyMemo(dto: ModifyMemoDto) {
     try {
-      const now = format(Date.now(), 'YYYY-MM-DD HH:mm:ss');
+      const now = format(new Date(), 'yyyy-MM-dd HH:mm');
       await this.db.memo.update({
         data: {
           ...dto,
