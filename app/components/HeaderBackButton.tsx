@@ -1,24 +1,28 @@
 import { View } from "react-native";
 import { useRouter } from "expo-router";
-import { StatusBar } from "react-native";
 import { Button, Icon } from "@rneui/base";
 
-export default function HeaderBackButton() {
+interface IProps {
+  rightContent?: React.ReactNode;
+}
+
+export default function HeaderBackButton(props: IProps) {
   const router = useRouter();
 
   return (
     <View
       style={{
-        backgroundColor: 'white',
+        backgroundColor: "white",
         display: "flex",
         flexDirection: "row",
+        justifyContent: "space-between",
       }}
     >
       <Button iconPosition='left' type='clear' onPress={() => router.back()}>
         <Icon name='chevron-left' color='black' />
         Back
       </Button>
-      <View />
+      <View>{props.rightContent}</View>
     </View>
   );
 }

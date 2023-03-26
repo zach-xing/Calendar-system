@@ -7,7 +7,7 @@ import {
 } from "react-native";
 import React from "react";
 import HeaderBackButton from "../../components/HeaderBackButton";
-import { Input } from "@rneui/base";
+import { Button, Input } from "@rneui/base";
 
 interface IProps {}
 
@@ -17,14 +17,23 @@ interface IProps {}
 export default function Detail() {
   const [value, onChangeText] = React.useState("Useless Multiline Placeholder");
 
+  const handleMemo = React.useCallback(() => {
+    console.log("操作成功");
+  }, []);
+
   return (
     <>
-      <HeaderBackButton />
+      <HeaderBackButton
+        rightContent={
+          <Button type='clear' onPress={handleMemo}>
+            保存
+          </Button>
+        }
+      />
       <View style={styles.container}>
         <Input placeholder='标题' />
         <View style={styles.textAreaContainer}>
           <TextInput
-            // editable
             multiline={true}
             numberOfLines={20}
             placeholderTextColor='grey'
@@ -50,5 +59,6 @@ const styles = StyleSheet.create({
     height: 300,
     display: "flex",
     justifyContent: "flex-start",
+    textAlignVertical: "top",
   },
 });
