@@ -63,7 +63,7 @@ const ScheduleItem: React.FC<IProps> = (props) => {
         }}
       >
         <Icon name='adjust' size={16} color='#00adf5' />
-        <View style={{ paddingLeft: 20 }}>
+        <View style={{ paddingLeft: 20, width: "100%" }}>
           <TouchableOpacity onPress={handleOpenSchedule}>
             <Text style={styles.timeTips}>
               {/* TODO: 需要考虑多天的情况 */}
