@@ -38,7 +38,6 @@ export default function OperateComp() {
 
   const onSubmit = useCallback(async (data: any) => {
     try {
-      // TODO: 完善 schedule API
       if (!!searchParams.data) {
         // modify
         await modifySchedule(data);
