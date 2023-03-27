@@ -10,7 +10,7 @@ export async function fetchTask(id: string, dateString: string) {
     list: ITask[];
   }>({
     method: "GET",
-    url: `/task/${id}?dataString=${dateString}`,
+    url: `/task/${id}?dateString=${dateString}`,
   });
   return res;
 }

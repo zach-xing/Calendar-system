@@ -1,6 +1,7 @@
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import React from "react";
 import { ListItem, Button, Icon } from "@rneui/base";
+import dayjs from "dayjs";
 import { Link } from "expo-router";
 import { deleteTask, modifyTaskState } from "../api/task";
 import Toast from "react-native-toast-message";
@@ -87,7 +88,7 @@ export default function AgendaItem(data: any) {
           >
             <View>
               <View style={{ display: "flex", flexDirection: "row" }}>
-                <Text>{data.dateString}</Text>
+                <Text>{dayjs(data.time).format("YYYY-MM-DD")}</Text>
                 {data.isDone ? (
                   <Icon
                     name='check-circle-outline'

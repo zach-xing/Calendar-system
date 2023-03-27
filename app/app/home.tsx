@@ -11,6 +11,9 @@ import { useRouter } from "expo-router";
 import dayjs from "dayjs";
 import ScheduleItem from "../components/ScheduleItem";
 import storage from "../utils/storage";
+import { useFetchCurDayData } from "../api";
+import LoadingComp from "../components/LoadingComp";
+import AgendaItem from "../components/AgendaItem";
 
 /** 展示样式块 */
 const InfoBlock: React.FC<{
@@ -44,12 +47,18 @@ export default function Home() {
   const [userName, setUserName] = React.useState("Friend");
   const [open, setOpen] = React.useState(false);
 
+  const [uid, setUid] = React.useState("");
+  const [dateString, setDateString] = React.useState("");
+  const { curDayData, isLoading } = useFetchCurDayData(uid, dateString);
+
   React.useEffect(() => {
     (async () => {
       const userData = await storage.load({
         key: "user",
       });
+      setUid(userData.id);
       setUserName(userData.name);
+      setDateString(dayjs(Date.now()).format("YYYY-MM-DD"));
     })();
   }, []);
 
@@ -102,33 +111,58 @@ export default function Home() {
           </View>
 
           <View style={styles.todayBlock}>
-            <Text h4 h4Style={{ margin: 10, marginLeft: 0 }}>
-              Today
-              <Text style={{ fontSize: 12, color: "grey" }}>
+            <View
+              style={{
+                display: "flex",
+                flexDirection: "row",
+                alignItems: "center",
+              }}
+            >
+              <Text h4 h4Style={{ margin: 10, marginLeft: 0 }}>
+                Today
+              </Text>
+              <Text style={{ fontSize: 14, color: "grey", marginLeft: 3 }}>
                 {dayjs().format("YYYY MM-DD")}
               </Text>
-            </Text>
+            </View>
 
-            {/* TODO: 这里需要加 Schedule 和 task 的显示 */}
-            {[1, 2, 3, 4, 5].map((item) => (
-              <ScheduleItem
-                key={item}
-                data={{
-                  id: "sdf",
-                  title: "说法水电费水电费水电111",
-                  isFullDay: false,
-                  startTime: "2023-02-27 10:00",
-                  endTime: "2023-02-27 10:00",
-                  remind: 0,
-                  desc: "123123131231sdgsgsdfgdgsdgsd",
-                }}
-                nowDateStr={""}
-              />
-            ))}
+            {isLoading ? (
+              <LoadingComp />
+            ) : curDayData?.scheduleList.length === 0 &&
+              curDayData.taskList.length === 0 ? (
+              <View>
+                <Text h4 h4Style={{ fontWeight: "500" }}>
+                  今天没有需要做的事项哦
+                </Text>
+              </View>
+            ) : (
+              // schedule 或者 task 有一个为空就走这个分支
+              <View>
+                <Text style={styles.todayTitle}>Today's Schedule</Text>
+                {curDayData?.scheduleList.length !== 0 ? (
+                  curDayData?.scheduleList.map((item) => (
+                    <ScheduleItem key={item.id} data={item} />
+                  ))
+                ) : (
+                  <View style={{ marginVertical: 10 }}>
+                    <Text>今天没有需要进行的日程哦</Text>
+                  </View>
+                )}
+                <Text style={styles.todayTitle}>Today's Task</Text>
+                {curDayData?.taskList.length !== 0 ? (
+                  curDayData?.taskList.map((item) => (
+                    <AgendaItem key={item.id} {...item} />
+                  ))
+                ) : (
+                  <View style={{ marginVertical: 10 }}>
+                    <Text>今天没有需要完成的任务哦</Text>
+                  </View>
+                )}
+              </View>
+            )}
           </View>
         </ScrollView>
       </SafeAreaView>
-
       <SpeedDial
         isOpen={open}
         icon={{ name: "add", color: "#fff" }}
@@ -173,9 +207,15 @@ const styles = StyleSheet.create({
     marginTop: 30,
     borderTopLeftRadius: 35,
     borderTopRightRadius: 35,
-    minHeight: "100%",
+    minHeight: 500,
     paddingLeft: 30,
     paddingRight: 30,
     paddingBottom: 50,
+  },
+  todayTitle: {
+    fontSize: 15,
+    fontWeight: "bold",
+    marginTop: 5,
+    marginBottom: 10,
   },
 });

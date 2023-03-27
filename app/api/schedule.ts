@@ -5,9 +5,12 @@ import storage from "../utils/storage";
 import request from "./http";
 
 export async function fetchSchedule(id: string, dateString: string) {
-  const res = await request({
+  const res = await request<{
+    total: number;
+    list: ISchedule[];
+  }>({
     method: "GET",
-    url: `/schedule/${id}?dataString=${dateString}`,
+    url: `/schedule/${id}?dateString=${dateString}`,
   });
   return res;
 }

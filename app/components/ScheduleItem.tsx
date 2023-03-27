@@ -11,7 +11,6 @@ import { Toast } from "react-native-toast-message/lib/src/Toast";
 
 interface IProps {
   data: ISchedule;
-  nowDateStr: string;
   deletedCallback?: Function;
 }
 
