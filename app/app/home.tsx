@@ -44,6 +44,7 @@ const InfoBlock: React.FC<{
 };
 
 export default function Home() {
+  const router = useRouter();
   const [userName, setUserName] = React.useState("Friend");
   const [open, setOpen] = React.useState(false);
 
@@ -163,6 +164,7 @@ export default function Home() {
           </View>
         </ScrollView>
       </SafeAreaView>
+
       <SpeedDial
         isOpen={open}
         icon={{ name: "add", color: "#fff" }}
@@ -176,19 +178,19 @@ export default function Home() {
           icon={{ name: "date-range", color: "#fff" }}
           title='Schedule'
           color='#00adf5'
-          onPress={() => console.log("Add schedule")}
+          onPress={() => router.push("/schedule/operate")}
         />
         <SpeedDial.Action
           icon={{ name: "assignment", color: "#fff" }}
           title='Task'
           color='#00adf5'
-          onPress={() => console.log("Add task")}
+          onPress={() => router.push("/task/operate")}
         />
         <SpeedDial.Action
           icon={{ name: "book", color: "#fff" }}
           title='Memo'
           color='#00adf5'
-          onPress={() => console.log("Add Memo")}
+          onPress={() => router.push("/memorandum/detail")}
         />
       </SpeedDial>
     </>
