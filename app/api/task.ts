@@ -80,3 +80,15 @@ export async function deleteTask(id: string) {
     url: `/task/${id}`,
   });
 }
+
+/** 更改 task 的状态 */
+export async function modifyTaskState(id: string, isDone: boolean) {
+  return await request({
+    method: "POST",
+    url: "/task/modifyState",
+    data: {
+      id: id,
+      isDone,
+    },
+  });
+}

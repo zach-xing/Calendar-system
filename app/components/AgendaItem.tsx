@@ -2,7 +2,7 @@ import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import React from "react";
 import { ListItem, Button, Icon } from "@rneui/base";
 import { Link } from "expo-router";
-import { deleteTask } from "../api/task";
+import { deleteTask, modifyTaskState } from "../api/task";
 import Toast from "react-native-toast-message";
 import { event, REFRESH_TASK_PAGE } from "../event";
 
@@ -10,11 +10,25 @@ import { event, REFRESH_TASK_PAGE } from "../event";
  * Agenda 列表渲染的 Item
  */
 export default function AgendaItem(data: any) {
-  const handleDoneTask = () => {};
+  const handleDoneTask = async () => {
+    try {
+      await modifyTaskState(data.id, !data.isDone);
+      Toast.show({
+        type: "success",
+        text1: "更改成功",
+      });
+      event.emit(REFRESH_TASK_PAGE);
+    } catch (error) {
+      console.error(error);
+      Toast.show({
+        type: "error",
+        text1: "更改失败",
+      });
+    }
+  };
 
   const handleDeleteTask = async () => {
     try {
-      console.log("delete");
       await deleteTask(data.id);
       Toast.show({
         type: "success",
@@ -31,14 +45,23 @@ export default function AgendaItem(data: any) {
 
   return (
     <ListItem.Swipeable
-      leftContent={() => (
-        <Button
-          title='Done'
-          onPress={handleDoneTask}
-          icon={{ name: "check", color: "white" }}
-          buttonStyle={{ minHeight: "100%" }}
-        />
-      )}
+      leftContent={() => {
+        return data.isDone ? (
+          <Button
+            title='No Done'
+            onPress={handleDoneTask}
+            icon={{ name: "close", color: "white" }}
+            buttonStyle={{ minHeight: "100%" }}
+          />
+        ) : (
+          <Button
+            title='Done'
+            onPress={handleDoneTask}
+            icon={{ name: "check", color: "white" }}
+            buttonStyle={{ minHeight: "100%" }}
+          />
+        );
+      }}
       rightContent={() => (
         <Button
           title='Delete'
