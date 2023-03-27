@@ -2,6 +2,7 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { PrismaService } from '../../prisma/prisma.service';
 import { CreateScheduleDto } from './dto/create-schedule.dto';
 import { ModifyScheduleDto } from './dto/modify-schedule.dto';
+import { format, isWithinInterval } from 'date-fns';
 
 @Injectable()
 export class ScheduleService {
@@ -13,23 +14,17 @@ export class ScheduleService {
       const list = await this.db.schedule.findMany({
         where: {
           uid: uid,
-          OR: [
-            {
-              startTime: {
-                contains: dateString || '',
-              },
-            },
-            {
-              endTime: {
-                contains: dateString || '',
-              },
-            },
-          ],
         },
       });
+      const filteredList = list.filter((item) =>
+        isWithinInterval(new Date(dateString), {
+          start: new Date(format(new Date(item.startTime), 'yyyy-MM-dd 00:00')),
+          end: new Date(format(new Date(item.endTime), 'yyyy-MM-dd 23:59')),
+        }),
+      );
       return {
-        total: list.length,
-        list,
+        total: filteredList.length,
+        list: filteredList,
       };
     } catch (error) {
       throw new HttpException(
