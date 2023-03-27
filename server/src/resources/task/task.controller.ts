@@ -9,6 +9,7 @@ import {
   Query,
 } from '@nestjs/common';
 import { CreateTaskDto } from './dto/create-task.dto';
+import { ModifyTaskStateDto } from './dto/modify-task-State.dto copy';
 import { ModifyTaskDto } from './dto/modify-task.dto';
 import { TaskService } from './task.service';
 
@@ -28,6 +29,11 @@ export class TaskController {
   @Post()
   async createTask(@Body() dto: CreateTaskDto) {
     return this.taskService.createTask(dto);
+  }
+
+  @Post('modifyState')
+  async modifyTaskState(@Body() dto: ModifyTaskStateDto) {
+    return this.taskService.modifyTaskState(dto);
   }
 
   @Put()

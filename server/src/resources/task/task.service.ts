@@ -1,6 +1,7 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { PrismaService } from '../../prisma/prisma.service';
 import { CreateTaskDto } from './dto/create-task.dto';
+import { ModifyTaskStateDto } from './dto/modify-task-State.dto copy';
 import { ModifyTaskDto } from './dto/modify-task.dto';
 
 @Injectable()
@@ -92,6 +93,37 @@ export class TaskService {
     } catch (error) {
       throw new HttpException(
         error?.meta?.message || '删除失败',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
+  }
+
+  async modifyTaskState(body: ModifyTaskStateDto) {
+    try {
+      console.log(body);
+      const taskData = await this.db.task.findUnique({
+        where: {
+          id: body.id,
+        },
+      });
+      if (taskData === null) {
+        throw new HttpException('传入数据有误', HttpStatus.BAD_REQUEST);
+      }
+      await this.db.task.update({
+        where: {
+          id: body.id,
+        },
+        data: {
+          isDone: body.isDone,
+        },
+      });
+      return {
+        message: '更改成功',
+      };
+    } catch (error) {
+      console.error(error);
+      throw new HttpException(
+        error?.meta?.message || '更改失败',
         HttpStatus.INTERNAL_SERVER_ERROR,
       );
     }
