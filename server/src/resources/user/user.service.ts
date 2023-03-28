@@ -44,4 +44,38 @@ export class UserService {
       access_token: token,
     };
   }
+
+  /** 搜索 */
+  async searchEvent(uid: string, title: string) {
+    try {
+      if (title.length === 0) {
+        return {
+          scheduleList: [],
+          taskList: [],
+        };
+      }
+      const scheduleList = await this.db.schedule.findMany({
+        where: {
+          uid: uid,
+          title: {
+            contains: title,
+          },
+        },
+      });
+      const taskList = await this.db.task.findMany({
+        where: {
+          uid: uid,
+          title: {
+            contains: title,
+          },
+        },
+      });
+      return {
+        scheduleList: scheduleList,
+        taskList,
+      };
+    } catch (error) {
+      throw new HttpException('输入有误', HttpStatus.BAD_REQUEST);
+    }
+  }
 }

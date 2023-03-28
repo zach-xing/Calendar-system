@@ -56,7 +56,6 @@ export default function AgendaComp() {
   const router = useRouter();
 
   const [items, setItems] = React.useState<AgendaSchedule>({});
-  const [_, refreshPageState] = React.useState(0);
 
   const [open, setOpen] = React.useState(false);
 
@@ -114,14 +113,8 @@ export default function AgendaComp() {
           color='#00adf5'
           onPress={linkToCreate}
         />
-        <SpeedDial.Action
-          icon={{ name: "search", color: "#fff" }}
-          title='Search'
-          color='#00adf5'
-          onPress={() => console.log("Delete Something")}
-        />
+        <></>
       </SpeedDial>
-      <Text style={{ display: "none" }}>{_}</Text>
     </>
   );
 }

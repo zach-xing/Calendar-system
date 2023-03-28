@@ -214,7 +214,6 @@ export default function CalendarPage() {
                 <ScheduleItem
                   key={item.id}
                   data={item}
-                  nowDateStr={nowDateString}
                   deletedCallback={refetch}
                 />
               )}
@@ -238,12 +237,7 @@ export default function CalendarPage() {
           color='#00adf5'
           onPress={linkToCreate}
         />
-        <SpeedDial.Action
-          icon={{ name: "search", color: "#fff" }}
-          title='Search'
-          color='#00adf5'
-          onPress={() => console.log("Delete Something")}
-        />
+        <></>
       </SpeedDial>
     </View>
   );

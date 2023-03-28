@@ -172,8 +172,14 @@ export default function Home() {
         onOpen={() => setOpen(!open)}
         onClose={() => setOpen(!open)}
         color='#00adf5'
-        style={{ paddingBottom: 50 }}
+        style={{ paddingBottom: 30 }}
       >
+        <SpeedDial.Action
+          icon={{ name: "search", color: "#fff" }}
+          title='Search'
+          color='#00adf5'
+          onPress={() => router.push("/search")}
+        />
         <SpeedDial.Action
           icon={{ name: "date-range", color: "#fff" }}
           title='Schedule'
