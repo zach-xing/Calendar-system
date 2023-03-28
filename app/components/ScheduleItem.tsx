@@ -65,16 +65,11 @@ const ScheduleItem: React.FC<IProps> = (props) => {
         <View style={{ paddingLeft: 20, width: "100%" }}>
           <TouchableOpacity onPress={handleOpenSchedule}>
             <Text style={styles.timeTips}>
-              {/* TODO: 需要考虑多天的情况 */}
-              {isDateToday(data.startTime)
-                ? "Today"
-                : data.isFullDay
-                ? "全天"
-                : dayjs(data.startTime).format("MM-DD")}
-              {","}
-              {dayjs(data.startTime).format("HH:mm")}
-              {" - "}
-              {dayjs(data.endTime).format("HH:mm")}
+              {data.isFullDay
+                ? `全天 ${dayjs(data.startTime).format("MM-DD")}`
+                : `${dayjs(data.startTime).format("MM-DD HH:mm")} - ${dayjs(
+                    data.endTime
+                  ).format("MM-DD HH:mm")}`}
             </Text>
             <Text style={styles.title}>{data.title}</Text>
           </TouchableOpacity>

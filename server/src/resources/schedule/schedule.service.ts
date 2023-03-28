@@ -11,6 +11,30 @@ export class ScheduleService {
   /** 根据 args 获取对应的 scheduleList */
   async getScheduleList(uid: string, dateString?: string) {
     try {
+      if (dateString.length === 7) {
+        // eg: 2023-03-01
+        const list = await this.db.schedule.findMany({
+          where: {
+            uid: uid,
+            OR: [
+              {
+                startTime: {
+                  contains: dateString || '',
+                },
+              },
+              {
+                endTime: {
+                  contains: dateString || '',
+                },
+              },
+            ],
+          },
+        });
+        return {
+          total: list.length,
+          list: list,
+        };
+      }
       const list = await this.db.schedule.findMany({
         where: {
           uid: uid,
