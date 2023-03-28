@@ -2,7 +2,7 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { PrismaService } from '../../prisma/prisma.service';
 import { CreateScheduleDto } from './dto/create-schedule.dto';
 import { ModifyScheduleDto } from './dto/modify-schedule.dto';
-import { format, isWithinInterval } from 'date-fns';
+import { format, isAfter, isWithinInterval } from 'date-fns';
 
 @Injectable()
 export class ScheduleService {
@@ -60,6 +60,11 @@ export class ScheduleService {
 
   /** 创建 schedule */
   async createSchedule(dto: CreateScheduleDto) {
+    const start = new Date(dto.startTime);
+    const end = new Date(dto.endTime);
+    if (isAfter(start, end)) {
+      throw new HttpException('日期传入有误', HttpStatus.BAD_REQUEST);
+    }
     const user = await this.db.user.findUnique({
       where: {
         id: dto.uid,
