@@ -23,6 +23,7 @@
     "expo-cli": "^6.3.2",
     "expo-font": "~11.1.1",
     "expo-linking": "~4.0.1",
+    "expo-notifications": "~0.18.1",
     "expo-router": "^1.0.0-rc5",
     "expo-splash-screen": "~0.18.1",
     "expo-status-bar": "~1.4.4",

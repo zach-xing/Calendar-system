@@ -1,8 +1,13 @@
 import Toast from "react-native-toast-message";
 import { useQuery } from "react-query";
 import { ICreateSchedule, IModifySchedule, ISchedule } from "../types";
+import {
+  registerSCheduleRemind,
+  schedulePushNotification,
+} from "../utils/notice";
 import storage from "../utils/storage";
 import request from "./http";
+import dayjs from "dayjs";
 
 export async function fetchSchedule(id: string, dateString: string) {
   const res = await request<{
@@ -12,6 +17,10 @@ export async function fetchSchedule(id: string, dateString: string) {
     method: "GET",
     url: `/schedule/${id}?dateString=${dateString}`,
   });
+  // 异步执行-注册通知到本地
+  if (res) {
+    await registerSCheduleRemind(id, res.list);
+  }
   return res;
 }
 
