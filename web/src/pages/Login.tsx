@@ -14,11 +14,12 @@ export default function Login() {
   // 登录
   const onFinish = async (values: any) => {
     try {
-      // const data = await login(values);
-      window.localStorage.setItem("user", JSON.stringify('data'));
+      const data = await login(values);
+      window.localStorage.setItem("user", JSON.stringify(data));
       message.success("登录成功");
       navigate("/");
     } catch (error: any) {
+      console.error(error);
       message.error(error.message ?? "登录失败");
     }
   };
@@ -26,27 +27,27 @@ export default function Login() {
   return (
     <LoginOrRegisterBg>
       <Typography.Title level={2}>Welcome back</Typography.Title>
-      <Typography.Title level={5} type="secondary" style={{ marginBottom: 30 }}>
+      <Typography.Title level={5} type='secondary' style={{ marginBottom: 30 }}>
         Welcome back!Please enter your details
       </Typography.Title>
 
-      <Form name="login" style={{ width: "50%" }} onFinish={onFinish}>
+      <Form name='login' style={{ width: "50%" }} onFinish={onFinish}>
         <Form.Item
-          name="account"
+          name='account'
           rules={[{ required: true, message: "Please input your Account!" }]}
         >
-          <Input prefix={<PhoneOutlined />} placeholder="账号" />
+          <Input prefix={<PhoneOutlined />} placeholder='账号' />
         </Form.Item>
 
         <Form.Item
-          name="password"
+          name='password'
           rules={[{ required: true, message: "Please input your Password!" }]}
         >
-          <Input prefix={<LockOutlined />} type="password" placeholder="密码" />
+          <Input prefix={<LockOutlined />} type='password' placeholder='密码' />
         </Form.Item>
 
         <Button
-          type="link"
+          type='link'
           style={{ marginBottom: 30 }}
           onClick={() => navigate("/register")}
         >
@@ -54,7 +55,7 @@ export default function Login() {
         </Button>
 
         <Form.Item>
-          <Button type="primary" htmlType="submit" block>
+          <Button type='primary' htmlType='submit' block>
             Log in
           </Button>
         </Form.Item>

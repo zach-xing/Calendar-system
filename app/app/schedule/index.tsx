@@ -8,7 +8,7 @@ import {
   Dimensions,
 } from "react-native";
 import { useRouter } from "expo-router";
-import { Button, Icon, Skeleton } from "@rneui/base";
+import { Button, Icon } from "@rneui/base";
 import { Calendar } from "react-native-calendars";
 import type { DateData } from "react-native-calendars";
 import { SpeedDial, Text } from "@rneui/themed";
@@ -21,6 +21,7 @@ import storage from "../../utils/storage";
 import { isBetweenWithDay } from "../../utils/shared";
 import EmptyComp from "../../components/EmptyComp";
 import LoadingComp from "../../components/LoadingComp";
+import { downloadImage } from "../../utils/downloadImage";
 
 /**
  * 显示将要标记的日期
@@ -96,9 +97,23 @@ export default function CalendarPage() {
     router.push(`/schedule/operate`);
   };
 
+  const shareSchedule = async () => {
+    try {
+      // await downloadImage("sdf");
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   return (
     <View style={styles.container}>
-      <HeaderBackButton />
+      <HeaderBackButton
+        rightContent={
+          <Button type='clear' onPress={shareSchedule}>
+            分享
+          </Button>
+        }
+      />
       <View style={styles.headerDivision} />
       <Calendar
         theme={{

@@ -1,5 +1,5 @@
 import React from "react";
-import { Calendar, Modal } from "antd";
+import { Calendar, message, Modal } from "antd";
 import type { CalendarMode } from "antd/es/calendar/generateCalendar";
 import dayjs from "dayjs";
 import type { Dayjs } from "dayjs";
@@ -8,12 +8,14 @@ import CalendarDateCell from "./CalendarDateCell";
 import { fetchEventList } from "../../../data/event";
 import EditScheduleForm from "../../../components/EditScheduleForm";
 import EditTaskForm from "../../../components/EditTaskForm";
+import { fetchSchedule } from "../../../data/schedule";
+import { ISchedule } from "../../../types";
 
 export default function Content() {
   const [curDate, setCurDate] = React.useState(
     new Date().toISOString().slice(0, 10)
   );
-  // 类似 {'2022-10-25': Array<Schedule | task>}
+  // 类似 {'2022-10-25': Array<ISchedule | ITask>}
   const [curMonthData, setCurMonthData] = React.useState<any>({});
   const [curOpenEventModal, setCurOpenEventModal] = React.useState<
     "" | "schedule" | "task"
@@ -46,10 +48,11 @@ export default function Content() {
   const fetchData = async () => {
     try {
       const user = JSON.parse(localStorage.getItem("user") || "{}");
-      const list = await fetchEventList(curDate.slice(0, 7), user.id);
+      const { list } = await fetchSchedule(user.id, curDate.slice(0, 7));
+      console.log(list)
       const obj: any = {};
-      list.forEach((item: any) => {
-        const flag = item.dateString.slice(0, 10) as string;
+      list.forEach((item: ISchedule) => {
+        const flag = item.startTime.slice(0, 10) as string;
         if (Object.hasOwn(obj, flag)) {
           obj[flag].push(item);
         } else {
@@ -58,7 +61,8 @@ export default function Content() {
       });
       setCurMonthData(obj);
     } catch (error) {
-      console.error("获取失败");
+      console.error("获取失败", error);
+      message.error("获取数据失败");
     }
   };
 

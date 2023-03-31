@@ -1,8 +1,23 @@
 import React from "react";
 import { Button, DatePicker, Form, Input, message, Select, Switch } from "antd";
-import { remindArr } from "../../types";
 import { createSchedule } from "../../data/event";
 import dayjs from "dayjs";
+import { RemindEnum } from "../../types";
+
+function remindTitle(arg: RemindEnum): string {
+  switch (arg) {
+    case RemindEnum.FIVE_MIN:
+      return "5 分钟前";
+    case RemindEnum.TEN_MIN:
+      return "10 分钟前";
+    case RemindEnum.HALF_HOUR:
+      return "30 分钟前";
+    case RemindEnum.ONE_HOUR:
+      return "1 小时前";
+    case RemindEnum.ONT_DAY:
+      return "1 天前";
+  }
+}
 
 interface IProps {
   isCreate: boolean;
@@ -73,11 +88,12 @@ const ScheduleForm: React.FC<IProps> = (props) => {
 
       <Form.Item label='提醒' name='remind'>
         <Select>
-          {Object.keys(remindArr).map((item) => (
-            <Select.Option key={item} title={item} value={remindArr[item]}>
+          {[0, 1, 2, 3, 4].map((item) => (
+            <Select.Option key={item} title={item} value={remindTitle(item)}>
               {item}
             </Select.Option>
           ))}
+          {}
         </Select>
       </Form.Item>
 

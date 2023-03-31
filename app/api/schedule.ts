@@ -3,11 +3,9 @@ import { useQuery } from "react-query";
 import { ICreateSchedule, IModifySchedule, ISchedule } from "../types";
 import {
   registerSCheduleRemind,
-  schedulePushNotification,
 } from "../utils/notice";
 import storage from "../utils/storage";
 import request from "./http";
-import dayjs from "dayjs";
 
 export async function fetchSchedule(id: string, dateString: string) {
   const res = await request<{
