@@ -23,10 +23,23 @@ export const CellStyleBox = styled.div<{ isNow: boolean; isCurMonth: boolean }>`
   }
 `;
 
-export const DotBox = styled.div<{ isShow: boolean }>`
-  width: 3px;
-  height: 3px;
+export const DotBox = styled.div`
+  display: flex;
   margin: 0 auto;
-  border-radius: 50%;
-  background-color: ${(props) => (props.isShow ? "blue" : "white")};
+  justify-content: space-around;
+  width: 40%;
+  .schedule {
+    display: inline-block;
+    width: 3px;
+    height: 3px;
+    border-radius: 50%;
+    background-color: blue;
+  }
+  .task {
+    display: inline-block;
+    width: 3px;
+    height: 3px;
+    border-radius: 50%;
+    background-color: orange;
+  }
 `;
