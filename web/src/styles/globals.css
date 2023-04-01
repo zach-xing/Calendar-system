@@ -1,0 +1,8 @@
+@font-face {
+  font-family: "LXGWWenKai-Font";
+  src: url("../assets/fonts/LXGWWenKai-Regular.ttf") format("truetype");
+}
+
+* {
+  font-family: "LXGWWenKai-Font";
+}
