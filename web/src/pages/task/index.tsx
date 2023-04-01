@@ -1,63 +1,59 @@
 import React, { useCallback, useMemo, useState } from "react";
 import ScrollBlock from "../../components/ScrollBlock";
-import { ISchedule } from "@/types";
+import { ITask, TaskLevelEnum } from "@/types";
 import { Button, Input, Modal, Popconfirm, Space, Table, Tag } from "antd";
 import { ColumnsType } from "antd/es/table";
 import dayjs from "dayjs";
-import { remindTitle } from "@/utils/shared";
-import ScheduleForm from "@/components/ScheduleForm";
+import TaskForm from "@/components/TaskForm";
 
-const data: ISchedule[] = [
+const data: ITask[] = [
   {
     id: "1",
-    title: "John Brown",
-    isFullDay: false,
-    startTime: "2023-04-01 12:00",
-    endTime: "2023-04-01: 13:00",
-    remind: 0,
+    title: "123John Brown",
+    time: "2023-04-01 12:00",
+    level: 2,
+    isDone: false,
     desc: "",
   },
   {
     id: "2",
-    title: "John Brown",
-    isFullDay: false,
-    startTime: "2023-04-01 12:00",
-    endTime: "2023-04-01: 13:00",
-    remind: 0,
+    title: "1John Brown",
+    time: "2023-04-01 12:00",
+    level: 1,
+    isDone: false,
     desc: "",
   },
   {
     id: "3",
-    title: "John Brown",
-    isFullDay: true,
-    startTime: "2023-04-01 12:00",
-    endTime: "2023-04-01: 13:00",
-    remind: 0,
+    title: "aaaJohn Brown",
+    time: "2023-04-01 12:00",
+    level: 3,
+    isDone: false,
     desc: "",
   },
 ];
 /**
  * 日程视图
  */
-const SchedulePage = () => {
+const TaskPage = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [curSchedule, setCurSchedule] = useState<ISchedule>();
+  const [curTask, setCurTask] = useState<ITask>();
 
-  const handleCreateSchedule = useCallback(() => {
+  const handleCreateTask = useCallback(() => {
     setIsModalOpen(true);
-    setCurSchedule(undefined);
+    setCurTask(undefined);
   }, []);
 
-  const handleScheduleModify = useCallback((val: ISchedule) => {
+  const handleTaskModify = useCallback((val: ITask) => {
     setIsModalOpen(true);
-    setCurSchedule(val);
+    setCurTask(val);
   }, []);
 
-  const handleScheduleDelete = useCallback((id: string) => {}, []);
+  const handleTaskDelete = useCallback((id: string) => {}, []);
 
   const onSearch = useCallback((value: string) => {}, []);
 
-  const columns: ColumnsType<ISchedule> = useMemo(
+  const columns: ColumnsType<ITask> = useMemo(
     () => [
       {
         title: "标题",
@@ -67,51 +63,55 @@ const SchedulePage = () => {
         width: "30%",
       },
       {
-        title: "是否全天",
-        dataIndex: "isFullDay",
-        key: "isFullDay",
+        title: "是否完成",
+        dataIndex: "isDone",
+        key: "isDone",
         align: "center",
         width: "10%",
         render: (_, record) => (
-          <Tag color={record.isFullDay ? "cyan" : "geekblue"}>
-            {record.isFullDay ? "是" : "不是"}
+          <Tag color={record.isDone ? "success" : "warning"}>
+            {record.isDone ? "完成" : "未完成"}
           </Tag>
         ),
       },
       {
-        title: "日期时间",
-        dataIndex: "startTime",
+        title: "截止时间",
+        dataIndex: "time",
         align: "center",
-        key: "startTime",
-        width: "35%",
-        render: (_, record) =>
-          record.isFullDay
-            ? dayjs(record.startTime).format("YYYY-MM-DD")
-            : `${dayjs(record.startTime).format("YYYY-MM-DD HH:mm")} - ${dayjs(
-                record.endTime
-              ).format("YYYY-MM-DD HH:mm")}`,
+        key: "time",
+        width: "25%",
+        render: (_, record) => dayjs(record.time).format("YYYY-MM-DD"),
       },
       {
-        title: "提醒",
-        dataIndex: "remind",
+        title: "优先级",
+        dataIndex: "level",
         align: "center",
-        key: "remind",
-        width: "10%",
-        render: (_, record) => (
-          <Tag color='purple'>{remindTitle(record.remind)}</Tag>
-        ),
+        key: "level",
+        width: "15%",
+        render: (_, record) => {
+          switch (record.level) {
+            case TaskLevelEnum.ONE:
+              return <Tag color='error'>优先级一</Tag>;
+            case TaskLevelEnum.TWO:
+              return <Tag color='warning'>优先级二</Tag>;
+            case TaskLevelEnum.THREE:
+              return <Tag color='processing'>优先级三</Tag>;
+            case TaskLevelEnum.FOUR:
+              return <Tag color='default'>优先级四</Tag>;
+          }
+        },
       },
       {
         title: "Action",
         key: "action",
         align: "center",
-        width: "15%",
+        width: "20%",
         render: (_, record) => (
           <Space size='middle'>
             <Button
               type='link'
               onClick={() => {
-                handleScheduleModify(record);
+                handleTaskModify(record);
               }}
             >
               编辑
@@ -119,7 +119,7 @@ const SchedulePage = () => {
             <Popconfirm
               title='确定删除么?'
               onConfirm={() => {
-                handleScheduleDelete(record.id);
+                handleTaskDelete(record.id);
               }}
               okText='Yes'
               cancelText='No'
@@ -132,12 +132,12 @@ const SchedulePage = () => {
         ),
       },
     ],
-    [handleScheduleDelete, handleScheduleModify]
+    [handleTaskDelete, handleTaskModify]
   );
 
   return (
     <div>
-      <h1>日程</h1>
+      <h1>任务</h1>
 
       <div
         style={{
@@ -146,7 +146,7 @@ const SchedulePage = () => {
           marginBottom: 10,
         }}
       >
-        <h3>{"All Schedule"}</h3>
+        <h3>{"All Task"}</h3>
 
         <Space>
           <Input.Search
@@ -154,7 +154,7 @@ const SchedulePage = () => {
             onSearch={onSearch}
             enterButton
           />
-          <Button type='primary' onClick={handleCreateSchedule}>
+          <Button type='primary' onClick={handleCreateTask}>
             创建
           </Button>
         </Space>
@@ -164,20 +164,20 @@ const SchedulePage = () => {
       </ScrollBlock>
 
       <Modal
-        title='日程'
+        title='任务'
         open={isModalOpen}
         width={600}
         footer={null}
         destroyOnClose={true}
         onCancel={() => {
-          setCurSchedule(undefined);
+          setCurTask(undefined);
           setIsModalOpen(false);
         }}
       >
-        <ScheduleForm data={curSchedule} />
+        <TaskForm data={curTask} />
       </Modal>
     </div>
   );
 };
 
-export default SchedulePage;
+export default TaskPage;
