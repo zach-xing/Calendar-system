@@ -13,43 +13,45 @@ import {
 } from "@ant-design/icons";
 import { SiderStyleBlock } from "./styled";
 import Logo from "../../assets/logo.png";
+import { useRouter } from "next/router";
 
 type MenuItem = Required<MenuProps>["items"][number];
 
 const items: MenuItem[] = [
   {
-    key: "1",
+    key: "home",
     label: "首页",
     icon: <HomeOutlined />,
   },
   {
-    key: "2",
-    label: "日历",
-    icon: <CalendarOutlined />,
-  },
-  {
-    key: "3",
+    key: "schedule",
     label: "日程",
     icon: <ScheduleOutlined />,
   },
   {
-    key: "4",
+    key: "task",
     label: "任务",
     icon: <ClockCircleOutlined />,
   },
   {
-    key: "5",
+    key: "memo",
     label: "备忘录",
     icon: <BookOutlined />,
   },
   {
-    key: "6",
+    key: "user",
     label: "个人",
     icon: <UserOutlined />,
   },
 ];
 
 function Sider() {
+  const router = useRouter();
+
+  const handleToPath = ({ item, key }: any) => {
+    router.push(`/${key}`);
+  };
+
   return (
     <SiderStyleBlock>
       <div>
@@ -68,6 +70,7 @@ function Sider() {
           inlineCollapsed={true}
           items={items}
           style={{ backgroundColor: "white", border: "none" }}
+          onClick={handleToPath}
         />
       </div>
 

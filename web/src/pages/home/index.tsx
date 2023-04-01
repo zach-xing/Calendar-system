@@ -1,11 +1,8 @@
 import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
-import { Container, Header } from "./style";
-import { Dropdown, Image, List, Space, Typography } from "antd";
+import { Container } from "./style";
 import {
   BookOutlined,
   ClockCircleOutlined,
-  DownOutlined,
   ScheduleOutlined,
 } from "@ant-design/icons";
 import InfoBlock from "./components/InfoBlock";
@@ -18,7 +15,6 @@ import ScheduleItem from "@/components/ScheduleItem";
  */
 export default function Home() {
   const router = useRouter();
-  const [open, setOpen] = useState(false);
 
   return (
     <Container>
