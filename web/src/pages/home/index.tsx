@@ -2,9 +2,16 @@ import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { Container, Header } from "./style";
 import { Dropdown, Image, List, Space, Typography } from "antd";
-import { BookOutlined, ClockCircleOutlined, DownOutlined, ScheduleOutlined } from "@ant-design/icons";
+import {
+  BookOutlined,
+  ClockCircleOutlined,
+  DownOutlined,
+  ScheduleOutlined,
+} from "@ant-design/icons";
 import InfoBlock from "./components/InfoBlock";
 import ScrollBlock from "@/components/ScrollBlock";
+import { ITask } from "@/types";
+import TaskItem from "@/components/TaskItem";
 /**
  * 首页
  */
@@ -46,28 +53,41 @@ export default function Home() {
         />
       </div>
 
-      <h3>{"Today's Schedule"}</h3>
-      <ScrollBlock height={'calc(100vh - 300px)'}>
-        <List
-          header={<div>Header</div>}
-          footer={<div>Footer</div>}
-          bordered
-          dataSource={data}
-          renderItem={(item) => (
-            <List.Item>
-              <Typography.Text mark>[ITEM]</Typography.Text> {item}
-            </List.Item>
-          )}
-        />
-      </ScrollBlock>
+      <div
+        style={{
+          display: "grid",
+          gridTemplateColumns: "1fr 1fr",
+          columnGap: 20,
+        }}
+      >
+        <div>
+          <h3>{"Today's Schedule"}</h3>
+          <ScrollBlock height={"calc(100vh - 300px)"}>
+            {dataArr.map((item) => (
+              <TaskItem key={item.id} data={item} />
+            ))}
+          </ScrollBlock>
+        </div>
+        <div>
+          <h3>{"Today's Task"}</h3>
+          <ScrollBlock height={"calc(100vh - 300px)"}>
+            {dataArr.map((item) => (
+              <TaskItem key={item.id} data={item} />
+            ))}
+          </ScrollBlock>
+        </div>
+      </div>
     </Container>
   );
 }
 
-const data = [
-  "Racing car sprays burning fuel into crowd.",
-  "Japanese princess to wed commoner.",
-  "Australian walks 100km after outback crash.",
-  "Man charged over missing wedding girl.",
-  "Los Angeles battles huge wildfires.",
+const dataArr: ITask[] = [
+  {
+    id: "1",
+    title: "text",
+    level: 2,
+    isDone: false,
+    time: "2023-04-01",
+    desc: "",
+  },
 ];
