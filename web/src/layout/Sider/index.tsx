@@ -1,11 +1,9 @@
 import React from "react";
 import Image from "next/image";
-import { Button, Menu } from "antd";
+import { Avatar, Button, Dropdown, Menu, Space } from "antd";
 import type { MenuProps } from "antd";
 import {
   HomeOutlined,
-  CalendarOutlined,
-  UserOutlined,
   ScheduleOutlined,
   ClockCircleOutlined,
   BookOutlined,
@@ -38,11 +36,6 @@ const items: MenuItem[] = [
     label: "备忘录",
     icon: <BookOutlined />,
   },
-  {
-    key: "user",
-    label: "个人",
-    icon: <UserOutlined />,
-  },
 ];
 
 function Sider() {
@@ -74,7 +67,34 @@ function Sider() {
         />
       </div>
 
-      <Button icon={<SmallDashOutlined />} href='https://www.google.com' />
+      <div>
+        <div style={{ marginBottom: 20 }}>
+          <Avatar
+            style={{ backgroundColor: "orange", verticalAlign: "middle" }}
+          >
+            {"U"}
+          </Avatar>
+        </div>
+        <Dropdown
+          menu={{
+            items: [
+              {
+                label: (
+                  <Button danger type='link'>
+                    退出登录
+                  </Button>
+                ),
+                key: "0",
+              },
+            ],
+          }}
+          trigger={["click"]}
+        >
+          <Space>
+            <Button icon={<SmallDashOutlined />} />
+          </Space>
+        </Dropdown>
+      </div>
     </SiderStyleBlock>
   );
 }
