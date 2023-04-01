@@ -97,7 +97,10 @@ const TaskItem: React.FC<IProps> = (props) => {
               textDecoration: isDone ? "line-through" : "none",
             }}
           >
-            <b>{data.title}</b> - {dayjs(data.time).format("YYYY-MM-DD")}
+            <b>{data.title}</b> -{" "}
+            <span style={{ fontSize: 14 }}>
+              {dayjs(data.time).format("YYYY-MM-DD")}
+            </span>
           </div>
         </div>
 

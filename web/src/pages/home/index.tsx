@@ -10,8 +10,9 @@ import {
 } from "@ant-design/icons";
 import InfoBlock from "./components/InfoBlock";
 import ScrollBlock from "@/components/ScrollBlock";
-import { ITask } from "@/types";
+import { ISchedule, ITask } from "@/types";
 import TaskItem from "@/components/TaskItem";
+import ScheduleItem from "@/components/ScheduleItem";
 /**
  * 首页
  */
@@ -63,8 +64,8 @@ export default function Home() {
         <div>
           <h3>{"Today's Schedule"}</h3>
           <ScrollBlock height={"calc(100vh - 300px)"}>
-            {dataArr.map((item) => (
-              <TaskItem key={item.id} data={item} />
+            {dataArr1.map((item) => (
+              <ScheduleItem key={item.id} data={item} />
             ))}
           </ScrollBlock>
         </div>
@@ -88,6 +89,26 @@ const dataArr: ITask[] = [
     level: 2,
     isDone: false,
     time: "2023-04-01",
+    desc: "",
+  },
+  {
+    id: "2",
+    title: "text111111",
+    level: 2,
+    isDone: true,
+    time: "2023-04-02",
+    desc: "",
+  },
+];
+
+const dataArr1: ISchedule[] = [
+  {
+    id: "1",
+    title: "text111111",
+    isFullDay: false,
+    startTime: "2023-04-01 12:00",
+    endTime: "2023-04-01: 13:00",
+    remind: 0,
     desc: "",
   },
 ];
