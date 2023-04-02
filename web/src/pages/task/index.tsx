@@ -1,10 +1,21 @@
-import React, { useCallback, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import ScrollBlock from "../../components/ScrollBlock";
 import { ITask, TaskLevelEnum } from "@/types";
-import { Button, Input, Modal, Popconfirm, Space, Table, Tag } from "antd";
+import {
+  Button,
+  Checkbox,
+  Input,
+  Modal,
+  Popconfirm,
+  Space,
+  Table,
+  Tag,
+} from "antd";
 import { ColumnsType } from "antd/es/table";
 import dayjs from "dayjs";
 import TaskForm from "@/components/TaskForm";
+import { useRouter } from "next/router";
+import { useFetchTask } from "@/api";
 
 const data: ITask[] = [
   {
@@ -33,11 +44,36 @@ const data: ITask[] = [
   },
 ];
 /**
- * 日程视图
+ * 任务视图
  */
 const TaskPage = () => {
+  const router = useRouter();
+
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [curTask, setCurTask] = useState<ITask>();
+
+  const [searchValue, setSearchValue] = useState("");
+
+  /** 发送请求 */
+  const [uid, setUid] = useState("");
+  const [isShowToday, setIsShowToday] = useState(!!router.query.showToday);
+  const { taskData, isFetchTaskLoading } = useFetchTask(
+    uid,
+    isShowToday ? dayjs(Date.now()).format("YYYY-MM-DD") : ""
+  );
+  const [filteredTaskList, setFilteredTaskList] = useState<ITask[]>([]);
+
+  useEffect(() => {
+    const userData = JSON.parse(localStorage.getItem("user")!);
+    setUid(userData.id);
+  }, []);
+
+  useEffect(() => {
+    const filteredList = taskData?.list.filter((item) =>
+      item.title.includes(searchValue)
+    );
+    setFilteredTaskList(filteredList || []);
+  }, [taskData?.list, searchValue]);
 
   const handleCreateTask = useCallback(() => {
     setIsModalOpen(true);
@@ -51,7 +87,9 @@ const TaskPage = () => {
 
   const handleTaskDelete = useCallback((id: string) => {}, []);
 
-  const onSearch = useCallback((value: string) => {}, []);
+  const onSearch = useCallback((value: string) => {
+    setSearchValue(value);
+  }, []);
 
   const columns: ColumnsType<ITask> = useMemo(
     () => [
@@ -146,11 +184,22 @@ const TaskPage = () => {
           marginBottom: 10,
         }}
       >
-        <h3>{"All Task"}</h3>
+        <div style={{ display: "flex", alignItems: "center" }}>
+          <h3 style={{ marginRight: 20 }}>{"All Task"}</h3>
+          <Checkbox
+            checked={isShowToday}
+            onChange={() => {
+              setIsShowToday((prev) => !prev);
+            }}
+          >
+            只看今天
+          </Checkbox>
+        </div>
 
         <Space>
           <Input.Search
-            placeholder='input search text'
+            allowClear
+            placeholder='请输入任务标题...'
             onSearch={onSearch}
             enterButton
           />
@@ -160,7 +209,12 @@ const TaskPage = () => {
         </Space>
       </div>
       <ScrollBlock height={"calc(100vh - 180px)"}>
-        <Table rowKey={"id"} columns={columns} dataSource={data} />
+        <Table
+          rowKey={"id"}
+          loading={isFetchTaskLoading}
+          columns={columns}
+          dataSource={filteredTaskList}
+        />
       </ScrollBlock>
 
       <Modal

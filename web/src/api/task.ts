@@ -7,12 +7,16 @@ import { message } from "antd";
  * 获取 task 数据
  */
 export async function fetchTask(id: string, dateString: string) {
+  const url =
+    dateString.length === 0
+      ? `/task/${id}`
+      : `/task/${id}?dateString=${dateString}`;
   const res = await request<{
     total: number;
     list: ITask[];
   }>({
     method: "GET",
-    url: `/task/${id}?dateString=${dateString}`,
+    url: url,
   });
   return res;
 }
@@ -26,7 +30,7 @@ export function useFetchTask(uid: string, dateString: string) {
     ["fetch-task-list", uid, dateString],
     async () => await fetchTask(uid, dateString),
     {
-      enabled: uid.length !== 0 && dateString.length !== 0,
+      enabled: uid.length !== 0,
       refetchInterval: false,
       refetchIntervalInBackground: false,
       refetchOnWindowFocus: true,
