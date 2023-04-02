@@ -2,6 +2,7 @@ import { useRouter } from "next/router";
 import { LockOutlined, PhoneOutlined } from "@ant-design/icons";
 import { Input, Button, Form, Typography, message } from "antd";
 import LoginOrRegisterBg from "@/components/LoginOrRegisterBg";
+import { login } from "@/api/user";
 
 /**
  * 登录界面
@@ -12,8 +13,8 @@ export default function Login() {
   // 登录
   const onFinish = async (values: any) => {
     try {
-      // const data = await login(values);
-      // window.localStorage.setItem("user", JSON.stringify(data));
+      const data = await login(values);
+      window.localStorage.setItem("user", JSON.stringify(data));
       message.success("登录成功");
       router.replace("/home");
     } catch (error: any) {

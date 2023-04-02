@@ -1,3 +1,4 @@
+import { register } from "@/api/user";
 import LoginOrRegisterBg from "@/components/LoginOrRegisterBg";
 import { UserOutlined, LockOutlined, PhoneOutlined } from "@ant-design/icons";
 import { Input, Button, Form, Typography, message } from "antd";
@@ -12,8 +13,7 @@ export default function Register() {
 
   const onFinish = async (values: any) => {
     try {
-      // await register(values);
-      // window.localStorage.setItem("user", JSON.stringify(data));
+      await register(values);
       message.success("注册成功, 去登录吧");
       router.replace("/login");
     } catch (error: any) {
