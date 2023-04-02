@@ -33,10 +33,11 @@ const SchedulePage = () => {
   /** 发送请求 */
   const [uid, setUid] = useState("");
   const [isShowToday, setIsShowToday] = useState(!!router.query.showToday);
-  const { scheduleData, isFetchScheduleLoading, refetch } = useFetchSchedule(
-    uid,
-    isShowToday ? dayjs(Date.now()).format("YYYY-MM-DD") : ""
-  );
+  const { scheduleData, isFetchScheduleLoading, refetchSchedule } =
+    useFetchSchedule(
+      uid,
+      isShowToday ? dayjs(Date.now()).format("YYYY-MM-DD") : ""
+    );
   const [filteredScheduleList, setFilteredScheduleList] = useState<ISchedule[]>(
     []
   );
@@ -67,14 +68,14 @@ const SchedulePage = () => {
     async (id: string) => {
       try {
         await deleteSchedule(id);
-        message.success("删除成功");
-        refetch();
+        message.success("删除日程成功");
+        refetchSchedule();
       } catch (error) {
         console.error(error);
-        message.error("删除失败");
+        message.error("删除日程失败");
       }
     },
-    [refetch]
+    [refetchSchedule]
   );
 
   const onSearch = useCallback((value: string) => {
@@ -219,7 +220,7 @@ const SchedulePage = () => {
           data={curSchedule}
           callback={() => {
             setIsModalOpen(false);
-            refetch();
+            refetchSchedule();
           }}
         />
       </Modal>

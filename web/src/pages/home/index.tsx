@@ -28,10 +28,8 @@ export default function Home() {
 
   /** 请求数据 */
   const [uid, setUid] = useState<string>("");
-  const { scheduleData, isFetchScheduleLoading } = useFetchSchedule(
-    uid,
-    nowDayStr
-  );
+  const { scheduleData, isFetchScheduleLoading, refetchSchedule } =
+    useFetchSchedule(uid, nowDayStr);
   const { taskData, isFetchTaskLoading, refetchTask } = useFetchTask(
     uid,
     nowDayStr
@@ -100,7 +98,11 @@ export default function Home() {
                   <div style={{ padding: 20, textAlign: "center" }}>空</div>
                 ) : (
                   scheduleData?.list.map((item) => (
-                    <ScheduleItem key={item.id} data={item} />
+                    <ScheduleItem
+                      key={item.id}
+                      data={item}
+                      operateCallback={refetchSchedule}
+                    />
                   ))
                 )}
               </>
