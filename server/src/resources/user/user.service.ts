@@ -6,7 +6,7 @@ import { PrismaService } from '../../prisma/prisma.service';
 import { ScheduleService } from '../schedule/schedule.service';
 import { TaskService } from '../task/task.service';
 import { MemoService } from '../memo/memo.service';
-import { isAfter } from 'date-fns';
+import { format, isAfter, isEqual } from 'date-fns';
 
 @Injectable()
 export class UserService {
@@ -89,6 +89,17 @@ export class UserService {
     }
   }
 
+  private isAfterAndEqual(time: Date): boolean {
+    const curDayStr = format(new Date(), 'yyyy-MM-dd');
+
+    const newTime = format(time, 'yyyy-MM-dd');
+
+    return (
+      isAfter(new Date(newTime), new Date(curDayStr)) ||
+      isEqual(new Date(newTime), new Date(curDayStr))
+    );
+  }
+
   /**
    * 获取首屏数据
    * - 待开始日程
@@ -101,11 +112,12 @@ export class UserService {
     );
     const { list: taskList } = await this.taskService.tasks(uid);
     const memoList = await this.memoService.getMemoList(uid);
+
     const afterScheduleSize = scheduleList.filter((item) =>
-      isAfter(new Date(item.startTime), new Date()),
+      this.isAfterAndEqual(new Date(item.startTime)),
     ).length;
     const afterTaskSize = taskList.filter((item) =>
-      isAfter(new Date(item.time), new Date()),
+      this.isAfterAndEqual(new Date(item.time)),
     ).length;
     return {
       afterScheduleSize,
