@@ -1,11 +1,12 @@
-import React, { useMemo, useState } from "react";
-import { Button, Calendar, Checkbox, Dropdown, Space } from "antd";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
+import { Button, Calendar, Checkbox, Dropdown, Space, message } from "antd";
 import type { CalendarMode } from "antd/es/calendar/generateCalendar";
 import type { Dayjs } from "dayjs";
 import { CellStyleBox, DotBox, LayoutCalendar } from "./styled";
 import dayjs from "dayjs";
 import { DownOutlined } from "@ant-design/icons";
 import { ISchedule, ITask } from "@/types";
+import { fetchSchedule, fetchTask } from "@/api";
 
 const DATE_FORMET = "YYYY-MM-DD";
 
@@ -54,27 +55,50 @@ const CalendarLayout = () => {
   const [curSelectedDate, setCurSelectedDate] = useState(
     dayjs(now).format(DATE_FORMET)
   );
+  const [curMonth, setCurMonth] = useState(dayjs(now).format("YYYY-MM"));
+
+  const [scheduleStringArr, setScheduleStringArr] = useState<string[]>([]);
+  const [taskStringArr, setTaskStringArr] = useState<string[]>([]);
 
   const [showScheduleDot, setShowScheduleDot] = useState(true);
   const [showTaskDot, setShowTaskDot] = useState(true);
 
+  const fetchEventDataWithMonth = useCallback(
+    async (uid: string) => {
+      try {
+        const { list: scheudleList } = await fetchSchedule(uid, curMonth);
+        const { list: taskList } = await fetchTask(uid, curMonth);
+        setScheduleStringArr(getScheduleDataWithMonth(scheudleList));
+        setTaskStringArr(getTaskDataWithMonth(taskList));
+      } catch (error) {
+        console.error(error);
+        message.error("获取当月数据失败");
+      }
+    },
+    [curMonth]
+  );
+
+  useEffect(() => {
+    const userData = JSON.parse(localStorage.getItem("user")!);
+    fetchEventDataWithMonth(userData.id);
+  }, [fetchEventDataWithMonth, curMonth]);
+
   const onPanelChange = (value: Dayjs, mode: CalendarMode) => {
-    console.log(value.format(DATE_FORMET), mode);
+    setCurMonth(value.format("YYYY-MM"));
   };
 
   const DateCellComp = useMemo(() => {
     // eslint-disable-next-line react/display-name
     return (date: Dayjs) => {
-      const isCurMonth = dayjs(date).isSame(curSelectedDate, "month");
+      const isCurMonth = date.isSame(curSelectedDate, "month");
+      const hasSchedule = scheduleStringArr.includes(date.format("YYYY-MM-DD"));
+      const hasTask = taskStringArr.includes(date.format("YYYY-MM-DD"));
       return (
         <>
-          <CellStyleBox
-            isCurMonth={isCurMonth}
-            isNow={dayjs(date).isSame(now, "day")}
-          >
+          <CellStyleBox isCurMonth={isCurMonth} isNow={date.isSame(now, "day")}>
             <div
               className={`${
-                dayjs(date).isSame(curSelectedDate, "day") ? "isSelected" : ""
+                date.isSame(curSelectedDate, "day") ? "isSelected" : ""
               }`}
               style={{ padding: 5 }}
             >
@@ -83,14 +107,23 @@ const CalendarLayout = () => {
           </CellStyleBox>
           {isCurMonth && (
             <DotBox>
-              {showScheduleDot && <div className='schedule'></div>}
-              {showTaskDot && <div className='task'></div>}
+              {showScheduleDot && hasSchedule && (
+                <div className='schedule'></div>
+              )}
+              {showTaskDot && hasTask && <div className='task'></div>}
             </DotBox>
           )}
         </>
       );
     };
-  }, [curSelectedDate, now, showScheduleDot, showTaskDot]);
+  }, [
+    curSelectedDate,
+    now,
+    scheduleStringArr,
+    showScheduleDot,
+    showTaskDot,
+    taskStringArr,
+  ]);
 
   return (
     <LayoutCalendar>
