@@ -23,32 +23,6 @@ import {
   eventInstance,
 } from "@/events";
 
-const data: ITask[] = [
-  {
-    id: "1",
-    title: "123John Brown",
-    time: "2023-04-01 12:00",
-    level: 2,
-    isDone: false,
-    desc: "",
-  },
-  {
-    id: "2",
-    title: "1John Brown",
-    time: "2023-04-01 12:00",
-    level: 1,
-    isDone: false,
-    desc: "",
-  },
-  {
-    id: "3",
-    title: "aaaJohn Brown",
-    time: "2023-04-01 12:00",
-    level: 3,
-    isDone: false,
-    desc: "",
-  },
-];
 /**
  * 任务视图
  */

@@ -23,6 +23,7 @@ const TaskForm: React.FC<IProps> = (props) => {
     try {
       const newValues = {
         ...values,
+        time: dayjs(values?.time).format("YYYY-MM-DD"),
         isDone: data?.isDone || false,
       };
       if (!!data) {
@@ -55,7 +56,9 @@ const TaskForm: React.FC<IProps> = (props) => {
           desc: "",
           level: 4,
           ...data,
-          time: dayjs(forceDateString || data?.time),
+          time: dayjs(
+            !!forceDateString ? forceDateString + " 08:00" : data?.time
+          ),
         }}
         onFinish={onFinish}
         onFinishFailed={onFinishFailed}

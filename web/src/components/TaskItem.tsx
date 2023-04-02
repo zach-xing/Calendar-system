@@ -6,6 +6,7 @@ import dayjs from "dayjs";
 import React, { useCallback, useEffect, useState } from "react";
 import TaskForm from "./TaskForm";
 import { modifyTaskState } from "@/api";
+import { REFRESH_HOME_PAGE_DATE, eventInstance } from "@/events";
 
 const StyleBox = styled.div<{ isPressing: boolean; bgColorWidth: number }>`
   position: relative;
@@ -80,6 +81,7 @@ const TaskItem: React.FC<IProps> = (props) => {
       await modifyTaskState(data.id, !data.isDone);
       operateCallback && operateCallback();
       message.success("更改任务状态成功");
+      eventInstance.emit(REFRESH_HOME_PAGE_DATE);
     } catch (error) {
       console.error(error);
       message.error("更改任务状态失败");
