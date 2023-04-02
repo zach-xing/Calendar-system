@@ -17,6 +17,12 @@ import {
 } from "@/api";
 import { message } from "antd";
 import dayjs from "dayjs";
+import {
+  REFRESH_HOME_PAGE_DATE,
+  REFRESH_SCHEDULE_DATE,
+  REFRESH_TASK_DATE,
+  eventInstance,
+} from "@/events";
 
 /**
  * 首页
@@ -51,6 +57,16 @@ export default function Home() {
     setUid(userData.id);
     getFirstScreenData(userData.id);
   }, [getFirstScreenData]);
+
+  useEffect(() => {
+    eventInstance.on(REFRESH_HOME_PAGE_DATE, getFirstScreenData);
+    eventInstance.on(REFRESH_SCHEDULE_DATE, refetchSchedule);
+    eventInstance.on(REFRESH_TASK_DATE, refetchTask);
+    return () => {
+      eventInstance.off(REFRESH_SCHEDULE_DATE);
+      eventInstance.off(REFRESH_TASK_DATE);
+    };
+  }, [getFirstScreenData, refetchSchedule, refetchTask]);
 
   return (
     <Container>

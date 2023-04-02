@@ -8,6 +8,7 @@ import React from "react";
 interface IProps {
   uid: string;
   data?: ITask;
+  forceDateString?: string; // 强制展示这个日期
   callback?: Function;
 }
 
@@ -15,7 +16,7 @@ interface IProps {
  * schedule create&modify form
  */
 const TaskForm: React.FC<IProps> = (props) => {
-  const { uid, data, callback } = props;
+  const { uid, data, callback, forceDateString } = props;
 
   const onFinish = async (values: any) => {
     try {
@@ -52,7 +53,7 @@ const TaskForm: React.FC<IProps> = (props) => {
           desc: "",
           level: 4,
           ...data,
-          time: dayjs(data?.time),
+          time: dayjs(forceDateString || data?.time),
         }}
         onFinish={onFinish}
         onFinishFailed={onFinishFailed}

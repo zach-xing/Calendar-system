@@ -17,6 +17,7 @@ import dayjs from "dayjs";
 import TaskForm from "@/components/TaskForm";
 import { useRouter } from "next/router";
 import { deleteTask, useFetchTask } from "@/api";
+import { REFRESH_TASK_DATE, eventInstance } from "@/events";
 
 const data: ITask[] = [
   {
@@ -75,6 +76,14 @@ const TaskPage = () => {
     );
     setFilteredTaskList(filteredList || []);
   }, [taskData?.list, searchValue]);
+
+  /** 监听事件 */
+  useEffect(() => {
+    eventInstance.on(REFRESH_TASK_DATE, refetchTask);
+    return () => {
+      eventInstance.off(REFRESH_TASK_DATE);
+    };
+  }, [refetchTask]);
 
   const handleCreateTask = useCallback(() => {
     setIsModalOpen(true);

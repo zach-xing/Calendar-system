@@ -18,6 +18,7 @@ import { remindTitle } from "@/utils/shared";
 import ScheduleForm from "@/components/ScheduleForm";
 import { deleteSchedule, useFetchSchedule } from "@/api";
 import { useRouter } from "next/router";
+import { REFRESH_SCHEDULE_DATE, eventInstance } from "@/events";
 
 /**
  * 日程视图
@@ -53,6 +54,14 @@ const SchedulePage = () => {
     );
     setFilteredScheduleList(filteredList || []);
   }, [scheduleData?.list, searchValue]);
+
+  /** 监听事件 */
+  useEffect(() => {
+    eventInstance.on(REFRESH_SCHEDULE_DATE, refetchSchedule);
+    return () => {
+      eventInstance.off(REFRESH_SCHEDULE_DATE);
+    };
+  }, [refetchSchedule]);
 
   const handleCreateSchedule = useCallback(() => {
     setIsModalOpen(true);

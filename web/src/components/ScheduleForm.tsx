@@ -8,6 +8,7 @@ import React, { useState } from "react";
 interface IProps {
   uid: string;
   data?: ISchedule;
+  forceDateString?: string; // 强制展示这个日期
   callback?: Function;
 }
 
@@ -15,7 +16,7 @@ interface IProps {
  * schedule create&modify form
  */
 const ScheduleForm: React.FC<IProps> = (props) => {
-  const { data, uid, callback } = props;
+  const { data, uid, callback, forceDateString } = props;
   const [isFullDay, setIsFullDay] = useState(data?.isFullDay || false);
 
   const onFinish = async (values: any) => {
@@ -69,7 +70,10 @@ const ScheduleForm: React.FC<IProps> = (props) => {
           desc: "",
           ...data,
           date: dayjs(data?.startTime),
-          rangeDate: [dayjs(data?.startTime), dayjs(data?.endTime)],
+          rangeDate: [
+            dayjs(forceDateString || data?.startTime),
+            dayjs(forceDateString || data?.endTime),
+          ],
         }}
         onFinish={onFinish}
         onFinishFailed={onFinishFailed}

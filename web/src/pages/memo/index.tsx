@@ -7,6 +7,7 @@ import { IMemo } from "@/types";
 import { useFetchMemo } from "@/api";
 import dayjs from "dayjs";
 import MemoForm from "@/components/MemoForm";
+import { eventInstance, REFRESH_MEMO_DATE } from "@/events";
 
 const ContainerStyleBox = styled.div`
   display: flex;
@@ -42,6 +43,14 @@ const MemoPage = () => {
     const userData = JSON.parse(localStorage.getItem("user")!);
     setUid(userData.id);
   }, []);
+
+  /** 监听事件 */
+  useEffect(() => {
+    eventInstance.on(REFRESH_MEMO_DATE, refetch);
+    return () => {
+      eventInstance.off(REFRESH_MEMO_DATE);
+    };
+  }, [refetch]);
 
   return (
     <>

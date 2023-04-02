@@ -1,5 +1,13 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react";
-import { Button, Calendar, Checkbox, Dropdown, Space, message } from "antd";
+import {
+  Button,
+  Calendar,
+  Checkbox,
+  Dropdown,
+  Modal,
+  Space,
+  message,
+} from "antd";
 import type { CalendarMode } from "antd/es/calendar/generateCalendar";
 import type { Dayjs } from "dayjs";
 import { CellStyleBox, DotBox, LayoutCalendar } from "./styled";
@@ -7,6 +15,15 @@ import dayjs from "dayjs";
 import { DownOutlined } from "@ant-design/icons";
 import { ISchedule, ITask } from "@/types";
 import { fetchSchedule, fetchTask } from "@/api";
+import {
+  REFRESH_MEMO_DATE,
+  REFRESH_SCHEDULE_DATE,
+  REFRESH_TASK_DATE,
+  eventInstance,
+} from "@/events";
+import TaskForm from "@/components/TaskForm";
+import ScheduleForm from "@/components/ScheduleForm";
+import MemoForm from "@/components/MemoForm";
 
 const DATE_FORMET = "YYYY-MM-DD";
 
@@ -63,6 +80,22 @@ const CalendarLayout = () => {
   const [showScheduleDot, setShowScheduleDot] = useState(true);
   const [showTaskDot, setShowTaskDot] = useState(true);
 
+  const [isModalFlag, setIsModalFlag] = useState<
+    "" | "schedule" | "task" | "memo"
+  >("");
+  const [uid, setUid] = useState("");
+
+  useEffect(() => {
+    const userData = JSON.parse(localStorage.getItem("user")!);
+    setUid(userData.id);
+  }, []);
+
+  const handleCreate = (flag: "schedule" | "task" | "memo") => {
+    setIsModalFlag(flag);
+
+    // eventInstance.emit(CREATE_SCHEDULE_WITH_CALENDAR, "2023-04-02");
+  };
+
   const fetchEventDataWithMonth = useCallback(
     async (uid: string) => {
       try {
@@ -93,27 +126,43 @@ const CalendarLayout = () => {
       const isCurMonth = date.isSame(curSelectedDate, "month");
       const hasSchedule = scheduleStringArr.includes(date.format("YYYY-MM-DD"));
       const hasTask = taskStringArr.includes(date.format("YYYY-MM-DD"));
+
       return (
-        <>
-          <CellStyleBox isCurMonth={isCurMonth} isNow={date.isSame(now, "day")}>
-            <div
-              className={`${
-                date.isSame(curSelectedDate, "day") ? "isSelected" : ""
-              }`}
-              style={{ padding: 5 }}
+        <Dropdown
+          menu={{
+            items: [
+              {
+                label: "1st menu item",
+                key: "1",
+              },
+            ],
+          }}
+          trigger={["contextMenu"]}
+        >
+          <>
+            <CellStyleBox
+              isCurMonth={isCurMonth}
+              isNow={date.isSame(now, "day")}
             >
-              <div>{date.format("DD")}</div>
-            </div>
-          </CellStyleBox>
-          {isCurMonth && (
-            <DotBox>
-              {showScheduleDot && hasSchedule && (
-                <div className='schedule'></div>
-              )}
-              {showTaskDot && hasTask && <div className='task'></div>}
-            </DotBox>
-          )}
-        </>
+              <div
+                className={`${
+                  date.isSame(curSelectedDate, "day") ? "isSelected" : ""
+                }`}
+                style={{ padding: 5 }}
+              >
+                <div>{date.format("DD")}</div>
+              </div>
+            </CellStyleBox>
+            {isCurMonth && (
+              <DotBox>
+                {showScheduleDot && hasSchedule && (
+                  <div className='schedule'></div>
+                )}
+                {showTaskDot && hasTask && <div className='task'></div>}
+              </DotBox>
+            )}
+          </>
+        </Dropdown>
       );
     };
   }, [
@@ -126,66 +175,134 @@ const CalendarLayout = () => {
   ]);
 
   return (
-    <LayoutCalendar>
-      <Dropdown
-        menu={{
-          items: [
-            {
-              label: <Button type='link'>创建日程</Button>,
-              key: "0",
-            },
-            {
-              label: <Button type='link'>创建任务</Button>,
-              key: "1",
-            },
-            {
-              label: <Button type='link'>创建备忘录</Button>,
-              key: "2",
-            },
-          ],
+    <>
+      <LayoutCalendar>
+        <Dropdown
+          menu={{
+            items: [
+              {
+                label: (
+                  <Button
+                    type='link'
+                    onClick={() => {
+                      handleCreate("schedule");
+                    }}
+                  >
+                    创建日程
+                  </Button>
+                ),
+                key: "0",
+              },
+              {
+                label: (
+                  <Button
+                    type='link'
+                    onClick={() => {
+                      handleCreate("task");
+                    }}
+                  >
+                    创建任务
+                  </Button>
+                ),
+                key: "1",
+              },
+              {
+                label: (
+                  <Button
+                    type='link'
+                    onClick={() => {
+                      handleCreate("memo");
+                    }}
+                  >
+                    创建备忘录
+                  </Button>
+                ),
+                key: "2",
+              },
+            ],
+          }}
+          trigger={["click"]}
+        >
+          <Button type='primary' style={{ marginTop: 20 }}>
+            <Space>
+              根据下面选中的日期创建
+              <DownOutlined />
+            </Space>
+          </Button>
+        </Dropdown>
+
+        <div style={{ width: 320, margin: "10px auto" }}>
+          <Calendar
+            fullscreen={false}
+            onPanelChange={onPanelChange}
+            onSelect={(date) => {
+              setCurSelectedDate(date.format(DATE_FORMET));
+            }}
+            dateFullCellRender={DateCellComp}
+          />
+        </div>
+
+        <div style={{ marginBottom: 5 }}>
+          <Checkbox
+            checked={showScheduleDot}
+            onChange={() => {
+              setShowScheduleDot((prev) => !prev);
+            }}
+          >
+            <span style={{ fontSize: 18 }}>显示日程</span>
+          </Checkbox>
+        </div>
+        <div>
+          <Checkbox
+            checked={showTaskDot}
+            onChange={() => {
+              setShowTaskDot((prev) => !prev);
+            }}
+          >
+            <span style={{ fontSize: 18 }}>显示任务</span>
+          </Checkbox>
+        </div>
+      </LayoutCalendar>
+
+      <Modal
+        title={`创建 ${isModalFlag}`}
+        open={isModalFlag.length !== 0}
+        width={600}
+        footer={null}
+        destroyOnClose={true}
+        onCancel={() => {
+          setIsModalFlag("");
         }}
-        trigger={["click"]}
       >
-        <Button type='primary' style={{ marginTop: 20 }}>
-          <Space>
-            创建
-            <DownOutlined />
-          </Space>
-        </Button>
-      </Dropdown>
-
-      <div style={{ width: 320, margin: "10px auto" }}>
-        <Calendar
-          fullscreen={false}
-          onPanelChange={onPanelChange}
-          onSelect={(date) => {
-            setCurSelectedDate(date.format(DATE_FORMET));
-          }}
-          dateFullCellRender={DateCellComp}
-        />
-      </div>
-
-      <div style={{ marginBottom: 5 }}>
-        <Checkbox
-          checked={showScheduleDot}
-          onChange={() => {
-            setShowScheduleDot((prev) => !prev);
-          }}
-        >
-          <span style={{ fontSize: 18 }}>显示日程</span>
-        </Checkbox>
-      </div>
-      <div>
-        <Checkbox
-          checked={showTaskDot}
-          onChange={() => {
-            setShowTaskDot((prev) => !prev);
-          }}
-        >
-          <span style={{ fontSize: 18 }}>显示任务</span>
-        </Checkbox>
-      </div>
-    </LayoutCalendar>
+        {isModalFlag === "schedule" ? (
+          <ScheduleForm
+            uid={uid}
+            forceDateString={curSelectedDate}
+            callback={() => {
+              setIsModalFlag("");
+              eventInstance.emit(REFRESH_SCHEDULE_DATE);
+            }}
+          />
+        ) : isModalFlag === "task" ? (
+          <TaskForm
+            uid={uid}
+            forceDateString={curSelectedDate}
+            callback={() => {
+              setIsModalFlag("");
+              eventInstance.emit(REFRESH_TASK_DATE);
+            }}
+          />
+        ) : (
+          <MemoForm
+            uid={uid}
+            callback={() => {
+              setIsModalFlag("");
+              eventInstance.emit(REFRESH_MEMO_DATE);
+            }}
+          />
+        )}
+      </Modal>
+    </>
   );
 };
 
