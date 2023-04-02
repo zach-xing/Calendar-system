@@ -58,7 +58,7 @@ const TaskPage = () => {
   /** 发送请求 */
   const [uid, setUid] = useState("");
   const [isShowToday, setIsShowToday] = useState(!!router.query.showToday);
-  const { taskData, isFetchTaskLoading, refetch } = useFetchTask(
+  const { taskData, isFetchTaskLoading, refetchTask } = useFetchTask(
     uid,
     isShowToday ? dayjs(Date.now()).format("YYYY-MM-DD") : ""
   );
@@ -91,13 +91,13 @@ const TaskPage = () => {
       try {
         await deleteTask(id);
         message.success("删除任务成功");
-        refetch();
+        refetchTask();
       } catch (error) {
         console.error(error);
         message.error("删除任务失败");
       }
     },
-    [refetch]
+    [refetchTask]
   );
 
   const onSearch = useCallback((value: string) => {
@@ -246,7 +246,7 @@ const TaskPage = () => {
           data={curTask}
           callback={() => {
             setIsModalOpen(false);
-            refetch();
+            refetchTask();
           }}
         />
       </Modal>

@@ -1,4 +1,3 @@
-import { useRouter } from "next/router";
 import { Container } from "./style";
 import {
   BookOutlined,
@@ -7,7 +6,6 @@ import {
 } from "@ant-design/icons";
 import InfoBlock from "./components/InfoBlock";
 import ScrollBlock from "@/components/ScrollBlock";
-import { ISchedule, ITask } from "@/types";
 import TaskItem from "@/components/TaskItem";
 import ScheduleItem from "@/components/ScheduleItem";
 import { useCallback, useEffect, useState } from "react";
@@ -24,7 +22,6 @@ import dayjs from "dayjs";
  * 首页
  */
 export default function Home() {
-  const router = useRouter();
   const nowDayStr = dayjs(Date.now()).format("YYYY-MM-DD");
 
   const [firstScreenData, setFirstScreenData] = useState<IFirstScreen>();
@@ -35,7 +32,10 @@ export default function Home() {
     uid,
     nowDayStr
   );
-  const { taskData, isFetchTaskLoading } = useFetchTask(uid, nowDayStr);
+  const { taskData, isFetchTaskLoading, refetchTask } = useFetchTask(
+    uid,
+    nowDayStr
+  );
 
   /** 获取首屏数据 */
   const getFirstScreenData = useCallback(async (uid: string) => {
@@ -118,7 +118,11 @@ export default function Home() {
                   <div style={{ padding: 20, textAlign: "center" }}>空</div>
                 ) : (
                   taskData?.list.map((item) => (
-                    <TaskItem key={item.id} data={item} />
+                    <TaskItem
+                      key={item.id}
+                      data={item}
+                      operateCallback={refetchTask}
+                    />
                   ))
                 )}
               </>

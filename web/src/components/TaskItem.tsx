@@ -1,9 +1,11 @@
 import { ITask, TaskLevelEnum } from "@/types";
 import { CheckCircleOutlined, SmallDashOutlined } from "@ant-design/icons";
 import styled from "@emotion/styled";
-import { Button, Dropdown, Tag, message } from "antd";
+import { Button, Dropdown, Modal, Tag, message } from "antd";
 import dayjs from "dayjs";
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
+import TaskForm from "./TaskForm";
+import { modifyTaskState } from "@/api";
 
 const StyleBox = styled.div<{ isPressing: boolean; bgColorWidth: number }>`
   position: relative;
@@ -50,24 +52,39 @@ const LevelComp = (level: TaskLevelEnum) => {
 
 interface IProps {
   data: ITask;
+  operateCallback?: Function;
 }
 
 /**
  * Task 的 某一个项
  */
 const TaskItem: React.FC<IProps> = (props) => {
-  const { data } = props;
+  const { data, operateCallback } = props;
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [uid, setUid] = useState("");
+
   const [timer, setTimer] = useState<NodeJS.Timeout | undefined>();
   const [isPressing, setIsPressing] = useState(false);
 
-  const [isDone, setIsDone] = useState(data.isDone);
+  const [curTask, setCurTask] = useState<ITask>();
+  useEffect(() => {
+    const userData = JSON.parse(localStorage.getItem("user")!);
+    setUid(userData.id);
+  }, []);
 
   // 长按触发事件
-  const handleLongPress = useCallback(() => {
-    message.info("发送成功");
-    setIsDone(!isDone);
-    // TODO:发送 done task request
-  }, [isDone]);
+  const handleLongPress = useCallback(async () => {
+    try {
+      message.info("发送成功");
+      await modifyTaskState(data.id, !data.isDone);
+      operateCallback && operateCallback();
+      message.success("更改任务状态成功");
+    } catch (error) {
+      console.error(error);
+      message.error("更改任务状态失败");
+    }
+  }, [data.id, data.isDone, operateCallback]);
 
   // 鼠标按下事件
   const handleMouseDown = () => {
@@ -81,56 +98,89 @@ const TaskItem: React.FC<IProps> = (props) => {
     setIsPressing(false);
   };
   return (
-    <StyleBox
-      isPressing={isPressing}
-      bgColorWidth={2}
-      onMouseDown={handleMouseDown}
-      onMouseUp={handleMouseUp}
-    >
-      <div className='show '>
-        <div style={{ display: "flex", alignItems: "center" }}>
-          {LevelComp(data.level)}
-          <div
-            style={{
-              marginLeft: 15,
-              marginRight: 20,
-              textDecoration: isDone ? "line-through" : "none",
-            }}
-          >
-            <b>{data.title}</b> -{" "}
-            <span style={{ fontSize: 14 }}>
-              {dayjs(data.time).format("YYYY-MM-DD")}
-            </span>
+    <>
+      <StyleBox
+        isPressing={isPressing}
+        bgColorWidth={2}
+        onMouseDown={handleMouseDown}
+        onMouseUp={handleMouseUp}
+      >
+        <div className='show '>
+          <div style={{ display: "flex", alignItems: "center" }}>
+            {LevelComp(data.level)}
+            <div
+              style={{
+                marginLeft: 15,
+                marginRight: 20,
+              }}
+            >
+              <b
+                style={{
+                  textDecoration: data.isDone ? "line-through" : "none",
+                }}
+              >
+                {data.title}
+              </b>{" "}
+              -{" "}
+              <span style={{ fontSize: 14 }}>
+                {dayjs(data.time).format("YYYY-MM-DD")}
+              </span>
+            </div>
+          </div>
+
+          <div>
+            {data.isDone && (
+              <Tag icon={<CheckCircleOutlined />} color='success'>
+                Done!
+              </Tag>
+            )}
+            <Dropdown
+              menu={{
+                items: [
+                  {
+                    label: (
+                      <span
+                        onClick={() => {
+                          setIsModalOpen(true);
+                          setCurTask(data);
+                        }}
+                      >
+                        编辑
+                      </span>
+                    ),
+                    key: "0",
+                  },
+                ],
+              }}
+              trigger={["click"]}
+            >
+              <Button icon={<SmallDashOutlined />} />
+            </Dropdown>
           </div>
         </div>
+        <div className='bgColor'></div>
+      </StyleBox>
 
-        <div>
-          {data.isDone && (
-            <Tag icon={<CheckCircleOutlined />} color='success'>
-              Done!
-            </Tag>
-          )}
-          <Dropdown
-            menu={{
-              items: [
-                {
-                  label: <span>编辑</span>,
-                  key: "0",
-                },
-                {
-                  label: <span style={{ color: "red" }}>删除</span>,
-                  key: "1",
-                },
-              ],
-            }}
-            trigger={["click"]}
-          >
-            <Button icon={<SmallDashOutlined />} />
-          </Dropdown>
-        </div>
-      </div>
-      <div className='bgColor'></div>
-    </StyleBox>
+      <Modal
+        title='任务'
+        open={isModalOpen}
+        width={600}
+        footer={null}
+        destroyOnClose={true}
+        onCancel={() => {
+          setIsModalOpen(false);
+        }}
+      >
+        <TaskForm
+          uid={uid}
+          data={curTask}
+          callback={() => {
+            setIsModalOpen(false);
+            operateCallback && operateCallback();
+          }}
+        />
+      </Modal>
+    </>
   );
 };
 

@@ -43,7 +43,7 @@ export function useFetchTask(uid: string, dateString: string) {
 
   return {
     taskData: data,
-    refetch,
+    refetchTask: refetch,
     isFetchTaskLoading: isLoading,
   };
 }

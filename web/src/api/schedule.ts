@@ -43,7 +43,7 @@ export function useFetchSchedule(uid: string, dateString: string) {
 
   return {
     scheduleData: data,
-    refetch,
+    refetchSchedule: refetch,
     isFetchScheduleLoading: isLoading,
   };
 }
