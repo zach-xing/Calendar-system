@@ -17,7 +17,11 @@ import dayjs from "dayjs";
 import TaskForm from "@/components/TaskForm";
 import { useRouter } from "next/router";
 import { deleteTask, useFetchTask } from "@/api";
-import { REFRESH_TASK_DATE, eventInstance } from "@/events";
+import {
+  REFRESH_SIDER_CALDENDAR_DATE,
+  REFRESH_TASK_DATE,
+  eventInstance,
+} from "@/events";
 
 const data: ITask[] = [
   {
@@ -101,6 +105,7 @@ const TaskPage = () => {
         await deleteTask(id);
         message.success("删除任务成功");
         refetchTask();
+        eventInstance.emit(REFRESH_SIDER_CALDENDAR_DATE);
       } catch (error) {
         console.error(error);
         message.error("删除任务失败");

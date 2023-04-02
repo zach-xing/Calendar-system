@@ -14,11 +14,12 @@ import { CellStyleBox, DotBox, LayoutCalendar } from "./styled";
 import dayjs from "dayjs";
 import { DownOutlined } from "@ant-design/icons";
 import { ISchedule, ITask } from "@/types";
-import { fetchSchedule, fetchTask } from "@/api";
+import { fetchSchedule, fetchTask, useFetchSiderData } from "@/api";
 import {
   REFRESH_HOME_PAGE_DATE,
   REFRESH_MEMO_DATE,
   REFRESH_SCHEDULE_DATE,
+  REFRESH_SIDER_CALDENDAR_DATE,
   REFRESH_TASK_DATE,
   eventInstance,
 } from "@/events";
@@ -75,8 +76,8 @@ const CalendarLayout = () => {
   );
   const [curMonth, setCurMonth] = useState(dayjs(now).format("YYYY-MM"));
 
-  const [scheduleStringArr, setScheduleStringArr] = useState<string[]>([]);
-  const [taskStringArr, setTaskStringArr] = useState<string[]>([]);
+  // const [scheduleStringArr, setScheduleStringArr] = useState<string[]>([]);
+  // const [taskStringArr, setTaskStringArr] = useState<string[]>([]);
 
   const [showScheduleDot, setShowScheduleDot] = useState(true);
   const [showTaskDot, setShowTaskDot] = useState(true);
@@ -85,6 +86,7 @@ const CalendarLayout = () => {
     "" | "schedule" | "task" | "memo"
   >("");
   const [uid, setUid] = useState("");
+  const { siderData, refetchSiderData } = useFetchSiderData(uid, curMonth);
 
   useEffect(() => {
     const userData = JSON.parse(localStorage.getItem("user")!);
@@ -93,29 +95,29 @@ const CalendarLayout = () => {
 
   const handleCreate = (flag: "schedule" | "task" | "memo") => {
     setIsModalFlag(flag);
-
-    // eventInstance.emit(CREATE_SCHEDULE_WITH_CALENDAR, "2023-04-02");
   };
 
-  const fetchEventDataWithMonth = useCallback(
-    async (uid: string) => {
-      try {
-        const { list: scheudleList } = await fetchSchedule(uid, curMonth);
-        const { list: taskList } = await fetchTask(uid, curMonth);
-        setScheduleStringArr(getScheduleDataWithMonth(scheudleList));
-        setTaskStringArr(getTaskDataWithMonth(taskList));
-      } catch (error) {
-        console.error(error);
-        message.error("获取当月数据失败");
-      }
-    },
-    [curMonth]
-  );
+  // const fetchEventDataWithMonth = useCallback(
+  //   async (uid: string) => {
+  //     try {
+  //       const { list: scheudleList } = await fetchSchedule(uid, curMonth);
+  //       const { list: taskList } = await fetchTask(uid, curMonth);
+  //       setScheduleStringArr(getScheduleDataWithMonth(scheudleList));
+  //       setTaskStringArr(getTaskDataWithMonth(taskList));
+  //     } catch (error) {
+  //       console.error(error);
+  //       message.error("获取当月数据失败");
+  //     }
+  //   },
+  //   [curMonth]
+  // );
 
   useEffect(() => {
-    const userData = JSON.parse(localStorage.getItem("user")!);
-    fetchEventDataWithMonth(userData.id);
-  }, [fetchEventDataWithMonth, curMonth]);
+    eventInstance.on(REFRESH_SIDER_CALDENDAR_DATE, refetchSiderData);
+    return () => {
+      eventInstance.off(REFRESH_SIDER_CALDENDAR_DATE);
+    };
+  }, [refetchSiderData]);
 
   const onPanelChange = (value: Dayjs, mode: CalendarMode) => {
     setCurMonth(value.format("YYYY-MM"));
@@ -125,8 +127,12 @@ const CalendarLayout = () => {
     // eslint-disable-next-line react/display-name
     return (date: Dayjs) => {
       const isCurMonth = date.isSame(curSelectedDate, "month");
-      const hasSchedule = scheduleStringArr.includes(date.format("YYYY-MM-DD"));
-      const hasTask = taskStringArr.includes(date.format("YYYY-MM-DD"));
+      const hasSchedule = siderData?.scheudleStringList.includes(
+        date.format("YYYY-MM-DD")
+      );
+      const hasTask = siderData?.taskStringList.includes(
+        date.format("YYYY-MM-DD")
+      );
 
       return (
         <Dropdown
@@ -168,11 +174,11 @@ const CalendarLayout = () => {
     };
   }, [
     curSelectedDate,
+    siderData?.scheudleStringList,
+    siderData?.taskStringList,
     now,
-    scheduleStringArr,
     showScheduleDot,
     showTaskDot,
-    taskStringArr,
   ]);
 
   return (
@@ -281,6 +287,7 @@ const CalendarLayout = () => {
             forceDateString={curSelectedDate}
             callback={() => {
               setIsModalFlag("");
+              refetchSiderData();
               eventInstance.emit(REFRESH_SCHEDULE_DATE);
               eventInstance.emit(REFRESH_HOME_PAGE_DATE);
             }}
@@ -291,6 +298,7 @@ const CalendarLayout = () => {
             forceDateString={curSelectedDate}
             callback={() => {
               setIsModalFlag("");
+              refetchSiderData();
               eventInstance.emit(REFRESH_TASK_DATE);
               eventInstance.emit(REFRESH_HOME_PAGE_DATE);
             }}

@@ -18,7 +18,7 @@ import { remindTitle } from "@/utils/shared";
 import ScheduleForm from "@/components/ScheduleForm";
 import { deleteSchedule, useFetchSchedule } from "@/api";
 import { useRouter } from "next/router";
-import { REFRESH_SCHEDULE_DATE, eventInstance } from "@/events";
+import { REFRESH_SCHEDULE_DATE, REFRESH_SIDER_CALDENDAR_DATE, eventInstance } from "@/events";
 
 /**
  * 日程视图
@@ -79,6 +79,7 @@ const SchedulePage = () => {
         await deleteSchedule(id);
         message.success("删除日程成功");
         refetchSchedule();
+        eventInstance.emit(REFRESH_SIDER_CALDENDAR_DATE);
       } catch (error) {
         console.error(error);
         message.error("删除日程失败");

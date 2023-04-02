@@ -1,4 +1,5 @@
 import { createSchedule, modifySchedule } from "@/api";
+import { eventInstance, REFRESH_SIDER_CALDENDAR_DATE } from "@/events";
 import { ISchedule } from "@/types";
 import { remindTitle } from "@/utils/shared";
 import { Form, Input, Button, message, DatePicker, Select, Switch } from "antd";
@@ -44,6 +45,7 @@ const ScheduleForm: React.FC<IProps> = (props) => {
         await modifySchedule(uid, { ...newValues, id: data.id });
       } else {
         await createSchedule(uid, { ...newValues });
+        eventInstance.emit(REFRESH_SIDER_CALDENDAR_DATE);
       }
       message.success("保存成功");
       callback && callback();

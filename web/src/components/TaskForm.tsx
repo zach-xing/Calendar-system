@@ -1,4 +1,5 @@
 import { createTask, modifyTask } from "@/api";
+import { eventInstance, REFRESH_SIDER_CALDENDAR_DATE } from "@/events";
 import { ITask } from "@/types";
 import { levelTitle } from "@/utils/shared";
 import { Form, Input, Button, message, DatePicker, Select, Switch } from "antd";
@@ -28,6 +29,7 @@ const TaskForm: React.FC<IProps> = (props) => {
         await modifyTask(uid, { ...newValues, id: data.id });
       } else {
         await createTask(uid, newValues);
+        eventInstance.emit(REFRESH_SIDER_CALDENDAR_DATE);
       }
       callback && callback();
       message.success("保存任务成功");
