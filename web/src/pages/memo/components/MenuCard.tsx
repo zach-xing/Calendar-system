@@ -29,6 +29,7 @@ const StyleBox = styled.div`
 interface IProps {
   title: string;
   lastModifiedTime: string;
+  onClick: React.MouseEventHandler;
 }
 
 /**
@@ -36,7 +37,7 @@ interface IProps {
  */
 const MenuCard: React.FC<IProps> = (props) => {
   return (
-    <StyleBox>
+    <StyleBox onClick={props.onClick}>
       <div
         style={{
           display: "flex",
@@ -45,7 +46,6 @@ const MenuCard: React.FC<IProps> = (props) => {
         }}
       >
         <p className='title'>{props.title}</p>
-        <Button icon={<SmallDashOutlined />} />
       </div>
       <div className='time'>最后修改时间: </div>
       <div className='time'>{props.lastModifiedTime}</div>

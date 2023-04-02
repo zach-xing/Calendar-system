@@ -1,5 +1,7 @@
-import { ICreateMemo, IModifyMemo } from "../types";
+import { useQuery } from "react-query";
+import { ICreateMemo, IMemo, IModifyMemo } from "../types";
 import request from "./http";
+import { message } from "antd";
 
 /** 获取 memo 数据
  */
@@ -9,6 +11,30 @@ export async function fetchMemo(id: string) {
     url: `/memo/${id}`,
   });
   return res;
+}
+
+/** 获取 memo 数据 with react-query */
+export function useFetchMemo(uid: string) {
+  const { data, refetch, isLoading } = useQuery<IMemo[]>(
+    ["fetch-memo-list", uid],
+    async () => await fetchMemo(uid),
+    {
+      enabled: uid.length !== 0,
+      refetchInterval: false,
+      refetchIntervalInBackground: false,
+      refetchOnWindowFocus: true,
+      onError: (err: any) => {
+        console.error("in useQuery", err);
+        message.error("获取备忘录失败");
+      },
+    }
+  );
+
+  return {
+    memoList: data,
+    refetch,
+    isFetchMemoLoading: isLoading,
+  };
 }
 
 /** 创建 Memo */
