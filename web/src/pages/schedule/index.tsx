@@ -1,23 +1,41 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import ScrollBlock from "../../components/ScrollBlock";
 import { ISchedule } from "@/types";
-import { Button, Input, Modal, Popconfirm, Space, Table, Tag } from "antd";
+import {
+  Button,
+  Checkbox,
+  Input,
+  Modal,
+  Popconfirm,
+  Space,
+  Table,
+  Tag,
+} from "antd";
 import { ColumnsType } from "antd/es/table";
 import dayjs from "dayjs";
 import { remindTitle } from "@/utils/shared";
 import ScheduleForm from "@/components/ScheduleForm";
 import { useFetchSchedule } from "@/api";
+import { useRouter } from "next/router";
 
 /**
  * 日程视图
  */
 const SchedulePage = () => {
+  const router = useRouter();
+
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [curSchedule, setCurSchedule] = useState<ISchedule>();
 
+  const [searchValue, setSearchValue] = useState("");
+
   /** 发送请求 */
   const [uid, setUid] = useState("");
-  const { scheduleData, isFetchScheduleLoading } = useFetchSchedule(uid, "");
+  const [isShowToday, setIsShowToday] = useState(!!router.query.showToday);
+  const { scheduleData, isFetchScheduleLoading } = useFetchSchedule(
+    uid,
+    isShowToday ? dayjs(Date.now()).format("YYYY-MM-DD") : ""
+  );
   const [filteredScheduleList, setFilteredScheduleList] = useState<ISchedule[]>(
     []
   );
@@ -28,8 +46,11 @@ const SchedulePage = () => {
   }, []);
 
   useEffect(() => {
-    setFilteredScheduleList(scheduleData?.list || []);
-  }, [scheduleData?.list]);
+    const filteredList = scheduleData?.list.filter((item) =>
+      item.title.includes(searchValue)
+    );
+    setFilteredScheduleList(filteredList || []);
+  }, [scheduleData?.list, searchValue]);
 
   const handleCreateSchedule = useCallback(() => {
     setIsModalOpen(true);
@@ -43,7 +64,9 @@ const SchedulePage = () => {
 
   const handleScheduleDelete = useCallback((id: string) => {}, []);
 
-  const onSearch = useCallback((value: string) => {}, []);
+  const onSearch = useCallback((value: string) => {
+    setSearchValue(value);
+  }, []);
 
   const columns: ColumnsType<ISchedule> = useMemo(
     () => [
@@ -134,11 +157,22 @@ const SchedulePage = () => {
           marginBottom: 10,
         }}
       >
-        <h3>{"All Schedule"}</h3>
+        <div style={{ display: "flex", alignItems: "center" }}>
+          <h3 style={{ marginRight: 20 }}>{"All Schedule"}</h3>
+          <Checkbox
+            checked={isShowToday}
+            onChange={() => {
+              setIsShowToday((prev) => !prev);
+            }}
+          >
+            只看今天
+          </Checkbox>
+        </div>
 
         <Space>
           <Input.Search
-            placeholder='input search text'
+            allowClear
+            placeholder='请输入日程标题...'
             onSearch={onSearch}
             enterButton
           />

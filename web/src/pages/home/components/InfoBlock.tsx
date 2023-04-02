@@ -1,4 +1,5 @@
 import styled from "@emotion/styled";
+import { useRouter } from "next/router";
 import React from "react";
 
 const StyleDiv = styled.div<{ bgColor: string }>`
@@ -32,15 +33,22 @@ interface IProps {
   value: number;
   text: string;
   bgColor: string;
-  onClick: React.MouseEventHandler<HTMLDivElement>;
+  toPath: string;
 }
 
 /**
  * 信息块
  */
 const InfoBlock: React.FC<IProps> = (props) => {
+  const router = useRouter();
+
   return (
-    <StyleDiv bgColor={props.bgColor} onClick={props.onClick}>
+    <StyleDiv
+      bgColor={props.bgColor}
+      onClick={() => {
+        router.push(props.toPath);
+      }}
+    >
       <div className='logo'>{props.icon}</div>
 
       <div>

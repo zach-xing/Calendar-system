@@ -64,27 +64,21 @@ export default function Home() {
           value={firstScreenData?.afterScheduleSize || 0}
           text={"待开始的日程"}
           bgColor='#e7582b'
-          onClick={() => {
-            console.log("sdfsdf");
-          }}
+          toPath='/schedule?showToday=true'
         />
         <InfoBlock
           icon={<ClockCircleOutlined />}
           value={firstScreenData?.afterTaskSize || 0}
           text={"待完成的任务"}
           bgColor='#582be7'
-          onClick={() => {
-            console.log("sdfsdf");
-          }}
+          toPath='/task?showToday=true'
         />
         <InfoBlock
           icon={<BookOutlined />}
           value={firstScreenData?.memoSize || 0}
           text={"备忘录"}
           bgColor='#242424'
-          onClick={() => {
-            console.log("sdfsdf");
-          }}
+          toPath='/memo'
         />
       </div>
 
