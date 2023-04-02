@@ -55,34 +55,42 @@ const CalendarLayout = () => {
     dayjs(now).format(DATE_FORMET)
   );
 
+  const [showScheduleDot, setShowScheduleDot] = useState(true);
+  const [showTaskDot, setShowTaskDot] = useState(true);
+
   const onPanelChange = (value: Dayjs, mode: CalendarMode) => {
     console.log(value.format(DATE_FORMET), mode);
   };
 
   const DateCellComp = useMemo(() => {
     // eslint-disable-next-line react/display-name
-    return (date: Dayjs) => (
-      <>
-        <CellStyleBox
-          isCurMonth={dayjs(date).isSame(curSelectedDate, "month")}
-          isNow={dayjs(date).isSame(now, "day")}
-        >
-          <div
-            className={`${
-              dayjs(date).isSame(curSelectedDate, "day") ? "isSelected" : ""
-            }`}
-            style={{ padding: 5 }}
+    return (date: Dayjs) => {
+      const isCurMonth = dayjs(date).isSame(curSelectedDate, "month");
+      return (
+        <>
+          <CellStyleBox
+            isCurMonth={isCurMonth}
+            isNow={dayjs(date).isSame(now, "day")}
           >
-            <div>{date.format("DD")}</div>
-          </div>
-        </CellStyleBox>
-        <DotBox>
-          <div className='schedule'></div>
-          <div className='task'></div>
-        </DotBox>
-      </>
-    );
-  }, [curSelectedDate, now]);
+            <div
+              className={`${
+                dayjs(date).isSame(curSelectedDate, "day") ? "isSelected" : ""
+              }`}
+              style={{ padding: 5 }}
+            >
+              <div>{date.format("DD")}</div>
+            </div>
+          </CellStyleBox>
+          {isCurMonth && (
+            <DotBox>
+              {showScheduleDot && <div className='schedule'></div>}
+              {showTaskDot && <div className='task'></div>}
+            </DotBox>
+          )}
+        </>
+      );
+    };
+  }, [curSelectedDate, now, showScheduleDot, showTaskDot]);
 
   return (
     <LayoutCalendar>
@@ -125,12 +133,22 @@ const CalendarLayout = () => {
       </div>
 
       <div style={{ marginBottom: 5 }}>
-        <Checkbox onChange={() => {}}>
+        <Checkbox
+          checked={showScheduleDot}
+          onChange={() => {
+            setShowScheduleDot((prev) => !prev);
+          }}
+        >
           <span style={{ fontSize: 18 }}>显示日程</span>
         </Checkbox>
       </div>
       <div>
-        <Checkbox onChange={() => {}}>
+        <Checkbox
+          checked={showTaskDot}
+          onChange={() => {
+            setShowTaskDot((prev) => !prev);
+          }}
+        >
           <span style={{ fontSize: 18 }}>显示任务</span>
         </Checkbox>
       </div>
