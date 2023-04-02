@@ -49,6 +49,7 @@ const TaskForm: React.FC<IProps> = (props) => {
         wrapperCol={{ span: 20 }}
         style={{ maxWidth: 800 }}
         initialValues={{
+          desc: "",
           level: 4,
           ...data,
           time: dayjs(data?.time),

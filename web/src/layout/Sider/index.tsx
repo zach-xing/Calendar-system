@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import { Avatar, Button, Dropdown, Menu, Space } from "antd";
 import type { MenuProps } from "antd";
@@ -40,6 +40,11 @@ const items: MenuItem[] = [
 
 function Sider() {
   const router = useRouter();
+  const [selectedMenu, setSelectedMenu] = useState(router.route.slice(1));
+
+  useEffect(() => {
+    setSelectedMenu(router.route.slice(1));
+  }, [router.route]);
 
   const handleToPath = ({ item, key }: any) => {
     router.push(`/${key}`);
@@ -57,7 +62,8 @@ function Sider() {
         />
 
         <Menu
-          defaultSelectedKeys={["1"]}
+          defaultSelectedKeys={["home"]}
+          selectedKeys={[selectedMenu]}
           mode='inline'
           theme='light'
           inlineCollapsed={true}
