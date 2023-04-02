@@ -8,13 +8,8 @@ import InfoBlock from "./components/InfoBlock";
 import ScrollBlock from "@/components/ScrollBlock";
 import TaskItem from "@/components/TaskItem";
 import ScheduleItem from "@/components/ScheduleItem";
-import { useCallback, useEffect, useState } from "react";
-import {
-  IFirstScreen,
-  fetchFirstScreenData,
-  useFetchSchedule,
-  useFetchTask,
-} from "@/api";
+import { useEffect, useState } from "react";
+import { useFetchFirstScreenData, useFetchSchedule, useFetchTask } from "@/api";
 import { message } from "antd";
 import dayjs from "dayjs";
 import {
@@ -30,8 +25,6 @@ import {
 export default function Home() {
   const nowDayStr = dayjs(Date.now()).format("YYYY-MM-DD");
 
-  const [firstScreenData, setFirstScreenData] = useState<IFirstScreen>();
-
   /** 请求数据 */
   const [uid, setUid] = useState<string>("");
   const { scheduleData, isFetchScheduleLoading, refetchSchedule } =
@@ -40,33 +33,23 @@ export default function Home() {
     uid,
     nowDayStr
   );
-
   /** 获取首屏数据 */
-  const getFirstScreenData = useCallback(async (uid: string) => {
-    try {
-      const res = await fetchFirstScreenData(uid);
-      setFirstScreenData(res);
-    } catch (error) {
-      console.error(error);
-      message.error("获取首屏数据失败");
-    }
-  }, []);
+  const { firstScreenData, refetchFirstScreen } = useFetchFirstScreenData(uid);
 
   useEffect(() => {
     const userData = JSON.parse(localStorage.getItem("user")!);
     setUid(userData.id);
-    getFirstScreenData(userData.id);
-  }, [getFirstScreenData]);
+  }, []);
 
   useEffect(() => {
-    eventInstance.on(REFRESH_HOME_PAGE_DATE, getFirstScreenData);
+    eventInstance.on(REFRESH_HOME_PAGE_DATE, refetchFirstScreen);
     eventInstance.on(REFRESH_SCHEDULE_DATE, refetchSchedule);
     eventInstance.on(REFRESH_TASK_DATE, refetchTask);
     return () => {
       eventInstance.off(REFRESH_SCHEDULE_DATE);
       eventInstance.off(REFRESH_TASK_DATE);
     };
-  }, [getFirstScreenData, refetchSchedule, refetchTask]);
+  }, [refetchFirstScreen, refetchSchedule, refetchTask]);
 
   return (
     <Container>

@@ -16,6 +16,7 @@ import { DownOutlined } from "@ant-design/icons";
 import { ISchedule, ITask } from "@/types";
 import { fetchSchedule, fetchTask } from "@/api";
 import {
+  REFRESH_HOME_PAGE_DATE,
   REFRESH_MEMO_DATE,
   REFRESH_SCHEDULE_DATE,
   REFRESH_TASK_DATE,
@@ -281,6 +282,7 @@ const CalendarLayout = () => {
             callback={() => {
               setIsModalFlag("");
               eventInstance.emit(REFRESH_SCHEDULE_DATE);
+              eventInstance.emit(REFRESH_HOME_PAGE_DATE);
             }}
           />
         ) : isModalFlag === "task" ? (
@@ -290,6 +292,7 @@ const CalendarLayout = () => {
             callback={() => {
               setIsModalFlag("");
               eventInstance.emit(REFRESH_TASK_DATE);
+              eventInstance.emit(REFRESH_HOME_PAGE_DATE);
             }}
           />
         ) : (
@@ -298,6 +301,7 @@ const CalendarLayout = () => {
             callback={() => {
               setIsModalFlag("");
               eventInstance.emit(REFRESH_MEMO_DATE);
+              eventInstance.emit(REFRESH_HOME_PAGE_DATE);
             }}
           />
         )}
