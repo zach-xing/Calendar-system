@@ -1,10 +1,12 @@
+import { createTask, modifyTask } from "@/api";
 import { ITask } from "@/types";
-import { levelTitle, remindTitle } from "@/utils/shared";
+import { levelTitle } from "@/utils/shared";
 import { Form, Input, Button, message, DatePicker, Select, Switch } from "antd";
 import dayjs from "dayjs";
-import React, { useState } from "react";
+import React from "react";
 
 interface IProps {
+  uid: string;
   data?: ITask;
   callback?: Function;
 }
@@ -13,10 +15,25 @@ interface IProps {
  * schedule create&modify form
  */
 const TaskForm: React.FC<IProps> = (props) => {
-  const { data } = props;
+  const { uid, data, callback } = props;
 
-  const onFinish = (values: any) => {
-    console.log("Success:", values);
+  const onFinish = async (values: any) => {
+    try {
+      const newValues = {
+        ...values,
+        isDone: data?.isDone || false,
+      };
+      if (!!data) {
+        await modifyTask(uid, { ...newValues, id: data.id });
+      } else {
+        await createTask(uid, newValues);
+      }
+      callback && callback();
+      message.success("保存任务成功");
+    } catch (error) {
+      console.error(error);
+      message.error("保存任务失败");
+    }
   };
 
   const onFinishFailed = (errorInfo: any) => {
@@ -32,6 +49,7 @@ const TaskForm: React.FC<IProps> = (props) => {
         wrapperCol={{ span: 20 }}
         style={{ maxWidth: 800 }}
         initialValues={{
+          level: 4,
           ...data,
           time: dayjs(data?.time),
         }}
@@ -66,12 +84,12 @@ const TaskForm: React.FC<IProps> = (props) => {
         </Form.Item>
 
         <Form.Item label='描述' name='desc'>
-          <Input.TextArea rows={4} maxLength={6} />
+          <Input.TextArea rows={4} />
         </Form.Item>
 
         <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
           <Button type='primary' htmlType='submit'>
-            Submit
+            保存
           </Button>
         </Form.Item>
       </Form>

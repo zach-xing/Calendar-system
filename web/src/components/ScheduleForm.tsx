@@ -116,7 +116,7 @@ const ScheduleForm: React.FC<IProps> = (props) => {
         </Form.Item>
 
         <Form.Item label='描述' name='desc'>
-          <Input.TextArea rows={4} maxLength={6} />
+          <Input.TextArea rows={4} />
         </Form.Item>
 
         <Form.Item wrapperCol={{ offset: 8, span: 16 }}>

@@ -10,12 +10,13 @@ import {
   Space,
   Table,
   Tag,
+  message,
 } from "antd";
 import { ColumnsType } from "antd/es/table";
 import dayjs from "dayjs";
 import TaskForm from "@/components/TaskForm";
 import { useRouter } from "next/router";
-import { useFetchTask } from "@/api";
+import { deleteTask, useFetchTask } from "@/api";
 
 const data: ITask[] = [
   {
@@ -57,7 +58,7 @@ const TaskPage = () => {
   /** 发送请求 */
   const [uid, setUid] = useState("");
   const [isShowToday, setIsShowToday] = useState(!!router.query.showToday);
-  const { taskData, isFetchTaskLoading } = useFetchTask(
+  const { taskData, isFetchTaskLoading, refetch } = useFetchTask(
     uid,
     isShowToday ? dayjs(Date.now()).format("YYYY-MM-DD") : ""
   );
@@ -85,7 +86,19 @@ const TaskPage = () => {
     setCurTask(val);
   }, []);
 
-  const handleTaskDelete = useCallback((id: string) => {}, []);
+  const handleTaskDelete = useCallback(
+    async (id: string) => {
+      try {
+        await deleteTask(id);
+        message.success("删除任务成功");
+        refetch();
+      } catch (error) {
+        console.error(error);
+        message.error("删除任务失败");
+      }
+    },
+    [refetch]
+  );
 
   const onSearch = useCallback((value: string) => {
     setSearchValue(value);
@@ -228,7 +241,14 @@ const TaskPage = () => {
           setIsModalOpen(false);
         }}
       >
-        <TaskForm data={curTask} />
+        <TaskForm
+          uid={uid}
+          data={curTask}
+          callback={() => {
+            setIsModalOpen(false);
+            refetch();
+          }}
+        />
       </Modal>
     </div>
   );
