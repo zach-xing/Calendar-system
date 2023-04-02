@@ -1,10 +1,12 @@
+import { createSchedule, modifySchedule } from "@/api";
 import { ISchedule } from "@/types";
 import { remindTitle } from "@/utils/shared";
 import { Form, Input, Button, message, DatePicker, Select, Switch } from "antd";
-import dayjs from "dayjs";
+import dayjs, { Dayjs } from "dayjs";
 import React, { useState } from "react";
 
 interface IProps {
+  uid: string;
   data?: ISchedule;
   callback?: Function;
 }
@@ -13,11 +15,41 @@ interface IProps {
  * schedule create&modify form
  */
 const ScheduleForm: React.FC<IProps> = (props) => {
-  const { data } = props;
+  const { data, uid, callback } = props;
   const [isFullDay, setIsFullDay] = useState(data?.isFullDay || false);
 
-  const onFinish = (values: any) => {
+  const onFinish = async (values: any) => {
     console.log("Success:", values);
+    try {
+      const newValues = {
+        ...values,
+        remind: Number(values.remind),
+        isFullDay,
+      };
+      if (!!values.date) {
+        const timeStr = (values.date as Dayjs).format("YYYY-MM-DD HH:mm");
+        newValues["startTime"] = timeStr;
+        newValues["endTime"] = timeStr;
+      }
+      if (!!values.rangeDate) {
+        newValues["startTime"] = (values.rangeDate[0] as Dayjs).format(
+          "YYYY-MM-DD HH:mm"
+        );
+        newValues["endTime"] = (values.rangeDate[1] as Dayjs).format(
+          "YYYY-MM-DD HH:mm"
+        );
+      }
+      if (!!data) {
+        await modifySchedule(uid, { ...newValues, id: data.id });
+      } else {
+        await createSchedule(uid, { ...newValues });
+      }
+      message.success("保存成功");
+      callback && callback();
+    } catch (error) {
+      console.error(error);
+      message.error("保存失败");
+    }
   };
 
   const onFinishFailed = (errorInfo: any) => {
@@ -33,6 +65,8 @@ const ScheduleForm: React.FC<IProps> = (props) => {
         wrapperCol={{ span: 20 }}
         style={{ maxWidth: 800 }}
         initialValues={{
+          remind: 0,
+          desc: "",
           ...data,
           date: dayjs(data?.startTime),
           rangeDate: [dayjs(data?.startTime), dayjs(data?.endTime)],
@@ -87,7 +121,7 @@ const ScheduleForm: React.FC<IProps> = (props) => {
 
         <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
           <Button type='primary' htmlType='submit'>
-            Submit
+            保存
           </Button>
         </Form.Item>
       </Form>

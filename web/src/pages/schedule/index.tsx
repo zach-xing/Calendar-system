@@ -10,12 +10,13 @@ import {
   Space,
   Table,
   Tag,
+  message,
 } from "antd";
 import { ColumnsType } from "antd/es/table";
 import dayjs from "dayjs";
 import { remindTitle } from "@/utils/shared";
 import ScheduleForm from "@/components/ScheduleForm";
-import { useFetchSchedule } from "@/api";
+import { deleteSchedule, useFetchSchedule } from "@/api";
 import { useRouter } from "next/router";
 
 /**
@@ -32,7 +33,7 @@ const SchedulePage = () => {
   /** 发送请求 */
   const [uid, setUid] = useState("");
   const [isShowToday, setIsShowToday] = useState(!!router.query.showToday);
-  const { scheduleData, isFetchScheduleLoading } = useFetchSchedule(
+  const { scheduleData, isFetchScheduleLoading, refetch } = useFetchSchedule(
     uid,
     isShowToday ? dayjs(Date.now()).format("YYYY-MM-DD") : ""
   );
@@ -62,7 +63,19 @@ const SchedulePage = () => {
     setCurSchedule(val);
   }, []);
 
-  const handleScheduleDelete = useCallback((id: string) => {}, []);
+  const handleScheduleDelete = useCallback(
+    async (id: string) => {
+      try {
+        await deleteSchedule(id);
+        message.success("删除成功");
+        refetch();
+      } catch (error) {
+        console.error(error);
+        message.error("删除失败");
+      }
+    },
+    [refetch]
+  );
 
   const onSearch = useCallback((value: string) => {
     setSearchValue(value);
@@ -201,7 +214,14 @@ const SchedulePage = () => {
           setIsModalOpen(false);
         }}
       >
-        <ScheduleForm data={curSchedule} />
+        <ScheduleForm
+          uid={uid}
+          data={curSchedule}
+          callback={() => {
+            setIsModalOpen(false);
+            refetch();
+          }}
+        />
       </Modal>
     </div>
   );
