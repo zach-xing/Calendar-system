@@ -135,34 +135,3 @@ export default function Home() {
     </Container>
   );
 }
-
-const dataArr: ITask[] = [
-  {
-    id: "1",
-    title: "text",
-    level: 2,
-    isDone: false,
-    time: "2023-04-01",
-    desc: "",
-  },
-  {
-    id: "2",
-    title: "text111111",
-    level: 2,
-    isDone: true,
-    time: "2023-04-02",
-    desc: "",
-  },
-];
-
-const dataArr1: ISchedule[] = [
-  {
-    id: "1",
-    title: "text111111",
-    isFullDay: false,
-    startTime: "2023-04-01 12:00",
-    endTime: "2023-04-01: 13:00",
-    remind: 0,
-    desc: "",
-  },
-];

@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import ScrollBlock from "../../components/ScrollBlock";
 import { ISchedule } from "@/types";
 import { Button, Input, Modal, Popconfirm, Space, Table, Tag } from "antd";
@@ -6,42 +6,30 @@ import { ColumnsType } from "antd/es/table";
 import dayjs from "dayjs";
 import { remindTitle } from "@/utils/shared";
 import ScheduleForm from "@/components/ScheduleForm";
+import { useFetchSchedule } from "@/api";
 
-const data: ISchedule[] = [
-  {
-    id: "1",
-    title: "John Brown",
-    isFullDay: false,
-    startTime: "2023-04-01 12:00",
-    endTime: "2023-04-01: 13:00",
-    remind: 0,
-    desc: "",
-  },
-  {
-    id: "2",
-    title: "John Brown",
-    isFullDay: false,
-    startTime: "2023-04-01 12:00",
-    endTime: "2023-04-01: 13:00",
-    remind: 0,
-    desc: "",
-  },
-  {
-    id: "3",
-    title: "John Brown",
-    isFullDay: true,
-    startTime: "2023-04-01 12:00",
-    endTime: "2023-04-01: 13:00",
-    remind: 0,
-    desc: "",
-  },
-];
 /**
  * 日程视图
  */
 const SchedulePage = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [curSchedule, setCurSchedule] = useState<ISchedule>();
+
+  /** 发送请求 */
+  const [uid, setUid] = useState("");
+  const { scheduleData, isFetchScheduleLoading } = useFetchSchedule(uid, "");
+  const [filteredScheduleList, setFilteredScheduleList] = useState<ISchedule[]>(
+    []
+  );
+
+  useEffect(() => {
+    const userData = JSON.parse(localStorage.getItem("user")!);
+    setUid(userData.id);
+  }, []);
+
+  useEffect(() => {
+    setFilteredScheduleList(scheduleData?.list || []);
+  }, [scheduleData?.list]);
 
   const handleCreateSchedule = useCallback(() => {
     setIsModalOpen(true);
@@ -160,7 +148,12 @@ const SchedulePage = () => {
         </Space>
       </div>
       <ScrollBlock height={"calc(100vh - 180px)"}>
-        <Table rowKey={"id"} columns={columns} dataSource={data} />
+        <Table
+          rowKey={"id"}
+          loading={isFetchScheduleLoading}
+          columns={columns}
+          dataSource={filteredScheduleList}
+        />
       </ScrollBlock>
 
       <Modal

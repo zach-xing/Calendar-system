@@ -7,12 +7,16 @@ import { message } from "antd";
  * 获取Schedule数据
  */
 export async function fetchSchedule(id: string, dateString: string) {
+  const url =
+    dateString.length === 0
+      ? `/schedule/${id}`
+      : `/schedule/${id}?dateString=${dateString}`;
   const res = await request<{
     total: number;
     list: ISchedule[];
   }>({
     method: "GET",
-    url: `/schedule/${id}?dateString=${dateString}`,
+    url: url,
   });
   return res;
 }
@@ -26,7 +30,7 @@ export function useFetchSchedule(uid: string, dateString: string) {
     ["fetch-schedule-list", uid, dateString],
     async () => await fetchSchedule(uid, dateString),
     {
-      enabled: uid.length !== 0 && dateString.length !== 0,
+      enabled: uid.length !== 0,
       refetchInterval: false,
       refetchIntervalInBackground: false,
       refetchOnWindowFocus: true,
