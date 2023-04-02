@@ -40,6 +40,12 @@ export class ScheduleService {
           uid: uid,
         },
       });
+      if (!dateString) {
+        return {
+          total: list.length,
+          list: list,
+        };
+      }
       const filteredList = list.filter((item) =>
         isWithinInterval(new Date(dateString), {
           start: new Date(format(new Date(item.startTime), 'yyyy-MM-dd 00:00')),
