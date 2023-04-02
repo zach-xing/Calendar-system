@@ -11,16 +11,31 @@ import { ISchedule, ITask } from "@/types";
 import TaskItem from "@/components/TaskItem";
 import ScheduleItem from "@/components/ScheduleItem";
 import { useCallback, useEffect, useState } from "react";
-import { IFirstScreen, fetchFirstScreenData } from "@/api";
+import {
+  IFirstScreen,
+  fetchFirstScreenData,
+  useFetchSchedule,
+  useFetchTask,
+} from "@/api";
 import { message } from "antd";
+import dayjs from "dayjs";
 
 /**
  * 首页
  */
 export default function Home() {
   const router = useRouter();
+  const nowDayStr = dayjs(Date.now()).format("YYYY-MM-DD");
 
   const [firstScreenData, setFirstScreenData] = useState<IFirstScreen>();
+
+  /** 请求数据 */
+  const [uid, setUid] = useState<string>("");
+  const { scheduleData, isFetchScheduleLoading } = useFetchSchedule(
+    uid,
+    nowDayStr
+  );
+  const { taskData, isFetchTaskLoading } = useFetchTask(uid, nowDayStr);
 
   /** 获取首屏数据 */
   const getFirstScreenData = useCallback(async (uid: string) => {
@@ -35,6 +50,7 @@ export default function Home() {
 
   useEffect(() => {
     const userData = JSON.parse(localStorage.getItem("user")!);
+    setUid(userData.id);
     getFirstScreenData(userData.id);
   }, [getFirstScreenData]);
 
@@ -82,17 +98,37 @@ export default function Home() {
         <div>
           <h3>{"Today's Schedule"}</h3>
           <ScrollBlock height={"calc(100vh - 300px)"}>
-            {dataArr1.map((item) => (
-              <ScheduleItem key={item.id} data={item} />
-            ))}
+            {isFetchScheduleLoading ? (
+              <div style={{ padding: 20 }}>Loading...</div>
+            ) : (
+              <>
+                {scheduleData?.list.length === 0 ? (
+                  <div style={{ padding: 20, textAlign: "center" }}>空</div>
+                ) : (
+                  scheduleData?.list.map((item) => (
+                    <ScheduleItem key={item.id} data={item} />
+                  ))
+                )}
+              </>
+            )}
           </ScrollBlock>
         </div>
         <div>
           <h3>{"Today's Task"}</h3>
           <ScrollBlock height={"calc(100vh - 300px)"}>
-            {dataArr.map((item) => (
-              <TaskItem key={item.id} data={item} />
-            ))}
+            {isFetchTaskLoading ? (
+              <div style={{ padding: 20 }}>Loading...</div>
+            ) : (
+              <>
+                {taskData?.list.length === 0 ? (
+                  <div style={{ padding: 20, textAlign: "center" }}>空</div>
+                ) : (
+                  taskData?.list.map((item) => (
+                    <TaskItem key={item.id} data={item} />
+                  ))
+                )}
+              </>
+            )}
           </ScrollBlock>
         </div>
       </div>

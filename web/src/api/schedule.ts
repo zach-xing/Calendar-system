@@ -1,5 +1,7 @@
 import { ICreateSchedule, IModifySchedule, ISchedule } from "@/types";
+import { useQuery } from "react-query";
 import request from "./http";
+import { message } from "antd";
 
 /**
  * 获取Schedule数据
@@ -13,6 +15,33 @@ export async function fetchSchedule(id: string, dateString: string) {
     url: `/schedule/${id}?dateString=${dateString}`,
   });
   return res;
+}
+
+/** 获取对应的schedule数据 */
+export function useFetchSchedule(uid: string, dateString: string) {
+  const { data, refetch, isLoading } = useQuery<{
+    total: number;
+    list: ISchedule[];
+  }>(
+    ["fetch-schedule-list", uid, dateString],
+    async () => await fetchSchedule(uid, dateString),
+    {
+      enabled: uid.length !== 0 && dateString.length !== 0,
+      refetchInterval: false,
+      refetchIntervalInBackground: false,
+      refetchOnWindowFocus: true,
+      onError: (err: any) => {
+        console.error("in useQuery", err);
+        message.error("获取日程失败");
+      },
+    }
+  );
+
+  return {
+    scheduleData: data,
+    refetch,
+    isFetchScheduleLoading: isLoading,
+  };
 }
 
 /** 创建 Schedule */

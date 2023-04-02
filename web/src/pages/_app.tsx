@@ -6,9 +6,11 @@ import { isLogined } from "@/utils/auth";
 import { useRouter } from "next/router";
 import Head from "next/head";
 import Layout from "@/layout";
+import { QueryClient, QueryClientProvider } from "react-query";
 
 export default function App({ Component, pageProps }: AppProps) {
   const router = useRouter();
+  const queryClient = new QueryClient();
 
   useEffect(() => {
     if (!isLogined()) {
@@ -25,7 +27,9 @@ export default function App({ Component, pageProps }: AppProps) {
           <meta name='viewport' content='width=device-width, initial-scale=1' />
           <link rel='icon' href='/favicon.ico' />
         </Head>
-        <Component {...pageProps} />
+        <QueryClientProvider client={queryClient}>
+          <Component {...pageProps} />
+        </QueryClientProvider>
       </>
     );
   }
@@ -38,9 +42,11 @@ export default function App({ Component, pageProps }: AppProps) {
         <meta name='viewport' content='width=device-width, initial-scale=1' />
         <link rel='icon' href='/favicon.ico' />
       </Head>
-      <Layout>
-        <Component {...pageProps} />
-      </Layout>
+      <QueryClientProvider client={queryClient}>
+        <Layout>
+          <Component {...pageProps} />
+        </Layout>
+      </QueryClientProvider>
     </>
   );
 }
