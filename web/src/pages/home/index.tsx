@@ -10,11 +10,33 @@ import ScrollBlock from "@/components/ScrollBlock";
 import { ISchedule, ITask } from "@/types";
 import TaskItem from "@/components/TaskItem";
 import ScheduleItem from "@/components/ScheduleItem";
+import { useCallback, useEffect, useState } from "react";
+import { IFirstScreen, fetchFirstScreenData } from "@/api";
+import { message } from "antd";
+
 /**
  * 首页
  */
 export default function Home() {
   const router = useRouter();
+
+  const [firstScreenData, setFirstScreenData] = useState<IFirstScreen>();
+
+  /** 获取首屏数据 */
+  const getFirstScreenData = useCallback(async (uid: string) => {
+    try {
+      const res = await fetchFirstScreenData(uid);
+      setFirstScreenData(res);
+    } catch (error) {
+      console.error(error);
+      message.error("获取首屏数据失败");
+    }
+  }, []);
+
+  useEffect(() => {
+    const userData = JSON.parse(localStorage.getItem("user")!);
+    getFirstScreenData(userData.id);
+  }, [getFirstScreenData]);
 
   return (
     <Container>
@@ -23,7 +45,7 @@ export default function Home() {
       <div style={{ display: "flex", marginBottom: 25 }}>
         <InfoBlock
           icon={<ScheduleOutlined />}
-          value={16}
+          value={firstScreenData?.afterScheduleSize || 0}
           text={"待开始的日程"}
           bgColor='#e7582b'
           onClick={() => {
@@ -32,7 +54,7 @@ export default function Home() {
         />
         <InfoBlock
           icon={<ClockCircleOutlined />}
-          value={16}
+          value={firstScreenData?.afterTaskSize || 0}
           text={"待完成的任务"}
           bgColor='#582be7'
           onClick={() => {
@@ -41,7 +63,7 @@ export default function Home() {
         />
         <InfoBlock
           icon={<BookOutlined />}
-          value={16}
+          value={firstScreenData?.memoSize || 0}
           text={"备忘录"}
           bgColor='#242424'
           onClick={() => {

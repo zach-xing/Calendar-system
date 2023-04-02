@@ -3,10 +3,20 @@ import { JwtService } from '@nestjs/jwt';
 import { CreateUserDto } from './dto/create-user.dto';
 import { LoginUserDto } from './dto/login.dto';
 import { PrismaService } from '../../prisma/prisma.service';
+import { ScheduleService } from '../schedule/schedule.service';
+import { TaskService } from '../task/task.service';
+import { MemoService } from '../memo/memo.service';
+import { isAfter } from 'date-fns';
 
 @Injectable()
 export class UserService {
-  constructor(private db: PrismaService, private jwtService: JwtService) {}
+  constructor(
+    private db: PrismaService,
+    private jwtService: JwtService,
+    private scheduleService: ScheduleService,
+    private taskService: TaskService,
+    private memoService: MemoService,
+  ) {}
 
   /** 注册 */
   async register(createUserDto: CreateUserDto) {
@@ -77,5 +87,30 @@ export class UserService {
     } catch (error) {
       throw new HttpException('输入有误', HttpStatus.BAD_REQUEST);
     }
+  }
+
+  /**
+   * 获取首屏数据
+   * - 待开始日程
+   * - 待完成日程
+   * - 备忘录总数
+   */
+  async getFirstScreenData(uid: string) {
+    const { list: scheduleList } = await this.scheduleService.getScheduleList(
+      uid,
+    );
+    const { list: taskList } = await this.taskService.tasks(uid);
+    const memoList = await this.memoService.getMemoList(uid);
+    const afterScheduleSize = scheduleList.filter((item) =>
+      isAfter(new Date(item.startTime), new Date()),
+    ).length;
+    const afterTaskSize = taskList.filter((item) =>
+      isAfter(new Date(item.time), new Date()),
+    ).length;
+    return {
+      afterScheduleSize,
+      afterTaskSize,
+      memoSize: memoList.length,
+    };
   }
 }

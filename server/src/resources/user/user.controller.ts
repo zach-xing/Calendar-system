@@ -1,4 +1,4 @@
-import { Controller, Post, Body, Get, Query } from '@nestjs/common';
+import { Controller, Post, Body, Get, Query, Param } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { LoginUserDto } from './dto/login.dto';
@@ -23,8 +23,14 @@ export class UserController {
     return await this.userService.login(loginUserDto);
   }
 
+  /** 搜索 */
   @Get('search')
   async searchEvent(@Query('id') uid: string, @Query('title') title: string) {
     return await this.userService.searchEvent(uid, title);
+  }
+
+  @Get('firstScreen/:uid')
+  async getFirstScreenData(@Param('uid') uid: string) {
+    return await this.userService.getFirstScreenData(uid);
   }
 }

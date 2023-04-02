@@ -11,7 +11,7 @@ export class ScheduleService {
   /** 根据 args 获取对应的 scheduleList */
   async getScheduleList(uid: string, dateString?: string) {
     try {
-      if (dateString.length === 7) {
+      if (dateString?.length === 7) {
         // eg: 2023-03-01
         const list = await this.db.schedule.findMany({
           where: {
@@ -51,8 +51,9 @@ export class ScheduleService {
         list: filteredList,
       };
     } catch (error) {
+      console.error(error);
       throw new HttpException(
-        '内部服务器错误',
+        'Schedule模块内部服务器错误',
         HttpStatus.INTERNAL_SERVER_ERROR,
       );
     }

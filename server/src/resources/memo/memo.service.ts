@@ -17,7 +17,7 @@ export class MemoService {
       });
       return data;
     } catch (error) {
-      throw new HttpException('获取失败', HttpStatus.BAD_REQUEST);
+      throw new HttpException('获取备忘录失败', HttpStatus.BAD_REQUEST);
     }
   }
 

@@ -9,7 +9,7 @@ export class TaskService {
   constructor(private db: PrismaService) {}
 
   /** 获取 task 列表 */
-  async tasks(uid: string, dateString: string) {
+  async tasks(uid: string, dateString?: string) {
     try {
       const list = await this.db.task.findMany({
         where: {
@@ -25,7 +25,7 @@ export class TaskService {
       };
     } catch (error) {
       throw new HttpException(
-        error.meta.message || '服务器获取tasks出错',
+        error.meta.message || 'Task模块服务器获取tasks出错',
         HttpStatus.INTERNAL_SERVER_ERROR,
       );
     }
