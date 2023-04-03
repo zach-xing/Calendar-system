@@ -1,6 +1,6 @@
-import type { RouteObject } from 'react-router-dom';
-import React from 'react';
-import { HomeOutlined } from '@ant-design/icons';
+import type { RouteObject } from "react-router-dom";
+import React from "react";
+import { HomeOutlined } from "@ant-design/icons";
 
 const Home = React.lazy(() => import("@/pages/home"));
 const About = React.lazy(() => import("@/pages/about"));
@@ -10,28 +10,19 @@ export type IRoute = RouteObject & {
   path: string;
   title: string;
   icon: React.ReactNode;
-  children?: IRoute[];
 };
 
 export const routes: IRoute[] = [
   {
-    path: '/',
+    path: "/",
     element: <Home />,
-    title: '主页',
+    title: "主页",
     icon: <HomeOutlined />,
   },
   {
-    path: '/about',
+    path: "/about",
     element: <></>,
-    title: '关于',
+    title: "关于",
     icon: <HomeOutlined />,
-    children: [
-      {
-        path: '/about-me',
-        element: <About />,
-        title: '主页',
-        icon: <HomeOutlined />,
-      },
-    ],
   },
 ];
