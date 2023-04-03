@@ -18,7 +18,7 @@ const UserPage = () => {
       dataIndex: "name",
       key: "name",
       align: "center",
-      width: "30%",
+      width: "20%",
     },
     {
       title: "账号",
@@ -39,9 +39,10 @@ const UserPage = () => {
       title: "Action",
       key: "action",
       align: "center",
-      width: "20%",
+      width: "30%",
       render: (_, record) => (
         <Space size='middle'>
+          <Button type='link'>下拉框</Button>
           <Button type='link'>更改密码</Button>
           <Button type='link' danger>
             删除
@@ -52,9 +53,6 @@ const UserPage = () => {
   ];
 
   useEffect(() => {
-    console.log(
-      usersData?.list.filter((user) => user.name.includes(searchValue))
-    );
     setFilteredUsers(
       usersData?.list.filter((user) => user.name.includes(searchValue)) || []
     );
@@ -78,6 +76,7 @@ const UserPage = () => {
       </Space>
 
       <Table
+        bordered
         columns={columns}
         loading={isFetchUsersLoading}
         dataSource={filteredUsers}
