@@ -1,16 +1,22 @@
 import { useFetchUsers } from "@/api";
 import { IUser } from "@/types";
-import { Button, Input, Space, Table } from "antd";
+import { Button, Dropdown, Input, Space, Table } from "antd";
 import { ColumnsType } from "antd/es/table";
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 /**
  * 用户页面
  */
 const UserPage = () => {
+  const navigate = useNavigate();
   const { usersData, refetchUsers, isFetchUsersLoading } = useFetchUsers();
   const [filteredUsers, setFilteredUsers] = useState<IUser[]>([]);
   const [searchValue, setSearchValue] = useState("");
+
+  const handletoPath = useCallback((path: string, account: string) => {
+    navigate(`/${path}?account=${account}`);
+  }, []);
 
   const columns: ColumnsType<IUser> = [
     {
@@ -42,7 +48,48 @@ const UserPage = () => {
       width: "30%",
       render: (_, record) => (
         <Space size='middle'>
-          <Button type='link'>下拉框</Button>
+          <Dropdown
+            menu={{
+              items: [
+                {
+                  label: (
+                    <Button
+                      type='link'
+                      onClick={() => handletoPath("schedule", record.account)}
+                    >
+                      日程
+                    </Button>
+                  ),
+                  key: "0",
+                },
+                {
+                  label: (
+                    <Button
+                      type='link'
+                      onClick={() => handletoPath("task", record.account)}
+                    >
+                      任务
+                    </Button>
+                  ),
+                  key: "1",
+                },
+                {
+                  label: (
+                    <Button
+                      type='link'
+                      onClick={() => handletoPath("memo", record.account)}
+                    >
+                      备忘录
+                    </Button>
+                  ),
+                  key: "2",
+                },
+              ],
+            }}
+            trigger={["click"]}
+          >
+            <Button type='link'>查看数据</Button>
+          </Dropdown>
           <Button type='link'>更改密码</Button>
           <Button type='link' danger>
             删除

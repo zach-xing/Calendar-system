@@ -5,15 +5,26 @@ import { levelTitle, remindTitle } from "@/utils/shard";
 import { Button, Input, Popconfirm, Space, Tag } from "antd";
 import Table, { ColumnsType } from "antd/es/table";
 import React, { useCallback, useEffect, useState } from "react";
+import { useLocation } from "react-router-dom";
 
 /**
  * 日程页面
  */
 const TaskPage = () => {
+  const location = useLocation();
+  const [account, setAccount] = useState("");
   const [searchAccount, setSearchAccount] = useState("");
 
   const { taskData, refetchTask, isFetchTaskLoading } =
     useFetchTask(searchAccount);
+
+  useEffect(() => {
+    if (location.search) {
+      const str = location.search.slice(1).split("=")[1];
+      setSearchAccount(str);
+      setAccount(str);
+    }
+  }, []);
 
   const columns: ColumnsType<ITask> = [
     {
@@ -76,6 +87,10 @@ const TaskPage = () => {
         <Input.Search
           placeholder='请输入要搜索的用户账号'
           allowClear
+          value={account}
+          onChange={(e) => {
+            setAccount(e.target.value);
+          }}
           enterButton='Search'
           onSearch={onSearch}
         />

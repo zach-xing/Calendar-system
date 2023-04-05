@@ -4,15 +4,26 @@ import { IMemo } from "@/types";
 import { Input, Space } from "antd";
 import Table, { ColumnsType } from "antd/es/table";
 import React, { useCallback, useEffect, useState } from "react";
+import { useLocation } from "react-router-dom";
 
 /**
  * 日程页面
  */
 const MemoPage = () => {
+  const location = useLocation();
+  const [account, setAccount] = useState("");
   const [searchAccount, setSearchAccount] = useState("");
 
   const { memoData, refetchMemo, isFetchMemoLoading } =
     useFetchMemo(searchAccount);
+
+  useEffect(() => {
+    if (location.search) {
+      const str = location.search.slice(1).split("=")[1];
+      setSearchAccount(str);
+      setAccount(str);
+    }
+  }, []);
 
   const columns: ColumnsType<IMemo> = [
     {
@@ -29,7 +40,7 @@ const MemoPage = () => {
       key: "startTime",
       width: "35%",
       render: (_, record) =>
-        dayjs(record.lastModifiedTime).format("YYYY-MM-DD"),
+        dayjs(record.lastModifiedTime).format("YYYY-MM-DD HH:mm"),
     },
     // {
     //   title: "Action",
@@ -66,6 +77,10 @@ const MemoPage = () => {
         <Input.Search
           placeholder='请输入要搜索的账号'
           allowClear
+          value={account}
+          onChange={(e) => {
+            setAccount(e.target.value);
+          }}
           enterButton='Search'
           onSearch={onSearch}
         />

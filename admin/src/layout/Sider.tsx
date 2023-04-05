@@ -58,7 +58,7 @@ const Sider: React.FC = () => {
         items={menuItem}
       />
       <Divider />
-      <Menu
+      {/* <Menu
         mode='inline'
         style={{ position: "absolute", bottom: 0 }}
         items={[
@@ -73,7 +73,7 @@ const Sider: React.FC = () => {
             icon: <ExportOutlined />,
           },
         ]}
-      />
+      /> */}
     </Layout.Sider>
   );
 };
