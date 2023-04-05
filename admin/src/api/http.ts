@@ -1,7 +1,9 @@
 import axios, { AxiosRequestConfig } from "axios";
 
+export const BASE_URL = "http://192.168.43.239:8080";
+
 const instance = axios.create({
-  baseURL: "http://192.168.43.239:8080/admin",
+  baseURL: `${BASE_URL}/admin`,
   timeout: 10000,
 });
 

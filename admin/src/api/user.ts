@@ -1,7 +1,8 @@
 import { IUser } from "@/types";
 import { useQuery } from "react-query";
-import request from "./http";
+import request, { BASE_URL } from "./http";
 import { message } from "antd";
+import axios from "axios";
 
 function fetchAllUser() {
   return request({
@@ -30,4 +31,16 @@ export function useFetchUsers() {
     refetchUsers: refetch,
     isFetchUsersLoading: isLoading,
   };
+}
+
+/** 修改用户密码 */
+export function modifyUserPsd(uid: string, password: string) {
+  return axios({
+    method: "POST",
+    url: `${BASE_URL}/user/modifyPassword`,
+    data: {
+      id: uid,
+      password: password,
+    },
+  });
 }

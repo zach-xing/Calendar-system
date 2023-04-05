@@ -1,6 +1,15 @@
-import { useFetchUsers } from "@/api";
+import { modifyUserPsd, useFetchUsers } from "@/api";
 import { IUser } from "@/types";
-import { Button, Dropdown, Input, Space, Table } from "antd";
+import {
+  Button,
+  Dropdown,
+  Form,
+  Input,
+  Modal,
+  Space,
+  Table,
+  message,
+} from "antd";
 import { ColumnsType } from "antd/es/table";
 import React, { useCallback, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -13,6 +22,10 @@ const UserPage = () => {
   const { usersData, refetchUsers, isFetchUsersLoading } = useFetchUsers();
   const [filteredUsers, setFilteredUsers] = useState<IUser[]>([]);
   const [searchValue, setSearchValue] = useState("");
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [curUid, setCurUid] = useState("");
+  const [curPassword, setCurPassword] = useState("");
 
   const handletoPath = useCallback((path: string, account: string) => {
     navigate(`/${path}?account=${account}`);
@@ -90,7 +103,16 @@ const UserPage = () => {
           >
             <Button type='link'>查看数据</Button>
           </Dropdown>
-          <Button type='link'>更改密码</Button>
+          <Button
+            type='link'
+            onClick={() => {
+              setCurUid(record.id);
+              setCurPassword(record.password);
+              setIsModalOpen(true);
+            }}
+          >
+            更改密码
+          </Button>
           <Button type='link' danger>
             删除
           </Button>
@@ -108,6 +130,18 @@ const UserPage = () => {
   const onSearch = (val: string) => {
     setSearchValue(val);
   };
+
+  const onFinish = useCallback(async (val: any) => {
+    try {
+      await modifyUserPsd(curUid, val.password);
+      message.success("修改成功");
+      setIsModalOpen(false);
+      refetchUsers();
+    } catch (error) {
+      console.error(error);
+      message.error("修改失败");
+    }
+  }, []);
 
   return (
     <div>
@@ -127,6 +161,38 @@ const UserPage = () => {
         loading={isFetchUsersLoading}
         dataSource={filteredUsers}
       />
+
+      <Modal
+        title='更改密码'
+        open={isModalOpen}
+        onCancel={() => {
+          setIsModalOpen(false);
+        }}
+        destroyOnClose
+        footer={null}
+      >
+        <Form
+          name='basic'
+          style={{ maxWidth: 600 }}
+          onFinish={onFinish}
+          autoComplete='off'
+          initialValues={{ password: curPassword }}
+        >
+          <Form.Item
+            label='密码'
+            name='password'
+            rules={[{ required: true, message: "密码不能为空" }]}
+          >
+            <Input />
+          </Form.Item>
+
+          <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
+            <Button type='primary' htmlType='submit'>
+              保存
+            </Button>
+          </Form.Item>
+        </Form>
+      </Modal>
     </div>
   );
 };
