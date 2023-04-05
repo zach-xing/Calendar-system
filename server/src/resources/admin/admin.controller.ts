@@ -14,4 +14,9 @@ export class AdminController {
   async getScheduleWithAccount(@Query('account') account: string) {
     return await this.adminService.getScheduleWithAccount(account);
   }
+
+  @Get('task')
+  async getTaskWithAccount(@Query('account') account: string) {
+    return await this.adminService.getTaskWithAccount(account);
+  }
 }

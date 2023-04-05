@@ -17,7 +17,7 @@ export class AdminService {
   /** 根据账号获取所有的日程数据 */
   async getScheduleWithAccount(account: string) {
     if (account.length === 0) {
-      return await this.db.schedule.findMany();
+      throw new HttpException('必须要填入账号', HttpStatus.BAD_REQUEST);
     }
 
     const user = await this.db.user.findUnique({
@@ -35,6 +35,42 @@ export class AdminService {
         uid: user.id,
       },
     });
-    return list;
+    return {
+      userData: {
+        name: user.name,
+        account: user.name,
+      },
+      list,
+    };
+  }
+
+  /** 根据账号获取对应的任务数据 */
+  async getTaskWithAccount(account: string) {
+    if (account.length === 0) {
+      throw new HttpException('必须要填入账号', HttpStatus.BAD_REQUEST);
+    }
+
+    const user = await this.db.user.findUnique({
+      where: {
+        account,
+      },
+    });
+
+    if (!user) {
+      throw new HttpException('没有该账号', HttpStatus.BAD_REQUEST);
+    }
+
+    const list = await this.db.task.findMany({
+      where: {
+        uid: user.id,
+      },
+    });
+    return {
+      userData: {
+        name: user.name,
+        account: user.name,
+      },
+      list,
+    };
   }
 }
