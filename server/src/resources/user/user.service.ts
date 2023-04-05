@@ -7,6 +7,7 @@ import { ScheduleService } from '../schedule/schedule.service';
 import { TaskService } from '../task/task.service';
 import { MemoService } from '../memo/memo.service';
 import { format, isAfter, isEqual } from 'date-fns';
+import { AdminService } from '../admin/admin.service';
 
 @Injectable()
 export class UserService {
@@ -16,6 +17,7 @@ export class UserService {
     private scheduleService: ScheduleService,
     private taskService: TaskService,
     private memoService: MemoService,
+    private adminService: AdminService,
   ) {}
 
   /** 注册 */
@@ -24,6 +26,7 @@ export class UserService {
       await this.db.user.create({
         data: createUserDto,
       });
+      await this.adminService.modifyUserInCrement('more');
       return new HttpException('创建成功', HttpStatus.OK);
     } catch (error) {
       throw new HttpException('创建用户出错', HttpStatus.BAD_REQUEST);

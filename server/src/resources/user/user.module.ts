@@ -6,6 +6,7 @@ import { PrismaService } from '../../prisma/prisma.service';
 import { ScheduleService } from '../schedule/schedule.service';
 import { TaskService } from '../task/task.service';
 import { MemoService } from '../memo/memo.service';
+import { AdminService } from '../admin/admin.service';
 
 @Module({
   imports: [
@@ -21,6 +22,7 @@ import { MemoService } from '../memo/memo.service';
     ScheduleService,
     TaskService,
     MemoService,
+    AdminService,
   ],
 })
 export class UserModule {}

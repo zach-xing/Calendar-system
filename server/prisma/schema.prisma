@@ -20,6 +20,12 @@ model User {
   Memo     Memo[]
 }
 
+model UserIncrement {
+  id   String @id @default(uuid())
+  date String @unique()
+  num  Int
+}
+
 model Schedule {
   id        String  @id @unique() @default(uuid())
   title     String  @default("")

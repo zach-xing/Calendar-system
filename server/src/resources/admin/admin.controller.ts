@@ -24,4 +24,9 @@ export class AdminController {
   async getMemoWithAccount(@Query('account') account: string) {
     return await this.adminService.getMemoWithAccount(account);
   }
+
+  @Get('userIncrement')
+  async getHomeUserInfo() {
+    return await this.adminService.getUserInCrement();
+  }
 }
