@@ -1,7 +1,7 @@
 import dayjs from "dayjs";
-import { useFetchSchedule } from "@/api";
-import { ISchedule } from "@/types";
-import { remindTitle } from "@/utils/shard";
+import { useFetchTask } from "@/api";
+import { ITask } from "@/types";
+import { levelTitle, remindTitle } from "@/utils/shard";
 import { Button, Input, Popconfirm, Space, Tag } from "antd";
 import Table, { ColumnsType } from "antd/es/table";
 import React, { useCallback, useEffect, useState } from "react";
@@ -9,13 +9,13 @@ import React, { useCallback, useEffect, useState } from "react";
 /**
  * 日程页面
  */
-const SchedulePage = () => {
+const TaskPage = () => {
   const [searchAccount, setSearchAccount] = useState("");
 
-  const { scheduleData, refetchSchedule, isFetchScheduleLoading } =
-    useFetchSchedule(searchAccount);
+  const { taskData, refetchTask, isFetchTaskLoading } =
+    useFetchTask(searchAccount);
 
-  const columns: ColumnsType<ISchedule> = [
+  const columns: ColumnsType<ITask> = [
     {
       title: "标题",
       dataIndex: "title",
@@ -24,38 +24,21 @@ const SchedulePage = () => {
       width: "30%",
     },
     {
-      title: "是否全天",
-      dataIndex: "isFullDay",
-      key: "isFullDay",
+      title: "截止日期",
+      dataIndex: "time",
       align: "center",
-      width: "10%",
-      render: (_, record) => (
-        <Tag color={record.isFullDay ? "cyan" : "geekblue"}>
-          {record.isFullDay ? "是" : "不是"}
-        </Tag>
-      ),
-    },
-    {
-      title: "日期时间",
-      dataIndex: "startTime",
-      align: "center",
-      key: "startTime",
+      key: "time",
       width: "35%",
-      render: (_, record) =>
-        record.isFullDay
-          ? dayjs(record.startTime).format("YYYY-MM-DD")
-          : `${dayjs(record.startTime).format("YYYY-MM-DD HH:mm")} - ${dayjs(
-              record.endTime
-            ).format("YYYY-MM-DD HH:mm")}`,
+      render: (_, record) => dayjs(record.time).format("YYYY-MM-DD"),
     },
     {
-      title: "提醒",
-      dataIndex: "remind",
+      title: "优先级",
+      dataIndex: "level",
       align: "center",
-      key: "remind",
+      key: "level",
       width: "10%",
       render: (_, record) => (
-        <Tag color='purple'>{remindTitle(record.remind)}</Tag>
+        <Tag color='purple'>{levelTitle(record.level)}</Tag>
       ),
     },
     // {
@@ -87,11 +70,11 @@ const SchedulePage = () => {
 
   return (
     <div>
-      <h2>日程数据</h2>
+      <h2>任务数据</h2>
 
       <Space style={{ margin: "10px 0" }}>
         <Input.Search
-          placeholder='请输入要搜索的账号'
+          placeholder='请输入要搜索的用户账号'
           allowClear
           enterButton='Search'
           onSearch={onSearch}
@@ -100,14 +83,15 @@ const SchedulePage = () => {
 
       {searchAccount.length !== 0 && (
         <Table
+          rowKey={'id'}
           bordered
           columns={columns}
-          loading={isFetchScheduleLoading}
-          dataSource={scheduleData?.list}
+          loading={isFetchTaskLoading}
+          dataSource={taskData?.list}
         />
       )}
     </div>
   );
 };
 
-export default SchedulePage;
+export default TaskPage;

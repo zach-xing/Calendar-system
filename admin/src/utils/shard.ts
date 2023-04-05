@@ -1,4 +1,4 @@
-import { RemindEnum } from "@/types";
+import { RemindEnum, TaskLevelEnum } from "@/types";
 
 /**
  * 提醒
@@ -21,15 +21,15 @@ export function remindTitle(arg: RemindEnum): string {
 /**
  * 优先级
  */
-// export function levelTitle(arg: TaskLevelEnum): string {
-//   switch (arg) {
-//     case TaskLevelEnum.ONE:
-//       return "优先级 一";
-//     case TaskLevelEnum.TWO:
-//       return "优先级 二";
-//     case TaskLevelEnum.THREE:
-//       return "优先级 三";
-//     case TaskLevelEnum.FOUR:
-//       return "优先级 四";
-//   }
-// }
+export function levelTitle(arg: TaskLevelEnum): string {
+  switch (arg) {
+    case TaskLevelEnum.ONE:
+      return "优先级 一";
+    case TaskLevelEnum.TWO:
+      return "优先级 二";
+    case TaskLevelEnum.THREE:
+      return "优先级 三";
+    case TaskLevelEnum.FOUR:
+      return "优先级 四";
+  }
+}

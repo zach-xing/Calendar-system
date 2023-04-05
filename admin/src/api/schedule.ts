@@ -12,7 +12,10 @@ function fetchSchedule(account: string) {
 
 /** 获取 日程 数据 with react-query */
 export function useFetchSchedule(account: string) {
-  const { data, refetch, isLoading } = useQuery<ISchedule[]>(
+  const { data, refetch, isLoading } = useQuery<{
+    userData: { name: string; account: string };
+    list: ISchedule[];
+  }>(
     ["fetch-schedule-list", account],
     async () => await fetchSchedule(account),
     {

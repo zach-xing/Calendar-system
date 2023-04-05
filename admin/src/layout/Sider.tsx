@@ -34,8 +34,6 @@ const Sider: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
-  console.log(location.pathname);
-
   const [menuItem, setMenuItem] = React.useState<MenuItemType[]>(
     getMenuItemEls(routes)
   );
