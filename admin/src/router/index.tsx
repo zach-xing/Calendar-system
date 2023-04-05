@@ -6,6 +6,7 @@ const Home = React.lazy(() => import("@/pages/home"));
 const User = React.lazy(() => import("@/pages/user"));
 const Schedule = React.lazy(() => import("@/pages/schedule"));
 const Task = React.lazy(() => import("@/pages/task"));
+const Memo = React.lazy(() => import("@/pages/memo"));
 const About = React.lazy(() => import("@/pages/about"));
 
 export type IRoute = RouteObject & {
@@ -42,7 +43,7 @@ export const routes: IRoute[] = [
   },
   {
     path: "/memo",
-    element: <></>,
+    element: <Memo />,
     title: "备忘录数据",
     icon: <HomeOutlined />,
   },
