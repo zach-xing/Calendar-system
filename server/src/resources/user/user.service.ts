@@ -8,6 +8,7 @@ import { TaskService } from '../task/task.service';
 import { MemoService } from '../memo/memo.service';
 import { format, isAfter, isEqual } from 'date-fns';
 import { AdminService } from '../admin/admin.service';
+import { ModifyUserPasswordDto } from './dto/modify-user-password.dto';
 
 @Injectable()
 export class UserService {
@@ -127,5 +128,29 @@ export class UserService {
       afterTaskSize,
       memoSize: memoList.length,
     };
+  }
+
+  /** 修改密码 */
+  async modifyUserPassword(dto: ModifyUserPasswordDto) {
+    try {
+      const data = await this.db.user.findUnique({
+        where: { id: dto.id },
+      });
+      if (data === null) {
+        throw new HttpException('没有此用户', HttpStatus.BAD_REQUEST);
+      }
+      await this.db.user.update({
+        where: { id: dto.id },
+        data: {
+          password: dto.password,
+        },
+      });
+      return {
+        message: 'ok',
+      };
+    } catch (error) {
+      console.error(error);
+      throw new HttpException('修改失败', HttpStatus.BAD_REQUEST);
+    }
   }
 }

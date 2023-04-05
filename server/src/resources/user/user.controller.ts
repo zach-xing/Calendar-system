@@ -2,6 +2,7 @@ import { Controller, Post, Body, Get, Query, Param } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { LoginUserDto } from './dto/login.dto';
+import { ModifyUserPasswordDto } from './dto/modify-user-password.dto';
 
 @Controller('user')
 export class UserController {
@@ -32,5 +33,10 @@ export class UserController {
   @Get('firstScreen/:uid')
   async getFirstScreenData(@Param('uid') uid: string) {
     return await this.userService.getFirstScreenData(uid);
+  }
+
+  @Post('modifyPassword')
+  async modifyUserPassword(@Body() dto: ModifyUserPasswordDto) {
+    return await this.userService.modifyUserPassword(dto);
   }
 }
