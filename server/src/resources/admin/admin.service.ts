@@ -38,7 +38,7 @@ export class AdminService {
     return {
       userData: {
         name: user.name,
-        account: user.name,
+        account: user.account,
       },
       list,
     };
@@ -68,7 +68,37 @@ export class AdminService {
     return {
       userData: {
         name: user.name,
-        account: user.name,
+        account: user.account,
+      },
+      list,
+    };
+  }
+
+  /** 根据账号获取对应的备忘录信息 */
+  async getMemoWithAccount(account: string) {
+    if (account.length === 0) {
+      throw new HttpException('必须要填入账号', HttpStatus.BAD_REQUEST);
+    }
+
+    const user = await this.db.user.findUnique({
+      where: {
+        account,
+      },
+    });
+
+    if (!user) {
+      throw new HttpException('没有该账号', HttpStatus.BAD_REQUEST);
+    }
+
+    const list = await this.db.memo.findMany({
+      where: {
+        uid: user.id,
+      },
+    });
+    return {
+      userData: {
+        name: user.name,
+        account: user.account,
       },
       list,
     };

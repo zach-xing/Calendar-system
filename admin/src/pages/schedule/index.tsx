@@ -99,12 +99,18 @@ const SchedulePage = () => {
       </Space>
 
       {searchAccount.length !== 0 && (
-        <Table
-          bordered
-          columns={columns}
-          loading={isFetchScheduleLoading}
-          dataSource={scheduleData?.list}
-        />
+        <>
+          <div style={{ margin: "10px 0", fontSize: 16 }}>
+            <p>用户名: {scheduleData?.userData.name}</p>
+            <p>用户账号: {scheduleData?.userData.account}</p>
+          </div>
+          <Table
+            bordered
+            columns={columns}
+            loading={isFetchScheduleLoading}
+            dataSource={scheduleData?.list}
+          />
+        </>
       )}
     </div>
   );

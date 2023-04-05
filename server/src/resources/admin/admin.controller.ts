@@ -19,4 +19,9 @@ export class AdminController {
   async getTaskWithAccount(@Query('account') account: string) {
     return await this.adminService.getTaskWithAccount(account);
   }
+
+  @Get('memo')
+  async getMemoWithAccount(@Query('account') account: string) {
+    return await this.adminService.getMemoWithAccount(account);
+  }
 }

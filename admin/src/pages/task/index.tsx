@@ -82,13 +82,19 @@ const TaskPage = () => {
       </Space>
 
       {searchAccount.length !== 0 && (
-        <Table
-          rowKey={'id'}
-          bordered
-          columns={columns}
-          loading={isFetchTaskLoading}
-          dataSource={taskData?.list}
-        />
+        <>
+          <div style={{ margin: "10px 0", fontSize: 16 }}>
+            <p>用户名: {taskData?.userData.name}</p>
+            <p>用户账号: {taskData?.userData.account}</p>
+          </div>
+          <Table
+            rowKey={"id"}
+            bordered
+            columns={columns}
+            loading={isFetchTaskLoading}
+            dataSource={taskData?.list}
+          />
+        </>
       )}
     </div>
   );

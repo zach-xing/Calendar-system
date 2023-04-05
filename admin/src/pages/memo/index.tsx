@@ -1,8 +1,7 @@
 import dayjs from "dayjs";
 import { useFetchMemo } from "@/api";
 import { IMemo } from "@/types";
-import { remindTitle } from "@/utils/shard";
-import { Button, Input, Popconfirm, Space, Tag } from "antd";
+import { Input, Space } from "antd";
 import Table, { ColumnsType } from "antd/es/table";
 import React, { useCallback, useEffect, useState } from "react";
 
@@ -73,12 +72,19 @@ const MemoPage = () => {
       </Space>
 
       {searchAccount.length !== 0 && (
-        <Table
-          bordered
-          columns={columns}
-          loading={isFetchMemoLoading}
-          dataSource={memoData?.list}
-        />
+        <>
+          <div style={{ margin: "10px 0", fontSize: 16 }}>
+            <p>用户名: {memoData?.userData.name}</p>
+            <p>用户账号: {memoData?.userData.account}</p>
+          </div>
+
+          <Table
+            bordered
+            columns={columns}
+            loading={isFetchMemoLoading}
+            dataSource={memoData?.list}
+          />
+        </>
       )}
     </div>
   );
