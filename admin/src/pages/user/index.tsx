@@ -4,53 +4,6 @@ import { Button, Dropdown, Input, Space, Table } from "antd";
 import { ColumnsType } from "antd/es/table";
 import React, { useCallback, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import {
-  Chart as ChartJS,
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  LineElement,
-  Title,
-  Tooltip,
-  Legend,
-} from "chart.js";
-import { Line } from "react-chartjs-2";
-
-ChartJS.register(
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  LineElement,
-  Title,
-  Tooltip,
-  Legend
-);
-
-const options = {
-  responsive: true,
-  plugins: {
-    legend: {
-      position: "top" as const,
-    },
-    title: {
-      display: true,
-      text: "用户日增量",
-    },
-  },
-};
-const labels = ["前五天", "前四天", "前三天", "前天", "昨天", "今天"];
-
-const data = {
-  labels,
-  datasets: [
-    {
-      label: "用户日增量",
-      data: [1, 3, 5, 3, 5, 7],
-      borderColor: "rgb(255, 99, 132)",
-      backgroundColor: "rgba(255, 99, 132, 0.5)",
-    },
-  ],
-};
 
 /**
  * 用户页面
@@ -160,10 +113,6 @@ const UserPage = () => {
     <div>
       <h2>用户数据</h2>
 
-      <div style={{ height: "40vh" }}>
-        <Line options={options} data={data} />
-      </div>
-
       <Space style={{ margin: "10px 0" }}>
         <Input.Search
           placeholder='请输入用户名...'
@@ -172,7 +121,6 @@ const UserPage = () => {
           onSearch={onSearch}
         />
       </Space>
-
       <Table
         bordered
         columns={columns}
