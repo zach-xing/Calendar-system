@@ -8,11 +8,13 @@ specifiers:
   '@vitejs/plugin-react': ^3.0.0
   antd: ^5.0.7
   axios: ^1.3.4
+  chart.js: ^4.2.1
   dayjs: ^1.11.7
   less: ^4.1.3
   localforage: ^1.10.0
   match-sorter: ^6.3.1
   react: ^18.2.0
+  react-chartjs-2: ^5.2.0
   react-dom: ^18.2.0
   react-query: ^3.39.3
   react-router-dom: ^6.5.0
@@ -24,11 +26,13 @@ dependencies:
   '@ant-design/icons': registry.npmmirror.com/@ant-design/icons/4.8.0_biqbaboplfbrettd7655fr4n2y
   antd: registry.npmmirror.com/antd/5.0.7_biqbaboplfbrettd7655fr4n2y
   axios: registry.npmmirror.com/axios/1.3.4
+  chart.js: registry.npmmirror.com/chart.js/4.2.1
   dayjs: registry.npmmirror.com/dayjs/1.11.7
   less: registry.npmmirror.com/less/4.1.3
   localforage: registry.npmmirror.com/localforage/1.10.0
   match-sorter: registry.npmmirror.com/match-sorter/6.3.1
   react: registry.npmmirror.com/react/18.2.0
+  react-chartjs-2: registry.npmmirror.com/react-chartjs-2/5.2.0_t5yjg6ab35jnsudnh2qdighszm
   react-dom: registry.npmmirror.com/react-dom/18.2.0_react@18.2.0
   react-query: registry.npmmirror.com/react-query/3.39.3_biqbaboplfbrettd7655fr4n2y
   react-router-dom: registry.npmmirror.com/react-router-dom/6.5.0_biqbaboplfbrettd7655fr4n2y
@@ -713,6 +717,12 @@ packages:
       '@jridgewell/sourcemap-codec': registry.npmmirror.com/@jridgewell/sourcemap-codec/1.4.14
     dev: true
 
+  registry.npmmirror.com/@kurkle/color/0.3.2:
+    resolution: {integrity: sha512-fuscdXJ9G1qb7W8VdHi+IwRqij3lBkosAm4ydQtEmbY58OzHXqQhvlxqEkoz0yssNVn38bcpRWgA9PP+OGoisw==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/@kurkle/color/-/color-0.3.2.tgz}
+    name: '@kurkle/color'
+    version: 0.3.2
+    dev: false
+
   registry.npmmirror.com/@rc-component/mini-decimal/1.0.1:
     resolution: {integrity: sha512-9N8nRk0oKj1qJzANKl+n9eNSMUGsZtjwNuDCiZ/KA+dt1fE3zq5x2XxclRcAbOIXnZcJ53ozP2Pa60gyELXagA==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/@rc-component/mini-decimal/-/mini-decimal-1.0.1.tgz}
     name: '@rc-component/mini-decimal'
@@ -987,6 +997,15 @@ packages:
       escape-string-regexp: registry.npmmirror.com/escape-string-regexp/1.0.5
       supports-color: registry.npmmirror.com/supports-color/5.5.0
     dev: true
+
+  registry.npmmirror.com/chart.js/4.2.1:
+    resolution: {integrity: sha512-6YbpQ0nt3NovAgOzbkSSeeAQu/3za1319dPUQTXn9WcOpywM8rGKxJHrhS8V8xEkAlk8YhEfjbuAPfUyp6jIsw==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/chart.js/-/chart.js-4.2.1.tgz}
+    name: chart.js
+    version: 4.2.1
+    engines: {pnpm: ^7.0.0}
+    dependencies:
+      '@kurkle/color': registry.npmmirror.com/@kurkle/color/0.3.2
+    dev: false
 
   registry.npmmirror.com/classnames/2.3.2:
     resolution: {integrity: sha512-CSbhY4cFEJRe6/GQzIk5qXZ4Jeg5pcsP7b5peFSDpffpe1cqjASH/n9UTjBwOp6XpMSTwQ8Za2K5V02ueA7Tmw==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/classnames/-/classnames-2.3.2.tgz}
@@ -2231,6 +2250,19 @@ packages:
       rc-util: registry.npmmirror.com/rc-util/5.27.0_biqbaboplfbrettd7655fr4n2y
       react: registry.npmmirror.com/react/18.2.0
       react-dom: registry.npmmirror.com/react-dom/18.2.0_react@18.2.0
+    dev: false
+
+  registry.npmmirror.com/react-chartjs-2/5.2.0_t5yjg6ab35jnsudnh2qdighszm:
+    resolution: {integrity: sha512-98iN5aguJyVSxp5U3CblRLH67J8gkfyGNbiK3c+l1QI/G4irHMPQw44aEPmjVag+YKTyQ260NcF82GTQ3bdscA==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/react-chartjs-2/-/react-chartjs-2-5.2.0.tgz}
+    id: registry.npmmirror.com/react-chartjs-2/5.2.0
+    name: react-chartjs-2
+    version: 5.2.0
+    peerDependencies:
+      chart.js: ^4.1.1
+      react: ^16.8.0 || ^17.0.0 || ^18.0.0
+    dependencies:
+      chart.js: registry.npmmirror.com/chart.js/4.2.1
+      react: registry.npmmirror.com/react/18.2.0
     dev: false
 
   registry.npmmirror.com/react-dom/18.2.0_react@18.2.0:
