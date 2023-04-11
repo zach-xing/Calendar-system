@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import Image from "next/image";
 import { Avatar, Button, Dropdown, Menu, Space } from "antd";
 import type { MenuProps } from "antd";
@@ -12,6 +12,7 @@ import {
 import { SiderStyleBlock } from "./styled";
 import Logo from "../../assets/logo.png";
 import { useRouter } from "next/router";
+import { logout } from "@/utils/auth";
 
 type MenuItem = Required<MenuProps>["items"][number];
 
@@ -50,6 +51,11 @@ function Sider() {
     router.push(`/${key}`);
   };
 
+  const handleLogout = useCallback(() => {
+    logout();
+    router.replace("/login");
+  }, [router]);
+
   return (
     <SiderStyleBlock>
       <div>
@@ -86,7 +92,7 @@ function Sider() {
             items: [
               {
                 label: (
-                  <Button danger type='link'>
+                  <Button danger type='link' onClick={handleLogout}>
                     退出登录
                   </Button>
                 ),

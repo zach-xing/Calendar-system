@@ -29,3 +29,8 @@ export function removeCookie(key: string): void {
 export function isLogined() {
   return !!getCookie("user");
 }
+
+/** 退出登录 */
+export function logout() {
+  removeCookie("user");
+}
