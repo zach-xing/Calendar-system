@@ -191,7 +191,7 @@ const TaskPage = () => {
         ),
       },
     ],
-    [handleTaskDelete, handleTaskModify]
+    [handleModifyTaskDone, handleTaskDelete, handleTaskModify]
   );
 
   return (

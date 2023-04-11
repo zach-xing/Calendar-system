@@ -39,12 +39,9 @@ const SchedulePage = () => {
 
   /** 发送请求 */
   const [uid, setUid] = useState("");
-  const [isShowToday, setIsShowToday] = useState(!!router.query.showToday);
+  const [isShowAfter, setIsShowAfter] = useState(!!router.query.showAfter);
   const { scheduleData, isFetchScheduleLoading, refetchSchedule } =
-    useFetchSchedule(
-      uid,
-      isShowToday ? dayjs(Date.now()).format("YYYY-MM-DD") : ""
-    );
+    useFetchSchedule(uid, "");
   const [filteredScheduleList, setFilteredScheduleList] = useState<ISchedule[]>(
     []
   );
@@ -58,8 +55,18 @@ const SchedulePage = () => {
     const filteredList = scheduleData?.list.filter((item) =>
       item.title.includes(searchValue)
     );
-    setFilteredScheduleList(filteredList || []);
-  }, [scheduleData?.list, searchValue]);
+    if (isShowAfter) {
+      setFilteredScheduleList(
+        filteredList?.filter(
+          (item) =>
+            dayjs(item.startTime).isAfter(dayjs(), "day") ||
+            dayjs(item.startTime).isSame(dayjs(), "day")
+        ) || []
+      );
+    } else {
+      setFilteredScheduleList(filteredList || []);
+    }
+  }, [scheduleData?.list, searchValue, isShowAfter]);
 
   /** 监听事件 */
   useEffect(() => {
@@ -176,10 +183,6 @@ const SchedulePage = () => {
     [handleScheduleDelete, handleScheduleModify]
   );
 
-  const onChange = (e: RadioChangeEvent) => {
-    console.log(`radio checked:${e.target.value}`);
-  };
-
   return (
     <div>
       <h1>日程</h1>
@@ -194,18 +197,13 @@ const SchedulePage = () => {
         <div style={{ display: "flex", alignItems: "center" }}>
           <h3 style={{ marginRight: 20 }}>{"All Schedule"}</h3>
           <Checkbox
-            checked={isShowToday}
+            checked={isShowAfter}
             onChange={() => {
-              setIsShowToday((prev) => !prev);
+              setIsShowAfter((prev) => !prev);
             }}
           >
-            只看今天
+            只看待开始
           </Checkbox>
-          <Radio.Group onChange={onChange} defaultValue='a'>
-            <Radio.Button value='a'>全部</Radio.Button>
-            <Radio.Button value='b'>只看今天</Radio.Button>
-            <Radio.Button value='c'>只看待开始</Radio.Button>
-          </Radio.Group>
         </div>
 
         <Space>

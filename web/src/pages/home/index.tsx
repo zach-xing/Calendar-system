@@ -62,7 +62,7 @@ export default function Home() {
           value={firstScreenData?.afterScheduleSize || 0}
           text={"待开始的日程"}
           bgColor='#e7582b'
-          toPath='/schedule?showToday=true'
+          toPath='/schedule?showAfter=true'
         />
         <InfoBlock
           icon={<ClockCircleOutlined />}
