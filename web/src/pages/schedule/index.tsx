@@ -7,6 +7,8 @@ import {
   Input,
   Modal,
   Popconfirm,
+  Radio,
+  RadioChangeEvent,
   Space,
   Table,
   Tag,
@@ -18,7 +20,11 @@ import { remindTitle } from "@/utils/shared";
 import ScheduleForm from "@/components/ScheduleForm";
 import { deleteSchedule, useFetchSchedule } from "@/api";
 import { useRouter } from "next/router";
-import { REFRESH_SCHEDULE_DATE, REFRESH_SIDER_CALDENDAR_DATE, eventInstance } from "@/events";
+import {
+  REFRESH_SCHEDULE_DATE,
+  REFRESH_SIDER_CALDENDAR_DATE,
+  eventInstance,
+} from "@/events";
 
 /**
  * 日程视图
@@ -170,6 +176,10 @@ const SchedulePage = () => {
     [handleScheduleDelete, handleScheduleModify]
   );
 
+  const onChange = (e: RadioChangeEvent) => {
+    console.log(`radio checked:${e.target.value}`);
+  };
+
   return (
     <div>
       <h1>日程</h1>
@@ -191,6 +201,11 @@ const SchedulePage = () => {
           >
             只看今天
           </Checkbox>
+          <Radio.Group onChange={onChange} defaultValue='a'>
+            <Radio.Button value='a'>全部</Radio.Button>
+            <Radio.Button value='b'>只看今天</Radio.Button>
+            <Radio.Button value='c'>只看待开始</Radio.Button>
+          </Radio.Group>
         </div>
 
         <Space>

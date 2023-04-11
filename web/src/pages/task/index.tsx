@@ -8,6 +8,7 @@ import {
   Modal,
   Popconfirm,
   Space,
+  Switch,
   Table,
   Tag,
   message,
@@ -16,7 +17,7 @@ import { ColumnsType } from "antd/es/table";
 import dayjs from "dayjs";
 import TaskForm from "@/components/TaskForm";
 import { useRouter } from "next/router";
-import { deleteTask, useFetchTask } from "@/api";
+import { deleteTask, modifyTaskState, useFetchTask } from "@/api";
 import {
   REFRESH_SIDER_CALDENDAR_DATE,
   REFRESH_TASK_DATE,
@@ -92,6 +93,19 @@ const TaskPage = () => {
     setSearchValue(value);
   }, []);
 
+  const handleModifyTaskDone = useCallback(
+    async (id: string, checked: boolean) => {
+      try {
+        await modifyTaskState(id, checked);
+        refetchTask();
+      } catch (error) {
+        console.error(error);
+        message.error("任务更改状态错误");
+      }
+    },
+    []
+  );
+
   const columns: ColumnsType<ITask> = useMemo(
     () => [
       {
@@ -108,9 +122,14 @@ const TaskPage = () => {
         align: "center",
         width: "10%",
         render: (_, record) => (
-          <Tag color={record.isDone ? "success" : "warning"}>
-            {record.isDone ? "完成" : "未完成"}
-          </Tag>
+          <Switch
+            checkedChildren='开启'
+            unCheckedChildren='关闭'
+            checked={record.isDone}
+            onChange={(checkd) => {
+              handleModifyTaskDone(record.id, checkd);
+            }}
+          />
         ),
       },
       {
