@@ -121,7 +121,7 @@ export class UserService {
       this.isAfterAndEqual(new Date(item.startTime)),
     ).length;
     const afterTaskSize = taskList.filter(
-      (item) => this.isAfterAndEqual(new Date(item.time)) && !item.isDone,
+      (item) => item.isDone === false,
     ).length;
     return {
       afterScheduleSize,
