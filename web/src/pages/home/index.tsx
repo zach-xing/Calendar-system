@@ -46,6 +46,7 @@ export default function Home() {
     eventInstance.on(REFRESH_SCHEDULE_DATE, refetchSchedule);
     eventInstance.on(REFRESH_TASK_DATE, refetchTask);
     return () => {
+      eventInstance.off(REFRESH_HOME_PAGE_DATE);
       eventInstance.off(REFRESH_SCHEDULE_DATE);
       eventInstance.off(REFRESH_TASK_DATE);
     };
@@ -68,7 +69,7 @@ export default function Home() {
           value={firstScreenData?.afterTaskSize || 0}
           text={"待完成的任务"}
           bgColor='#582be7'
-          toPath='/task?showToday=true'
+          toPath='/task?showNoDone=true'
         />
         <InfoBlock
           icon={<BookOutlined />}

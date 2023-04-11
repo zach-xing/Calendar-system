@@ -37,11 +37,8 @@ const TaskPage = () => {
 
   /** 发送请求 */
   const [uid, setUid] = useState("");
-  const [isShowToday, setIsShowToday] = useState(!!router.query.showToday);
-  const { taskData, isFetchTaskLoading, refetchTask } = useFetchTask(
-    uid,
-    isShowToday ? dayjs(Date.now()).format("YYYY-MM-DD") : ""
-  );
+  const [isShowNoDone, setShowIsNoDone] = useState(!!router.query.showNoDone);
+  const { taskData, isFetchTaskLoading, refetchTask } = useFetchTask(uid, "");
   const [filteredTaskList, setFilteredTaskList] = useState<ITask[]>([]);
 
   useEffect(() => {
@@ -53,8 +50,12 @@ const TaskPage = () => {
     const filteredList = taskData?.list.filter((item) =>
       item.title.includes(searchValue)
     );
-    setFilteredTaskList(filteredList || []);
-  }, [taskData?.list, searchValue]);
+    if (isShowNoDone) {
+      setFilteredTaskList(filteredList?.filter((item) => !item.isDone) || []);
+    } else {
+      setFilteredTaskList(filteredList || []);
+    }
+  }, [taskData?.list, searchValue, isShowNoDone]);
 
   /** 监听事件 */
   useEffect(() => {
@@ -103,7 +104,7 @@ const TaskPage = () => {
         message.error("任务更改状态错误");
       }
     },
-    []
+    [refetchTask]
   );
 
   const columns: ColumnsType<ITask> = useMemo(
@@ -207,12 +208,12 @@ const TaskPage = () => {
         <div style={{ display: "flex", alignItems: "center" }}>
           <h3 style={{ marginRight: 20 }}>{"All Task"}</h3>
           <Checkbox
-            checked={isShowToday}
+            checked={isShowNoDone}
             onChange={() => {
-              setIsShowToday((prev) => !prev);
+              setShowIsNoDone((prev) => !prev);
             }}
           >
-            只看今天
+            只看未完成
           </Checkbox>
         </div>
 
