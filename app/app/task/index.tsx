@@ -71,6 +71,7 @@ export default function AgendaComp() {
   };
 
   const loadMonthItems = async (day: DateData) => {
+    console.log('load', day)
     const user = await storage.load({
       key: "user",
     });

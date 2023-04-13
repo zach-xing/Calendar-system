@@ -238,7 +238,7 @@ const styles = StyleSheet.create({
   todayTitle: {
     fontSize: 15,
     fontWeight: "bold",
-    marginTop: 5,
+    marginTop: 10,
     marginBottom: 10,
   },
 });
