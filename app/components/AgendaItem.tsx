@@ -5,7 +5,7 @@ import dayjs from "dayjs";
 import { Link } from "expo-router";
 import { deleteTask, modifyTaskState } from "../api/task";
 import Toast from "react-native-toast-message";
-import { event, REFRESH_TASK_PAGE } from "../event";
+import { event, REFRESH_HOME_PAGE, REFRESH_TASK_PAGE } from "../event";
 
 /**
  * Agenda 列表渲染的 Item
@@ -19,6 +19,7 @@ export default function AgendaItem(data: any) {
         text1: "更改成功",
       });
       event.emit(REFRESH_TASK_PAGE);
+      event.emit(REFRESH_HOME_PAGE);
     } catch (error) {
       console.error(error);
       Toast.show({
@@ -36,6 +37,7 @@ export default function AgendaItem(data: any) {
         text1: "删除成功",
       });
       event.emit(REFRESH_TASK_PAGE);
+      event.emit(REFRESH_HOME_PAGE);
     } catch (error) {
       Toast.show({
         type: "error",

@@ -14,6 +14,7 @@ import storage from "../utils/storage";
 import { useFetchCurDayData } from "../api";
 import LoadingComp from "../components/LoadingComp";
 import AgendaItem from "../components/AgendaItem";
+import { REFRESH_HOME_PAGE, event } from "../event";
 
 /** 展示样式块 */
 const InfoBlock: React.FC<{
@@ -50,7 +51,10 @@ export default function Home() {
 
   const [uid, setUid] = React.useState("");
   const [dateString, setDateString] = React.useState("");
-  const { curDayData, isLoading } = useFetchCurDayData(uid, dateString);
+  const { curDayData, isLoading, refetch } = useFetchCurDayData(
+    uid,
+    dateString
+  );
 
   React.useEffect(() => {
     (async () => {
@@ -61,6 +65,13 @@ export default function Home() {
       setUserName(userData.name);
       setDateString(dayjs(Date.now()).format("YYYY-MM-DD"));
     })();
+  }, []);
+
+  React.useEffect(() => {
+    event.on(REFRESH_HOME_PAGE, refetch);
+    return () => {
+      event.off(REFRESH_HOME_PAGE, refetch);
+    };
   }, []);
 
   return (
@@ -142,7 +153,11 @@ export default function Home() {
                 <Text style={styles.todayTitle}>Today's Schedule</Text>
                 {curDayData?.scheduleList.length !== 0 ? (
                   curDayData?.scheduleList.map((item) => (
-                    <ScheduleItem key={item.id} data={item} />
+                    <ScheduleItem
+                      key={item.id}
+                      data={item}
+                      deletedCallback={refetch}
+                    />
                   ))
                 ) : (
                   <View style={{ marginVertical: 10 }}>
