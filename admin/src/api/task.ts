@@ -22,7 +22,7 @@ export function useFetchTask(account: string) {
     refetchOnWindowFocus: true,
     onError: (err: any) => {
       console.error("in useQuery", err);
-      message.error("获取任务数据失败");
+      message.error("获取任务数据失败或没有此账号");
     },
   });
 

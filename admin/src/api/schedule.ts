@@ -25,7 +25,7 @@ export function useFetchSchedule(account: string) {
       refetchOnWindowFocus: true,
       onError: (err: any) => {
         console.error("in useQuery", err);
-        message.error("获取日程数据失败");
+        message.error("获取日程数据失败或没有此账号");
       },
     }
   );

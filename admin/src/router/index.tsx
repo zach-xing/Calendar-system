@@ -1,6 +1,12 @@
 import type { RouteObject } from "react-router-dom";
 import React from "react";
-import { HomeOutlined } from "@ant-design/icons";
+import {
+  BookOutlined,
+  CalendarOutlined,
+  HomeOutlined,
+  InfoCircleOutlined,
+  MinusSquareOutlined,
+} from "@ant-design/icons";
 
 const Home = React.lazy(() => import("@/pages/home"));
 const User = React.lazy(() => import("@/pages/user"));
@@ -27,24 +33,24 @@ export const routes: IRoute[] = [
     path: "/user",
     element: <User />,
     title: "用户数据",
-    icon: <HomeOutlined />,
+    icon: <InfoCircleOutlined />,
   },
   {
     path: "/schedule",
     element: <Schedule />,
     title: "日程数据",
-    icon: <HomeOutlined />,
+    icon: <CalendarOutlined />,
   },
   {
     path: "/task",
     element: <Task />,
     title: "任务数据",
-    icon: <HomeOutlined />,
+    icon: <MinusSquareOutlined />,
   },
   {
     path: "/memo",
     element: <Memo />,
     title: "备忘录数据",
-    icon: <HomeOutlined />,
+    icon: <BookOutlined />,
   },
 ];
