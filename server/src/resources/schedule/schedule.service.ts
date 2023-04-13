@@ -2,7 +2,14 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { PrismaService } from '../../prisma/prisma.service';
 import { CreateScheduleDto } from './dto/create-schedule.dto';
 import { ModifyScheduleDto } from './dto/modify-schedule.dto';
-import { format, isAfter, isWithinInterval } from 'date-fns';
+import {
+  compareAsc,
+  format,
+  isAfter,
+  isWithinInterval,
+  parseISO,
+} from 'date-fns';
+import { ISchedule } from 'types';
 
 @Injectable()
 export class ScheduleService {
@@ -32,7 +39,7 @@ export class ScheduleService {
         });
         return {
           total: list.length,
-          list: list,
+          list: this.sortScheduleList(list),
         };
       }
       const list = await this.db.schedule.findMany({
@@ -43,7 +50,7 @@ export class ScheduleService {
       if (!dateString) {
         return {
           total: list.length,
-          list: list,
+          list: this.sortScheduleList(list),
         };
       }
       const filteredList = list.filter((item) =>
@@ -54,7 +61,7 @@ export class ScheduleService {
       );
       return {
         total: filteredList.length,
-        list: filteredList,
+        list: this.sortScheduleList(filteredList),
       };
     } catch (error) {
       console.error(error);
@@ -133,5 +140,11 @@ export class ScheduleService {
         HttpStatus.BAD_REQUEST,
       );
     }
+  }
+
+  private sortScheduleList(list: ISchedule[]) {
+    return list.sort((a, b) =>
+      compareAsc(parseISO(a.startTime), parseISO(b.startTime)),
+    );
   }
 }

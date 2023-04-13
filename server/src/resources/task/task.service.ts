@@ -3,6 +3,7 @@ import { PrismaService } from '../../prisma/prisma.service';
 import { CreateTaskDto } from './dto/create-task.dto';
 import { ModifyTaskStateDto } from './dto/modify-task-State.dto copy';
 import { ModifyTaskDto } from './dto/modify-task.dto';
+import { compareAsc, parseISO } from 'date-fns';
 
 @Injectable()
 export class TaskService {
@@ -21,7 +22,7 @@ export class TaskService {
       });
       return {
         total: list.length,
-        list,
+        list: this.sortTaskList(list),
       };
     } catch (error) {
       throw new HttpException(
@@ -127,5 +128,9 @@ export class TaskService {
         HttpStatus.INTERNAL_SERVER_ERROR,
       );
     }
+  }
+
+  private sortTaskList(list: any[]) {
+    return list.sort((a, b) => compareAsc(parseISO(a.time), parseISO(b.time)));
   }
 }
