@@ -6,6 +6,7 @@ import {
 } from "@react-navigation/native";
 import { useFonts } from "expo-font";
 import { SplashScreen, Slot } from "expo-router";
+import React from "react";
 import { useEffect } from "react";
 import { StatusBar, useColorScheme, View } from "react-native";
 import Toast from "react-native-toast-message";

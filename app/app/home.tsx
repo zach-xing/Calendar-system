@@ -191,27 +191,33 @@ export default function Home() {
       >
         <SpeedDial.Action
           icon={{ name: "search", color: "#fff" }}
-          title='Search'
+          title='搜索'
           color='#00adf5'
           onPress={() => router.push("/search")}
         />
         <SpeedDial.Action
           icon={{ name: "date-range", color: "#fff" }}
-          title='Schedule'
+          title='日程'
           color='#00adf5'
           onPress={() => router.push("/schedule/operate")}
         />
         <SpeedDial.Action
           icon={{ name: "assignment", color: "#fff" }}
-          title='Task'
+          title='任务'
           color='#00adf5'
           onPress={() => router.push("/task/operate")}
         />
         <SpeedDial.Action
           icon={{ name: "book", color: "#fff" }}
-          title='Memo'
+          title='备忘录'
           color='#00adf5'
           onPress={() => router.push("/memorandum/detail")}
+        />
+        <SpeedDial.Action
+          icon={{ name: "book", color: "#fff" }}
+          title='语音创建'
+          color='#00adf5'
+          onPress={() => router.push("/voice")}
         />
       </SpeedDial>
     </>
