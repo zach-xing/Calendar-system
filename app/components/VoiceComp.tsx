@@ -1,6 +1,7 @@
 import React, { Component, useState } from "react";
 import { FontAwesome } from "@expo/vector-icons";
 import { MotiView } from "@motify/components";
+import * as FileSystem from "expo-file-system";
 import {
   StyleSheet,
   Text,
@@ -10,6 +11,15 @@ import {
 } from "react-native";
 import { Easing } from "react-native-reanimated";
 import { Audio } from "expo-av";
+import { getSpeech2Text } from "../api/speech2text";
+import { getFileData } from "../utils/getFileBlob";
+import {
+  AndroidAudioEncoder,
+  AndroidOutputFormat,
+  IOSAudioQuality,
+  IOSOutputFormat,
+} from "expo-av/build/Audio";
+import { Button } from "@rneui/base";
 
 interface IProps {
   onSpeechStart: () => void;
@@ -27,53 +37,174 @@ type State = {
 
 const VoiceComp: React.FC<IProps> = (props) => {
   const [started, setStarted] = useState(false);
+  const [isFetching, setIsFetching] = useState(false); // 正在将音频传输并等待响应
   const [recording, setRecording] = useState<Audio.Recording>();
 
-  // 长按开始录音
-  const handleLongPress = async () => {
-    setStarted(true);
+  // // 删除音频文件
+  // const deleteRecordingFile = async () => {
+  //   try {
+  //     if (recording !== undefined) {
+  //       const info = await FileSystem.getInfoAsync(recording.getURI()!);
+  //       await FileSystem.deleteAsync(info.uri);
+  //     }
+  //   } catch (error) {
+  //     console.log("There was an error deleting recording file", error);
+  //   }
+  // };
 
-    // const { status } = await Permissions.askAsync(Permissions.AUDIO_RECORDING);
-    // if the user doesn't allow us to do so - return as we can't do anything further :(
-    // if (status !== "granted") return;
-    // when status is granted - setting up our state
-    // this.setState({ isRecording: true });
+  // const startRecording = async () => {
+  //   setStarted(true);
+  //   await Audio.requestPermissionsAsync();
+  //   await Audio.setAudioModeAsync({
+  //     playThroughEarpieceAndroid: true,
+  //   });
 
-    // basic settings before we start recording,
-    // you can read more about each of them in expo documentation on Audio
-    await Audio.requestPermissionsAsync();
-    await Audio.setAudioModeAsync({
-      allowsRecordingIOS: true,
-      playsInSilentModeIOS: true,
-    });
+  //   console.log("Starting recording..");
+  //   const { recording } = await Audio.Recording.createAsync({
+  //     android: {
+  //       extension: ".wav",
+  //       outputFormat: AndroidOutputFormat.MPEG_4,
+  //       audioEncoder: AndroidAudioEncoder.AAC,
+  //       sampleRate: 44100,
+  //       numberOfChannels: 1,
+  //       bitRate: 128000,
+  //     },
+  //     ios: {
+  //       extension: ".m4a",
+  //       outputFormat: IOSOutputFormat.MPEG4AAC,
+  //       audioQuality: IOSAudioQuality.MAX,
+  //       sampleRate: 44100,
+  //       numberOfChannels: 2,
+  //       bitRate: 128000,
+  //       linearPCMBitDepth: 16,
+  //       linearPCMIsBigEndian: false,
+  //       linearPCMIsFloat: false,
+  //     },
+  //     web: {
+  //       mimeType: "audio/webm",
+  //       bitsPerSecond: 128000,
+  //     },
+  //   });
+  //   AndroidOutputFormat;
+  //   AndroidAudioEncoder;
+  //   setRecording(recording);
+  // };
 
-    console.log("Starting recording..");
-    const { recording } = await Audio.Recording.createAsync(
-      Audio.RecordingOptionsPresets.HIGH_QUALITY
-    );
-    setRecording(recording);
+  // const stopRecording = async () => {
+  //   if (recording) {
+  //     await recording.stopAndUnloadAsync();
+  //   }
+  //   setStarted(false);
+  // };
 
-    console.log("handle long press");
-  };
+  const getTranscription = async () => {
+    setIsFetching(true);
+    try {
+      const info = await FileSystem.getInfoAsync(recording!.getURI()!);
+      console.log(`FILE INFO: ${JSON.stringify(info)}`);
+      const bufferData = await getFileData(info.uri);
 
-  const handleStopRecognizing = async () => {
-    setRecording(undefined);
-    if (recording) {
-      await recording.stopAndUnloadAsync();
-      await Audio.setAudioModeAsync({
-        allowsRecordingIOS: false,
-      });
-      const uri = recording.getURI();
-      console.log("Recording stopped and stored at", uri);
+      const res = await getSpeech2Text(bufferData, bufferData.length);
+      console.log(res);
+      // const videoFile = await fetch(uri, {
+      //   headers: {
+      //     "Content-Type": "audio/mp4",
+      //   },
+      // });
+
+      // console.log("videoFile", videoFile);
+      // const videoFileBlob = await videoFile.blob();
+      // console.log("videoFileBlob", videoFileBlob);
+      // const data = await getSpeech2Text(videoFileBlob);
+      // console.log("这里是结果", data);
+      // const formData = new FormData();
+      // formData.append("file", videoFileBlob);
+
+      // console.log("这里是结果", data);
+    } catch (error) {
+      console.log("There was an error reading file", error);
+      stopRecording();
+    } finally {
+      // resetRecording();
     }
-    console.log("stop");
-    setStarted(false);
+    setIsFetching(false);
   };
+
+  // const resetRecording = () => {
+  //   deleteRecordingFile();
+  //   setRecording(undefined);
+  // };
+
+  // // 长按开始录音
+  // const handleStartRecoding = async () => {
+  //   await startRecording();
+  // };
+
+  // // 停止录音或录音已经结束
+  // const handleStopRecording = async () => {
+  //   await stopRecording();
+  //   await getTranscription();
+  // };
+
+  async function startRecording() {
+    try {
+      console.log("Requesting permissions..");
+      await Audio.requestPermissionsAsync();
+      await Audio.setAudioModeAsync({
+        allowsRecordingIOS: true,
+        playsInSilentModeIOS: true,
+      });
+
+      console.log("Starting recording..");
+      const { recording } = await Audio.Recording.createAsync({
+        android: {
+          extension: ".wav",
+          outputFormat: AndroidOutputFormat.MPEG_4,
+          audioEncoder: AndroidAudioEncoder.AAC,
+          sampleRate: 44100,
+          numberOfChannels: 1,
+          bitRate: 128000,
+        },
+        ios: {
+          extension: ".m4a",
+          outputFormat: IOSOutputFormat.MPEG4AAC,
+          audioQuality: IOSAudioQuality.MAX,
+          sampleRate: 44100,
+          numberOfChannels: 2,
+          bitRate: 128000,
+          linearPCMBitDepth: 16,
+          linearPCMIsBigEndian: false,
+          linearPCMIsFloat: false,
+        },
+        web: {
+          mimeType: "audio/webm",
+          bitsPerSecond: 128000,
+        },
+      });
+      setRecording(recording);
+      console.log("Recording started");
+    } catch (err) {
+      console.error("Failed to start recording", err);
+    }
+  }
+
+  async function stopRecording() {
+    console.log("Stopping recording..");
+    // setRecording(undefined);
+    await recording?.stopAndUnloadAsync();
+    await Audio.setAudioModeAsync({
+      allowsRecordingIOS: false,
+    });
+    const uri = recording?.getURI();
+    console.log("Recording stopped and stored at", uri);
+
+    await getTranscription();
+  }
 
   return (
     <View style={styles.container}>
-      {started ? (
-        <TouchableHighlight onPress={handleStopRecognizing}>
+      {/* {started ? (
+        <TouchableHighlight onPress={handleStopRecording}>
           <View
             style={{
               width: 75,
@@ -109,7 +240,7 @@ const VoiceComp: React.FC<IProps> = (props) => {
           </View>
         </TouchableHighlight>
       ) : (
-        <TouchableHighlight onLongPress={handleLongPress}>
+        <TouchableHighlight onPress={handleStartRecoding}>
           <View
             style={{
               width: 75,
@@ -123,7 +254,11 @@ const VoiceComp: React.FC<IProps> = (props) => {
             <FontAwesome name='microphone' size={24} color='#fff' />
           </View>
         </TouchableHighlight>
-      )}
+      )} */}
+      <Button
+        title={recording ? "Stop Recording" : "Start Recording"}
+        onPress={recording ? stopRecording : startRecording}
+      />
     </View>
   );
 };

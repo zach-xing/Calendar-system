@@ -213,12 +213,12 @@ export default function Home() {
           color='#00adf5'
           onPress={() => router.push("/memorandum/detail")}
         />
-        <SpeedDial.Action
+        {/* <SpeedDial.Action
           icon={{ name: "book", color: "#fff" }}
           title='语音创建'
           color='#00adf5'
           onPress={() => router.push("/voice")}
-        />
+        /> */}
       </SpeedDial>
     </>
   );
