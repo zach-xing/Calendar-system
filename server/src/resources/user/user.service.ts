@@ -30,6 +30,7 @@ export class UserService {
       await this.adminService.modifyUserInCrement('more');
       return new HttpException('创建成功', HttpStatus.OK);
     } catch (error) {
+      console.error(error);
       throw new HttpException('创建用户出错', HttpStatus.BAD_REQUEST);
     }
   }

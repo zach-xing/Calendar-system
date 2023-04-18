@@ -111,10 +111,12 @@ export class AdminService {
         });
       } else {
         const newNum = method === 'more' ? data.num + 1 : data.num - 1;
-        await this.db.userIncrement.create({
+        await this.db.userIncrement.update({
           data: {
-            date: newDateStr,
             num: newNum,
+          },
+          where: {
+            id: data.id,
           },
         });
       }
