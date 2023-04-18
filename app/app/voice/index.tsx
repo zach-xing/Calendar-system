@@ -7,12 +7,14 @@ import {
   Button,
   Pressable,
 } from "react-native";
-import VoiceComp from "../../components/VoiceComp";
+import { useMutation, useQueryClient } from "react-query";
 import React from "react";
-
+import VoiceComp from "../../components/VoiceComp";
 
 export default function Home() {
   const [speechText, setSpeechText] = useState("");
+
+
   return (
     <View style={styles.container}>
       <View style={styles.inputContainer}>
@@ -25,6 +27,7 @@ export default function Home() {
           maxLength={500}
           editable={true}
         />
+
         <View
           style={{
             alignItems: "flex-end",
@@ -34,13 +37,6 @@ export default function Home() {
           }}
         >
           <Button
-            title='Save'
-            color={"#007AFF"}
-            onPress={async () => {
-              console.log("save");
-            }}
-          />
-          <Button
             title='Clear'
             color={"#007AFF"}
             onPress={() => {
@@ -49,6 +45,7 @@ export default function Home() {
           />
         </View>
       </View>
+
       <View style={styles.voiceContainer}>
         <VoiceComp
           onSpeechEnd={(value) => {
@@ -62,6 +59,7 @@ export default function Home() {
     </View>
   );
 }
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
