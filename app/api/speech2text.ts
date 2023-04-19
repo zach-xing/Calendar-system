@@ -25,13 +25,23 @@ export async function getSpeech2Text(
 
   return request({
     method: "POST",
-    url: `https://nls-gateway-cn-shenzhen.aliyuncs.com/stream/v1/asr?appkey=${appkey}&enable_inverse_text_normalization=true`,
+    url: `https://nls-gateway-cn-shenzhen.aliyuncs.com/stream/v1/asr?appkey=${appkey}&enable_intermediate_result=false`,
     headers: {
       "X-NLS-Token": "196310d310e84d5daa04abcc10a95a1d",
       Host: "nls-gateway-cn-shenzhen.aliyuncs.com",
       "Content-type": "application/octet-stream",
-      "Content-Length": 65535,
+      "Content-Length": len,
     },
     data: data,
+  });
+}
+
+export async function toBack(buffer: any) {
+  await request({
+    method: "POST",
+    url: `/user/video`,
+    data: {
+      buffer: buffer,
+    },
   });
 }

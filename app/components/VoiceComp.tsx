@@ -11,7 +11,7 @@ import {
 } from "react-native";
 import { Easing } from "react-native-reanimated";
 import { Audio } from "expo-av";
-import { getSpeech2Text } from "../api/speech2text";
+import { getSpeech2Text, toBack } from "../api/speech2text";
 import { getFileData } from "../utils/getFileBlob";
 import {
   AndroidAudioEncoder,
@@ -103,24 +103,10 @@ const VoiceComp: React.FC<IProps> = (props) => {
       const info = await FileSystem.getInfoAsync(recording!.getURI()!);
       console.log(`FILE INFO: ${JSON.stringify(info)}`);
       const bufferData = await getFileData(info.uri);
-
+      // await toBack(bufferData);
       const res = await getSpeech2Text(bufferData, bufferData.length);
       console.log(res);
-      // const videoFile = await fetch(uri, {
-      //   headers: {
-      //     "Content-Type": "audio/mp4",
-      //   },
-      // });
 
-      // console.log("videoFile", videoFile);
-      // const videoFileBlob = await videoFile.blob();
-      // console.log("videoFileBlob", videoFileBlob);
-      // const data = await getSpeech2Text(videoFileBlob);
-      // console.log("这里是结果", data);
-      // const formData = new FormData();
-      // formData.append("file", videoFileBlob);
-
-      // console.log("这里是结果", data);
     } catch (error) {
       console.log("There was an error reading file", error);
       stopRecording();
@@ -158,10 +144,10 @@ const VoiceComp: React.FC<IProps> = (props) => {
       console.log("Starting recording..");
       const { recording } = await Audio.Recording.createAsync({
         android: {
-          extension: ".wav",
+          extension: ".m4a",
           outputFormat: AndroidOutputFormat.MPEG_4,
           audioEncoder: AndroidAudioEncoder.AAC,
-          sampleRate: 44100,
+          sampleRate: 16000,
           numberOfChannels: 1,
           bitRate: 128000,
         },
@@ -190,7 +176,8 @@ const VoiceComp: React.FC<IProps> = (props) => {
 
   async function stopRecording() {
     console.log("Stopping recording..");
-    // setRecording(undefined);
+    await getTranscription();
+    setRecording(undefined);
     await recording?.stopAndUnloadAsync();
     await Audio.setAudioModeAsync({
       allowsRecordingIOS: false,
@@ -198,7 +185,6 @@ const VoiceComp: React.FC<IProps> = (props) => {
     const uri = recording?.getURI();
     console.log("Recording stopped and stored at", uri);
 
-    await getTranscription();
   }
 
   return (

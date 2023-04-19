@@ -9,6 +9,9 @@ import { MemoService } from '../memo/memo.service';
 import { format, isAfter, isEqual } from 'date-fns';
 import { AdminService } from '../admin/admin.service';
 import { ModifyUserPasswordDto } from './dto/modify-user-password.dto';
+// import { SpeechRecognition } from 'alibabacloud-nls';
+// import { SpeechTranscription } from 'alibabacloud-nls';
+// import { SpeechSynthesizer } from 'alibabacloud-nls';
 
 @Injectable()
 export class UserService {
@@ -154,4 +157,14 @@ export class UserService {
       throw new HttpException('修改失败', HttpStatus.BAD_REQUEST);
     }
   }
+  //import { SpeechRecognition } from "alibabacloud-nls"
+  //import { SpeechTranscription } from "alibabacloud-nls"
+  //import { SpeechSynthesizer } from "alibabacloud-nls"
+  // async speech2text(dto: { buffer: any }) {
+  // const st = new SpeechTranscription({
+  //   url: URL,
+  //   appkey:APPKEY,
+  //   token:TOKEN
+  // })
+  // }
 }

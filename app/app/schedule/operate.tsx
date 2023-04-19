@@ -22,7 +22,7 @@ export default function OperateComp() {
     formState: { errors },
   } = useForm({
     defaultValues: JSON.parse(
-      searchParams.data ||
+      searchParams.data as string ||
         JSON.stringify({
           desc: "",
           endTime: dayjs(Date.now()).format("YYYY-MM-DD HH:mm"),

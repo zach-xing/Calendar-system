@@ -59,10 +59,10 @@ const Home: React.FC = () => {
           <Line
             options={options}
             data={{
-              labels: ["前五天", "前四天", "前三天", "前天", "昨天", "今天"],
+              labels: ["周一", "周二", "周三", "周四", "周五", "周六", "周日"],
               datasets: [
                 {
-                  label: "本周用户活跃度",
+                  label: "本周用户增长量",
                   data: homeData?.week,
                   borderColor: "rgb(53, 162, 235)",
                   backgroundColor: "rgba(53, 162, 235, 0.5)",

@@ -39,4 +39,9 @@ export class UserController {
   async modifyUserPassword(@Body() dto: ModifyUserPasswordDto) {
     return await this.userService.modifyUserPassword(dto);
   }
+
+  // @Post('video')
+  // async getVideoData(@Body() dto: { buffer: any }) {
+  //   console.log(dto);
+  // }
 }

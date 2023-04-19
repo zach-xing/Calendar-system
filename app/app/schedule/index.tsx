@@ -108,11 +108,11 @@ export default function CalendarPage() {
   return (
     <View style={styles.container}>
       <HeaderBackButton
-        rightContent={
-          <Button type='clear' onPress={shareSchedule}>
-            分享
-          </Button>
-        }
+        // rightContent={
+        //   <Button type='clear' onPress={shareSchedule}>
+        //     分享
+        //   </Button>
+        // }
       />
       <View style={styles.headerDivision} />
       <Calendar
